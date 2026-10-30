@@ -1,0 +1,146 @@
+# Russian translations for OctoPrint-Aurora.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the OctoPrint-Aurora
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OctoPrint-Aurora 0.1.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-30 21:36+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+msgid "Switch to light theme"
+msgstr "Переключить на светлую тему"
+
+msgid "Switch to dark theme"
+msgstr "Переключить на тёмную тему"
+
+msgid "Enable the Aurora theme"
+msgstr "Включить тему Aurora"
+
+msgid "Changes are previewed live. They are only kept once you click Save."
+msgstr ""
+"Изменения сразу видны в интерфейсе, но сохраняются только после нажатия "
+"«Сохранить»."
+
+msgid "Appearance"
+msgstr "Внешний вид"
+
+msgid "Theme"
+msgstr "Тема"
+
+msgid "Auto"
+msgstr "Авто"
+
+msgid "Light"
+msgstr "Светлая"
+
+msgid "Dark"
+msgstr "Тёмная"
+
+msgid ""
+"\"Auto\" follows the operating system. The moon/sun button in the navbar "
+"lets each browser override it."
+msgstr ""
+"«Авто» следует настройкам операционной системы. Кнопка с луной/солнцем на"
+" панели навигации позволяет выбрать тему отдельно в каждом браузере."
+
+msgid "Accent color"
+msgstr "Акцентный цвет"
+
+msgid "Custom color"
+msgstr "Свой цвет"
+
+msgid "Logo"
+msgstr "Логотип"
+
+msgid "OctoPrint (original)"
+msgstr "OctoPrint (оригинальный)"
+
+msgid "Nozzle"
+msgstr "Сопло"
+
+msgid "Text only"
+msgstr "Только текст"
+
+msgid "Corner radius"
+msgstr "Скругление углов"
+
+msgid "Effects"
+msgstr "Эффекты"
+
+msgid "Background glow and translucent navbar"
+msgstr "Фоновое свечение и полупрозрачная панель навигации"
+
+msgid "Theme the temperature graph colors"
+msgstr "Окрашивать график температуры в цвета темы"
+
+msgid "Show the OctoPrint watermark behind the temperature graph"
+msgstr "Показывать водяной знак OctoPrint за графиком температуры"
+
+msgid "Layout"
+msgstr "Макет"
+
+msgid "Density"
+msgstr "Плотность"
+
+msgid "Comfortable"
+msgstr "Свободная"
+
+msgid "Compact"
+msgstr "Компактная"
+
+msgid "Sidebar position"
+msgstr "Положение боковой панели"
+
+msgid "Left"
+msgstr "Слева"
+
+msgid "Right"
+msgstr "Справа"
+
+msgid "Use the full width of large screens"
+msgstr "Использовать всю ширину больших экранов"
+
+msgid ""
+"Themeify is also active. Two themes at the same time give mixed results: "
+"disable one of them."
+msgstr ""
+"Themeify тоже включён. Две темы одновременно дают неаккуратный результат:"
+" отключите одну из них."
+
+msgid "TouchUI is active in this browser: Aurora is paused while it is in use."
+msgstr ""
+"В этом браузере включён TouchUI: Aurora приостановлена, пока он "
+"используется."
+
+msgid "Instance color"
+msgstr "Цвет экземпляра"
+
+msgid "Thin stripe at the top"
+msgstr "Тонкая полоса сверху"
+
+msgid "Use as accent color"
+msgstr "Использовать как акцентный цвет"
+
+msgid "Ignore"
+msgstr "Не учитывать"
+
+msgid ""
+"Uses the color chosen in Settings > Appearance, to tell several printers "
+"apart."
+msgstr ""
+"Использует цвет, выбранный в «Настройки > Внешний вид», чтобы различать "
+"несколько принтеров."
+
