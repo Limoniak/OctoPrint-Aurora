@@ -1,0 +1,114 @@
+msgid "Switch to light theme"
+msgstr ""
+
+msgid "Switch to dark theme"
+msgstr ""
+
+msgid ""
+"Themeify is also active. Two themes at the same time give mixed results: "
+"disable one of them."
+msgstr ""
+
+msgid "TouchUI is active in this browser: Aurora is paused while it is in use."
+msgstr ""
+
+msgid "Enable the Aurora theme"
+msgstr ""
+
+msgid "Changes are previewed live. They are only kept once you click Save."
+msgstr ""
+
+msgid "Appearance"
+msgstr ""
+
+msgid "Theme"
+msgstr ""
+
+msgid "Auto"
+msgstr ""
+
+msgid "Light"
+msgstr ""
+
+msgid "Dark"
+msgstr ""
+
+msgid ""
+"\"Auto\" follows the operating system. The moon/sun button in the navbar "
+"lets each browser override it."
+msgstr ""
+
+msgid "Accent color"
+msgstr ""
+
+msgid "Custom color"
+msgstr ""
+
+msgid "Logo"
+msgstr ""
+
+msgid "OctoPrint (original)"
+msgstr ""
+
+msgid "Nozzle"
+msgstr ""
+
+msgid "Text only"
+msgstr ""
+
+msgid "Instance color"
+msgstr ""
+
+msgid "Thin stripe at the top"
+msgstr ""
+
+msgid "Use as accent color"
+msgstr ""
+
+msgid "Ignore"
+msgstr ""
+
+msgid ""
+"Uses the color chosen in Settings > Appearance, to tell several printers "
+"apart."
+msgstr ""
+
+msgid "Corner radius"
+msgstr ""
+
+msgid "Effects"
+msgstr ""
+
+msgid "Background glow and translucent navbar"
+msgstr ""
+
+msgid "Theme the temperature graph colors"
+msgstr ""
+
+msgid "Show the OctoPrint watermark behind the temperature graph"
+msgstr ""
+
+msgid "Layout"
+msgstr ""
+
+msgid "Density"
+msgstr ""
+
+msgid "Comfortable"
+msgstr ""
+
+msgid "Compact"
+msgstr ""
+
+msgid "Sidebar position"
+msgstr ""
+
+msgid "Left"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Use the full width of large screens"
+msgstr ""
+

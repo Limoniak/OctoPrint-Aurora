@@ -1,0 +1,145 @@
+# German translations for OctoPrint-Aurora.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the OctoPrint-Aurora
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OctoPrint-Aurora 0.1.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-30 21:36+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+msgid "Switch to light theme"
+msgstr "Zum hellen Design wechseln"
+
+msgid "Switch to dark theme"
+msgstr "Zum dunklen Design wechseln"
+
+msgid "Enable the Aurora theme"
+msgstr "Aurora-Design aktivieren"
+
+msgid "Changes are previewed live. They are only kept once you click Save."
+msgstr ""
+"Änderungen werden sofort als Vorschau angezeigt und erst mit einem Klick "
+"auf „Speichern“ übernommen."
+
+msgid "Appearance"
+msgstr "Aussehen"
+
+msgid "Theme"
+msgstr "Design"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Light"
+msgstr "Hell"
+
+msgid "Dark"
+msgstr "Dunkel"
+
+msgid ""
+"\"Auto\" follows the operating system. The moon/sun button in the navbar "
+"lets each browser override it."
+msgstr ""
+"„Auto“ folgt dem Betriebssystem. Über den Mond/Sonne-Button in der "
+"Navigationsleiste kann jeder Browser eine eigene Wahl treffen."
+
+msgid "Accent color"
+msgstr "Akzentfarbe"
+
+msgid "Custom color"
+msgstr "Eigene Farbe"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "OctoPrint (original)"
+msgstr "OctoPrint (Original)"
+
+msgid "Nozzle"
+msgstr "Düse"
+
+msgid "Text only"
+msgstr "Nur Text"
+
+msgid "Corner radius"
+msgstr "Eckenradius"
+
+msgid "Effects"
+msgstr "Effekte"
+
+msgid "Background glow and translucent navbar"
+msgstr "Hintergrundschimmer und durchscheinende Navigationsleiste"
+
+msgid "Theme the temperature graph colors"
+msgstr "Temperaturdiagramm in den Designfarben darstellen"
+
+msgid "Show the OctoPrint watermark behind the temperature graph"
+msgstr "OctoPrint-Wasserzeichen hinter dem Temperaturdiagramm anzeigen"
+
+msgid "Layout"
+msgstr "Layout"
+
+msgid "Density"
+msgstr "Dichte"
+
+msgid "Comfortable"
+msgstr "Komfortabel"
+
+msgid "Compact"
+msgstr "Kompakt"
+
+msgid "Sidebar position"
+msgstr "Position der Seitenleiste"
+
+msgid "Left"
+msgstr "Links"
+
+msgid "Right"
+msgstr "Rechts"
+
+msgid "Use the full width of large screens"
+msgstr "Volle Breite großer Bildschirme nutzen"
+
+msgid ""
+"Themeify is also active. Two themes at the same time give mixed results: "
+"disable one of them."
+msgstr ""
+"Themeify ist ebenfalls aktiv. Zwei Designs gleichzeitig ergeben ein "
+"uneinheitliches Bild: Deaktiviere eines davon."
+
+msgid "TouchUI is active in this browser: Aurora is paused while it is in use."
+msgstr ""
+"TouchUI ist in diesem Browser aktiv: Aurora pausiert, solange es "
+"verwendet wird."
+
+msgid "Instance color"
+msgstr "Instanzfarbe"
+
+msgid "Thin stripe at the top"
+msgstr "Schmaler Streifen oben"
+
+msgid "Use as accent color"
+msgstr "Als Akzentfarbe verwenden"
+
+msgid "Ignore"
+msgstr "Ignorieren"
+
+msgid ""
+"Uses the color chosen in Settings > Appearance, to tell several printers "
+"apart."
+msgstr ""
+"Verwendet die unter Einstellungen > Aussehen gewählte Farbe, um mehrere "
+"Drucker zu unterscheiden."
+

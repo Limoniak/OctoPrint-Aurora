@@ -1,0 +1,1934 @@
+/*
+ * Aurora UI for OctoPrint
+ *
+ * Every rule is scoped to html.aurora so that disabling the theme in the
+ * settings instantly restores the stock look. Theme values live in the
+ * --a-* custom properties; aurora.js sets the accent, radius and the
+ * data-aurora-* attributes on <html>.
+ */
+
+/* ===== Tokens ========================================================= */
+
+html.aurora {
+  --a-accent: #6d4aff;
+  --a-on-accent: #ffffff;
+  /* accent-derived colors: aurora.js recomputes them for the chosen accent
+     (plain colors, so they also work without color-mix() support) */
+  --a-accent-2: #af60e5;
+  --a-accent-soft: rgba(109, 74, 255, 0.14);
+  --a-accent-ring: rgba(109, 74, 255, 0.35);
+  --a-glow-1: rgba(109, 74, 255, 0.16);
+  --a-glow-2: rgba(109, 74, 255, 0.09);
+  --a-radius: 14px;
+  --a-radius-sm: calc(var(--a-radius) * 0.6);
+  --a-gap: 20px;
+  --a-pad: 20px;
+  --a-sidebar-w: 360px;
+  --a-max-w: 1280px;
+  --a-success-fill: #15803d;
+  --a-warning-fill: #b45309;
+  --a-danger-fill: #dc2626;
+  --a-info-fill: #0369a1;
+  --a-font: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --a-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+html.aurora.aurora-wide {
+  --a-max-w: 1720px;
+}
+
+html.aurora[data-aurora-density="compact"] {
+  --a-gap: 12px;
+  --a-pad: 14px;
+  --a-sidebar-w: 320px;
+}
+
+html.aurora[data-aurora-theme="light"] {
+  color-scheme: light;
+  --a-bg: #f3f4f9;
+  --a-surface: #ffffff;
+  --a-surface-2: #f6f7fb;
+  --a-surface-3: #eceef5;
+  --a-border: rgba(15, 23, 42, 0.08);
+  --a-border-strong: rgba(15, 23, 42, 0.15);
+  --a-text: #111827;
+  --a-text-2: #4b5563;
+  --a-text-3: #5f667c;
+  --a-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -6px rgba(15, 23, 42, 0.08);
+  --a-shadow-lg: 0 24px 64px -12px rgba(15, 23, 42, 0.25);
+  --a-nav-bg: rgba(255, 255, 255, 0.75);
+  --a-accent-text: #442e9e;
+  --a-success: #15803d;
+  --a-warning: #b45309;
+  --a-danger: #dc2626;
+  --a-info: #0369a1;
+  --a-graph-1: #ef4444;
+  --a-graph-2: #3b82f6;
+  --a-graph-3: #f59e0b;
+  --a-graph-4: #10b981;
+  --a-graph-5: #a16207;
+  --a-graph-6: #a855f7;
+  --a-graph-7: #475569;
+  --a-canvas: #ffffff;
+  --a-canvas-off: #f3f4f9;
+  --a-canvas-grid: #dde0ea;
+}
+
+html.aurora[data-aurora-theme="dark"] {
+  color-scheme: dark;
+  --a-bg: #0b0d14;
+  --a-surface: #131722;
+  --a-surface-2: #191e2c;
+  --a-surface-3: #222839;
+  --a-border: rgba(255, 255, 255, 0.07);
+  --a-border-strong: rgba(255, 255, 255, 0.13);
+  --a-text: #e7e9f1;
+  --a-text-2: #a6adc4;
+  --a-text-3: #8a92ad;
+  --a-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  --a-shadow-lg: 0 30px 80px -10px rgba(0, 0, 0, 0.7);
+  --a-nav-bg: rgba(11, 13, 20, 0.72);
+  --a-accent-text: #a792ff;
+  --a-success: #22c55e;
+  --a-warning: #f59e0b;
+  --a-danger: #fb7185;
+  --a-info: #38bdf8;
+  --a-graph-1: #fb7185;
+  --a-graph-2: #60a5fa;
+  --a-graph-3: #fbbf24;
+  --a-graph-4: #34d399;
+  --a-graph-5: #d6a26a;
+  --a-graph-6: #c084fc;
+  --a-graph-7: #cbd5e1;
+  --a-canvas: #191e2c;
+  --a-canvas-off: #131722;
+  --a-canvas-grid: #2b3245;
+}
+
+/* ===== Base =========================================================== */
+
+html.aurora body {
+  background: var(--a-bg);
+  color: var(--a-text);
+  font-family: var(--a-font);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.aurora.aurora-glass body {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, var(--a-glow-1), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, var(--a-glow-2), transparent 60%),
+    var(--a-bg);
+  background-repeat: no-repeat;
+}
+
+html.aurora ::selection {
+  background: var(--a-accent-ring);
+}
+
+/*
+ * Base element rules use :where() so they weigh no more than a plain element
+ * selector: they still override Bootstrap (loaded earlier) but leave plugins'
+ * own classes in charge (e.g. a plugin's link styled as a button).
+ */
+:where(html.aurora) a {
+  color: var(--a-accent-text);
+}
+
+:where(html.aurora) a:hover,
+:where(html.aurora) a:focus {
+  color: var(--a-text);
+}
+
+:where(html.aurora) h1,
+:where(html.aurora) h2,
+:where(html.aurora) h3,
+:where(html.aurora) h4,
+:where(html.aurora) h5,
+:where(html.aurora) h6,
+:where(html.aurora) legend {
+  color: var(--a-text);
+  font-family: var(--a-font);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+/* Bootstrap greys these out with #999 (e.g. plugin version in headings) */
+html.aurora h1 small,
+html.aurora h2 small,
+html.aurora h3 small,
+html.aurora h4 small,
+html.aurora h5 small,
+html.aurora h6 small {
+  color: var(--a-text-3);
+}
+
+html.aurora legend {
+  border-bottom-color: var(--a-border);
+  font-size: 16px;
+}
+
+html.aurora hr {
+  border-top-color: var(--a-border);
+  border-bottom: 0;
+}
+
+html.aurora .muted {
+  color: var(--a-text-3);
+}
+
+html.aurora .text-error {
+  color: var(--a-danger);
+}
+
+html.aurora .text-success {
+  color: var(--a-success);
+}
+
+html.aurora .text-warning {
+  color: var(--a-warning);
+}
+
+html.aurora .text-info {
+  color: var(--a-info);
+}
+
+:where(html.aurora) code,
+:where(html.aurora) pre {
+  background: var(--a-surface-2);
+  border-color: var(--a-border);
+  color: var(--a-text);
+  border-radius: var(--a-radius-sm);
+  font-family: var(--a-mono);
+}
+
+:where(html.aurora) code {
+  color: var(--a-accent-text);
+}
+
+html.aurora * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--a-border-strong) transparent;
+}
+
+html.aurora ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html.aurora ::-webkit-scrollbar-thumb {
+  background: var(--a-border-strong);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+html.aurora ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ===== Loading / overlays ============================================ */
+
+html.aurora #page-container-loading,
+html.aurora #page-container-noscript {
+  background: var(--a-bg);
+  color: var(--a-text);
+}
+
+html.aurora #page-container-loading-spinner {
+  color: var(--a-accent);
+}
+
+html.aurora #drop_overlay,
+html.aurora #offline_overlay {
+  backdrop-filter: blur(8px);
+}
+
+html.aurora #drop_overlay .dropzone_background,
+html.aurora #drop_overlay #drop_background,
+html.aurora #drop_overlay #drop_locally_background,
+html.aurora #drop_overlay #drop_sd_background {
+  background: color-mix(in srgb, var(--a-bg) 75%, transparent);
+  border: 2px dashed var(--a-accent);
+  border-radius: var(--a-radius);
+}
+
+html.aurora #drop_overlay .dropzone_background.hover,
+html.aurora #drop_overlay .hover {
+  background: var(--a-accent-soft);
+}
+
+html.aurora #offline_overlay_background {
+  background: var(--a-bg);
+  opacity: 0.85;
+}
+
+html.aurora #offline_overlay_wrapper,
+html.aurora #offline_overlay_title,
+html.aurora #offline_overlay_message {
+  color: var(--a-text);
+}
+
+/* ===== Navbar ========================================================= */
+
+html.aurora #navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  margin-bottom: calc(var(--a-gap) + 4px);
+}
+
+html.aurora #navbar .navbar-inner {
+  background: var(--a-surface);
+  background-image: none;
+  filter: none;
+  border: 0;
+  border-bottom: 1px solid var(--a-border);
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 60px;
+}
+
+html.aurora.aurora-glass #navbar .navbar-inner {
+  background: var(--a-nav-bg);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+}
+
+/* OctoPrint's instance color (Settings > Appearance) as a thin top stripe,
+   to tell several printers apart */
+html.aurora.aurora-instance-stripe #navbar .navbar-inner {
+  /* the 1px line keeps a white stripe visible on the light theme */
+  box-shadow: inset 0 3px 0 var(--a-instance), inset 0 4px 0 var(--a-border-strong);
+}
+
+html.aurora #navbar .container,
+html.aurora .octoprint-container {
+  width: auto;
+  max-width: var(--a-max-w);
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+/*
+ * Note: UI Customizer disables every plugin rule whose selector contains
+ * "#navbar .navbar-inner .nav", hence the "#navbar > .navbar-inner .nav" form
+ * below (same elements, same specificity).
+ */
+html.aurora #navbar .navbar-inner .brand {
+  color: var(--a-text);
+  text-shadow: none;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  padding: 19px 20px 19px 0;
+  margin-left: 0;
+}
+
+html.aurora #navbar .navbar-inner .brand span {
+  display: inline-flex;
+  align-items: center;
+  height: auto;
+  min-height: 24px;
+  max-width: none;
+}
+
+/* Logo, chosen in the settings (data-aurora-logo) */
+
+/* "octoprint": the green tentacle. OctoPrint swaps it for a white one on
+   some instance colors, which would vanish on the light theme. */
+html.aurora[data-aurora-logo="octoprint"] #navbar .navbar-inner .brand span {
+  padding-left: 30px;
+  background-image: url("../img/tentacle.png") !important;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+
+html.aurora[data-aurora-logo="aurora"] #navbar .navbar-inner .brand span,
+html.aurora[data-aurora-logo="none"] #navbar .navbar-inner .brand span {
+  background-image: none !important;
+  padding-left: 0;
+}
+
+html.aurora[data-aurora-logo="aurora"] #navbar .navbar-inner .brand span::before {
+  content: "";
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 9px;
+  background:
+    url("../img/brand.svg") center / 20px 20px no-repeat,
+    linear-gradient(135deg, var(--a-accent), var(--a-accent-2));
+  box-shadow: 0 6px 16px -4px var(--a-accent-ring);
+}
+
+html.aurora #navbar > .navbar-inner .nav > li > a {
+  color: var(--a-text-2);
+  text-shadow: none;
+  padding: 8px 12px;
+  margin: 12px 2px;
+  border-radius: 10px;
+  line-height: 20px;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+html.aurora #navbar > .navbar-inner .nav > li > a:hover,
+html.aurora #navbar > .navbar-inner .nav > li > a:focus,
+html.aurora #navbar > .navbar-inner .nav li.dropdown.open > .dropdown-toggle {
+  background: var(--a-surface-3);
+  color: var(--a-text);
+}
+
+html.aurora #navbar > .navbar-inner .nav li.dropdown > .dropdown-toggle .caret {
+  border-top-color: currentColor;
+  border-bottom-color: currentColor;
+}
+
+html.aurora #navbar > .navbar-inner .nav > li > .dropdown-menu::before,
+html.aurora #navbar > .navbar-inner .nav > li > .dropdown-menu::after {
+  display: none;
+}
+
+/* Plain text items some plugins put in the navbar (e.g. layer progress) */
+html.aurora #navbar .navbar-text {
+  color: var(--a-text-2);
+  line-height: 20px;
+  margin: 20px 8px;
+}
+
+/* ===== Dropdowns ====================================================== */
+
+html.aurora .dropdown-menu {
+  background: var(--a-surface);
+  border: 1px solid var(--a-border-strong);
+  border-radius: var(--a-radius-sm);
+  box-shadow: var(--a-shadow-lg);
+  padding: 6px;
+  margin-top: 6px;
+}
+
+html.aurora .dropdown-menu > li > a {
+  color: var(--a-text);
+  border-radius: calc(var(--a-radius-sm) * 0.75);
+  padding: 6px 12px;
+}
+
+html.aurora .dropdown-menu > li > a:hover,
+html.aurora .dropdown-menu > li > a:focus,
+html.aurora .dropdown-submenu:hover > a,
+html.aurora .dropdown-menu > .active > a,
+html.aurora .dropdown-menu > .active > a:hover {
+  background: var(--a-accent-soft);
+  background-image: none;
+  color: var(--a-text);
+  filter: none;
+}
+
+html.aurora .dropdown-menu > .disabled > a,
+html.aurora .dropdown-menu > .disabled > a:hover {
+  color: var(--a-text-3);
+  background: transparent;
+}
+
+html.aurora .dropdown-menu .divider {
+  background: var(--a-border);
+  border-bottom: 0;
+  margin: 6px 4px;
+}
+
+html.aurora .dropdown-menu .dropdown-header,
+html.aurora .dropdown-menu .nav-header {
+  color: var(--a-text-3);
+}
+
+/* ===== Layout ========================================================= */
+
+html.aurora .octoprint-container > .row {
+  display: grid;
+  grid-template-columns: var(--a-sidebar-w) minmax(0, 1fr);
+  gap: var(--a-gap);
+  margin-left: 0;
+  align-items: start;
+}
+
+html.aurora .octoprint-container > .row::before,
+html.aurora .octoprint-container > .row::after {
+  display: none;
+}
+
+html.aurora .octoprint-container > .row > #sidebar,
+html.aurora .octoprint-container > .row > .tabbable {
+  float: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+}
+
+html.aurora .octoprint-container > .row > .span12 {
+  grid-column: 1 / -1;
+}
+
+html.aurora[data-aurora-sidebar="right"] .octoprint-container > .row {
+  grid-template-columns: minmax(0, 1fr) var(--a-sidebar-w);
+}
+
+html.aurora[data-aurora-sidebar="right"] .octoprint-container > .row > #sidebar {
+  order: 2;
+}
+
+/* ===== Sidebar cards ================================================== */
+
+html.aurora #sidebar,
+html.aurora .UICCol3 {
+  margin-bottom: 0;
+}
+
+html.aurora #sidebar > .accordion-group,
+html.aurora .UICCol3 > .accordion-group {
+  background: var(--a-surface);
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius);
+  box-shadow: var(--a-shadow);
+  margin-bottom: var(--a-gap);
+}
+
+/*
+ * Header buttons are floated right in the stock UI, so their DOM order is
+ * right-to-left. row-reverse keeps that visual order; the toggle gets a
+ * higher order to end up on the left.
+ */
+html.aurora #sidebar .accordion-heading,
+html.aurora .UICCol3 .accordion-heading {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 2px;
+  padding-right: 8px;
+}
+
+html.aurora #sidebar .accordion-heading .accordion-toggle,
+html.aurora .UICCol3 .accordion-heading .accordion-toggle {
+  order: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--a-text);
+  font-weight: 650;
+  font-size: 15px;
+  padding: 14px var(--a-pad);
+  text-decoration: none;
+}
+
+html.aurora #sidebar .accordion-heading .accordion-toggle i,
+html.aurora .UICCol3 .accordion-heading .accordion-toggle i {
+  color: var(--a-accent);
+  width: 18px;
+  margin-right: 6px;
+  text-align: center;
+}
+
+html.aurora #sidebar .accordion-heading .accordion-heading-button,
+html.aurora .UICCol3 .accordion-heading .accordion-heading-button {
+  float: none;
+}
+
+html.aurora #sidebar .accordion-heading .accordion-heading-button > a,
+html.aurora .UICCol3 .accordion-heading .accordion-heading-button > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 9px;
+  color: var(--a-text-3);
+}
+
+html.aurora #sidebar .accordion-heading .accordion-heading-button > a:hover,
+html.aurora .UICCol3 .accordion-heading .accordion-heading-button > a:hover {
+  background: var(--a-surface-3);
+  color: var(--a-text);
+}
+
+html.aurora #sidebar .accordion-inner,
+html.aurora .UICCol3 .accordion-inner {
+  border-top: 1px solid var(--a-border);
+  padding: var(--a-pad);
+}
+
+html.aurora #sidebar .accordion-inner hr,
+html.aurora .UICCol3 .accordion-inner hr {
+  margin: 12px 0;
+}
+
+html.aurora #sidebar .accordion-inner strong,
+html.aurora .UICCol3 .accordion-inner strong {
+  color: var(--a-text);
+  font-weight: 600;
+}
+
+/* State panel: give it a quieter "key: value" look */
+html.aurora #state .accordion-inner {
+  color: var(--a-text-2);
+}
+
+/* Files list: each entry becomes a small card */
+html.aurora #files .gcode_files .scroll-wrapper {
+  padding-right: 4px;
+}
+
+html.aurora #files .gcode_files .entry {
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius-sm);
+  background: var(--a-surface-2);
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+html.aurora #files .gcode_files .entry:hover {
+  background: var(--a-surface-3);
+  border-color: var(--a-border-strong);
+}
+
+html.aurora #files .gcode_files .entry .title {
+  color: var(--a-text);
+  font-weight: 600;
+}
+
+html.aurora #files .gcode_files .entry .title.text-success {
+  color: var(--a-success);
+}
+
+html.aurora #files .gcode_files .entry .title.text-error {
+  color: var(--a-danger);
+}
+
+html.aurora #files .gcode_files .entry .uploaded,
+html.aurora #files .gcode_files .entry .size,
+html.aurora #files .gcode_files .entry .internal,
+html.aurora #files .gcode_files .entry .additionalInfo {
+  color: var(--a-text-3);
+}
+
+html.aurora #files .gcode_files .entry .action-buttons {
+  bottom: 10px;
+  right: 12px;
+}
+
+html.aurora #files .gcode_files .entry .toggleAdditionalData {
+  margin: -2px -4px 0 0;
+}
+
+html.aurora #files .gcode_files .entry.back {
+  color: var(--a-accent-text);
+  background: transparent;
+}
+
+/* ===== Tabs =========================================================== */
+
+/*
+ * bootstrap-tabdrop moves every tab whose offsetTop is > 0 into its overflow
+ * menu. #tabs is therefore the offsetParent (position: relative) and has no
+ * padding: the inner spacing is a border in the surface color, the visible
+ * outline is a box-shadow.
+ */
+html.aurora #tabs {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 0;
+  column-gap: 4px;
+  margin: 0 0 var(--a-gap);
+  padding: 0;
+  border: 6px solid var(--a-surface);
+  border-radius: var(--a-radius);
+  background: var(--a-surface);
+  box-shadow: 0 0 0 1px var(--a-border), var(--a-shadow);
+}
+
+html.aurora #tabs::before,
+html.aurora #tabs::after {
+  display: none;
+}
+
+html.aurora #tabs > li {
+  float: none;
+  margin: 0;
+}
+
+html.aurora #tabs > li > a {
+  margin: 0;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: calc(var(--a-radius) - 6px);
+  color: var(--a-text-2);
+  font-weight: 550;
+  line-height: 20px;
+  transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+html.aurora #tabs > li > a:hover,
+html.aurora #tabs > li > a:focus {
+  background: var(--a-surface-3);
+  color: var(--a-text);
+}
+
+html.aurora #tabs > li.active > a,
+html.aurora #tabs > li.active > a:hover,
+html.aurora #tabs > li.active > a:focus {
+  background: var(--a-accent);
+  color: var(--a-on-accent);
+  box-shadow: 0 6px 16px -6px var(--a-accent);
+}
+
+html.aurora #tabs .tabdrop .dropdown-toggle .caret {
+  border-top-color: currentColor;
+}
+
+html.aurora #tabs_content {
+  background: var(--a-surface);
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius);
+  box-shadow: var(--a-shadow);
+  padding: var(--a-pad);
+  margin-bottom: var(--a-gap);
+}
+
+/* Section headings inside the tabs (Finished Timelapses, Model info, ...) */
+html.aurora .octoprint-container .tab-content h1 {
+  color: var(--a-text);
+  border-bottom-color: var(--a-border);
+  font-size: 18px;
+  font-weight: 650;
+}
+
+/* Settings and other dialogs use the vertical nav list */
+html.aurora .nav-list {
+  padding: 0;
+}
+
+html.aurora .nav-list > li > a,
+html.aurora .nav-list .nav-header {
+  margin: 0;
+  text-shadow: none;
+}
+
+html.aurora .nav-list > li > a {
+  color: var(--a-text-2);
+  border-radius: var(--a-radius-sm);
+  padding: 6px 12px;
+}
+
+html.aurora .nav-list > li > a:hover {
+  background: var(--a-surface-3);
+  color: var(--a-text);
+}
+
+html.aurora .nav-list > .active > a,
+html.aurora .nav-list > .active > a:hover,
+html.aurora .nav-list > .active > a:focus {
+  background: var(--a-accent);
+  color: var(--a-on-accent);
+  text-shadow: none;
+}
+
+html.aurora .nav-list .nav-header {
+  color: var(--a-text-3);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding: 14px 12px 6px;
+}
+
+html.aurora .nav-list .divider {
+  background: var(--a-border);
+  border-bottom: 0;
+}
+
+/* Tabs used inside dialogs/plugins (not the main #tabs bar) */
+html.aurora .nav-tabs:not(#tabs) {
+  border-bottom-color: var(--a-border);
+}
+
+html.aurora .nav-tabs:not(#tabs) > li > a {
+  color: var(--a-text-2);
+  border-radius: var(--a-radius-sm) var(--a-radius-sm) 0 0;
+}
+
+html.aurora .nav-tabs:not(#tabs) > li > a:hover {
+  background: var(--a-surface-2);
+  border-color: var(--a-border) var(--a-border) transparent;
+}
+
+html.aurora .nav-tabs:not(#tabs) > .active > a,
+html.aurora .nav-tabs:not(#tabs) > .active > a:hover {
+  background: var(--a-surface);
+  color: var(--a-text);
+  border-color: var(--a-border) var(--a-border) transparent;
+  box-shadow: inset 0 2px 0 var(--a-accent);
+}
+
+html.aurora .nav-pills > li > a {
+  border-radius: 999px;
+  color: var(--a-text-2);
+}
+
+html.aurora .nav-pills > .active > a,
+html.aurora .nav-pills > .active > a:hover {
+  background: var(--a-accent);
+  color: var(--a-on-accent);
+}
+
+/* ===== Buttons ======================================================== */
+
+html.aurora .btn {
+  background: var(--a-surface-2);
+  background-image: none;
+  filter: none;
+  border: 1px solid var(--a-border-strong);
+  border-radius: var(--a-radius-sm);
+  box-shadow: none;
+  color: var(--a-text);
+  text-shadow: none;
+  font-weight: 550;
+  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s, filter 0.15s;
+}
+
+html.aurora .btn:hover,
+html.aurora .btn:focus {
+  background: var(--a-surface-3);
+  color: var(--a-text);
+  background-position: 0 0;
+}
+
+html.aurora .btn:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--a-accent-ring);
+}
+
+html.aurora .btn.active,
+html.aurora .btn:active {
+  background: var(--a-surface-3);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+html.aurora .btn.disabled,
+html.aurora .btn[disabled] {
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+html.aurora .btn-primary,
+html.aurora .btn-success,
+html.aurora .btn-danger,
+html.aurora .btn-warning,
+html.aurora .btn-info,
+html.aurora .btn-inverse {
+  border-color: transparent;
+  color: #fff;
+}
+
+html.aurora .btn-primary {
+  background: var(--a-accent);
+  color: var(--a-on-accent);
+  box-shadow: 0 6px 16px -8px var(--a-accent);
+}
+
+html.aurora .btn-success {
+  background: var(--a-success-fill);
+}
+
+html.aurora .btn-danger {
+  background: var(--a-danger-fill);
+}
+
+html.aurora .btn-warning {
+  background: var(--a-warning-fill);
+}
+
+html.aurora .btn-info {
+  background: var(--a-info-fill);
+}
+
+html.aurora .btn-inverse {
+  background: var(--a-text);
+  color: var(--a-bg);
+}
+
+html.aurora .btn-primary:hover,
+html.aurora .btn-primary:focus,
+html.aurora .btn-primary.active,
+html.aurora .btn-primary:active {
+  background: var(--a-accent);
+  color: var(--a-on-accent);
+  filter: brightness(1.08);
+}
+
+html.aurora .btn-success:hover,
+html.aurora .btn-success:focus,
+html.aurora .btn-success.active {
+  background: var(--a-success-fill);
+  color: #fff;
+  filter: brightness(1.08);
+}
+
+html.aurora .btn-danger:hover,
+html.aurora .btn-danger:focus,
+html.aurora .btn-danger.active {
+  background: var(--a-danger-fill);
+  color: #fff;
+  filter: brightness(1.08);
+}
+
+html.aurora .btn-warning:hover,
+html.aurora .btn-warning:focus,
+html.aurora .btn-warning.active {
+  background: var(--a-warning-fill);
+  color: #fff;
+  filter: brightness(1.08);
+}
+
+html.aurora .btn-info:hover,
+html.aurora .btn-info:focus,
+html.aurora .btn-info.active {
+  background: var(--a-info-fill);
+  color: #fff;
+  filter: brightness(1.08);
+}
+
+html.aurora .btn-link,
+html.aurora .btn-link:hover,
+html.aurora .btn-link:active {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--a-accent-text);
+}
+
+html.aurora .btn .caret {
+  border-top-color: currentColor;
+}
+
+html.aurora .btn-group > .btn {
+  border-radius: 0;
+}
+
+html.aurora .btn-group > .btn:first-child {
+  border-top-left-radius: var(--a-radius-sm);
+  border-bottom-left-radius: var(--a-radius-sm);
+}
+
+html.aurora .btn-group > .btn:last-child,
+html.aurora .btn-group > .dropdown-toggle {
+  border-top-right-radius: var(--a-radius-sm);
+  border-bottom-right-radius: var(--a-radius-sm);
+}
+
+html.aurora .btn-group > .btn:only-child {
+  border-radius: var(--a-radius-sm);
+}
+
+html.aurora .btn-group > .btn + .dropdown-toggle {
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.18);
+}
+
+html.aurora .btn-group.open .btn.dropdown-toggle {
+  background: var(--a-surface-3);
+}
+
+html.aurora .btn-group.open .btn-primary.dropdown-toggle {
+  background: var(--a-accent);
+}
+
+/* ===== Forms ========================================================== */
+
+html.aurora select,
+html.aurora textarea,
+html.aurora input[type="text"],
+html.aurora input[type="password"],
+html.aurora input[type="datetime"],
+html.aurora input[type="datetime-local"],
+html.aurora input[type="date"],
+html.aurora input[type="month"],
+html.aurora input[type="time"],
+html.aurora input[type="week"],
+html.aurora input[type="number"],
+html.aurora input[type="email"],
+html.aurora input[type="url"],
+html.aurora input[type="search"],
+html.aurora input[type="tel"],
+html.aurora input[type="color"],
+html.aurora .uneditable-input {
+  background: var(--a-surface-2);
+  border: 1px solid var(--a-border-strong);
+  border-radius: var(--a-radius-sm);
+  box-shadow: none;
+  color: var(--a-text);
+  font-family: var(--a-font);
+  transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+html.aurora select:focus,
+html.aurora textarea:focus,
+html.aurora input[type="text"]:focus,
+html.aurora input[type="password"]:focus,
+html.aurora input[type="number"]:focus,
+html.aurora input[type="email"]:focus,
+html.aurora input[type="url"]:focus,
+html.aurora input[type="search"]:focus,
+html.aurora input[type="tel"]:focus,
+html.aurora .uneditable-input:focus {
+  background: var(--a-surface);
+  border-color: var(--a-accent);
+  box-shadow: 0 0 0 3px var(--a-accent-ring);
+  outline: 0;
+}
+
+html.aurora input[disabled],
+html.aurora select[disabled],
+html.aurora textarea[disabled],
+html.aurora input[readonly],
+html.aurora select[readonly],
+html.aurora textarea[readonly] {
+  background: var(--a-surface-3);
+  color: var(--a-text-3);
+  cursor: not-allowed;
+}
+
+html.aurora input::placeholder,
+html.aurora textarea::placeholder {
+  color: var(--a-text-3);
+}
+
+html.aurora input[type="checkbox"],
+html.aurora input[type="radio"],
+html.aurora input[type="range"],
+html.aurora progress {
+  accent-color: var(--a-accent);
+}
+
+:where(html.aurora) label,
+:where(html.aurora) .control-label {
+  color: var(--a-text);
+}
+
+html.aurora .help-block,
+html.aurora .help-inline {
+  color: var(--a-text-3);
+}
+
+html.aurora .add-on {
+  background: var(--a-surface-3);
+  border-color: var(--a-border-strong);
+  color: var(--a-text-2);
+  text-shadow: none;
+}
+
+/* Rounded corners for input groups: inner seams square, outer corners round */
+html.aurora .input-append input,
+html.aurora .input-append select,
+html.aurora .input-append .uneditable-input,
+html.aurora .input-append .add-on,
+html.aurora .input-append .btn,
+html.aurora .input-append .btn-group > .dropdown-toggle,
+html.aurora .input-prepend input,
+html.aurora .input-prepend select,
+html.aurora .input-prepend .uneditable-input,
+html.aurora .input-prepend .add-on,
+html.aurora .input-prepend .btn {
+  border-radius: 0;
+}
+
+html.aurora .input-append > :first-child,
+html.aurora .input-prepend > :first-child,
+html.aurora .input-append > .btn-group:first-child > .btn:first-child,
+html.aurora .input-prepend > .btn-group:first-child > .btn:first-child {
+  border-top-left-radius: var(--a-radius-sm);
+  border-bottom-left-radius: var(--a-radius-sm);
+}
+
+html.aurora .input-append > :last-child,
+html.aurora .input-prepend > :last-child,
+html.aurora .input-append > .btn-group:last-child > .btn:last-child,
+html.aurora .input-prepend > .btn-group:last-child > .btn:last-child,
+html.aurora .input-append > .btn-group:last-child > .dropdown-toggle {
+  border-top-right-radius: var(--a-radius-sm);
+  border-bottom-right-radius: var(--a-radius-sm);
+}
+
+html.aurora input.search-query,
+html.aurora .search-query {
+  border-radius: 999px;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+html.aurora .search-query-with-clear .search-clear {
+  color: var(--a-text-3);
+}
+
+html.aurora .form-actions {
+  background: var(--a-surface-2);
+  border-top-color: var(--a-border);
+}
+
+html.aurora .control-group.error .control-label,
+html.aurora .control-group.error .help-block,
+html.aurora .control-group.error .help-inline {
+  color: var(--a-danger);
+}
+
+html.aurora .control-group.error input,
+html.aurora .control-group.error select,
+html.aurora .control-group.error textarea {
+  border-color: var(--a-danger);
+}
+
+/* ===== Tables ========================================================= */
+
+html.aurora .table {
+  color: var(--a-text);
+}
+
+html.aurora .table th,
+html.aurora .table td {
+  border-top-color: var(--a-border);
+  vertical-align: middle;
+}
+
+html.aurora .table thead th,
+html.aurora .table th {
+  color: var(--a-text-2);
+  font-weight: 600;
+}
+
+html.aurora .table-bordered {
+  border-color: var(--a-border);
+  border-radius: var(--a-radius-sm);
+  border-collapse: separate;
+  overflow: hidden;
+}
+
+html.aurora .table-bordered th,
+html.aurora .table-bordered td {
+  border-left-color: var(--a-border);
+}
+
+html.aurora .table-striped tbody > tr:nth-child(odd) > td,
+html.aurora .table-striped tbody > tr:nth-child(odd) > th {
+  background: var(--a-surface-2);
+}
+
+html.aurora .table-hover tbody tr:hover > td,
+html.aurora .table-hover tbody tr:hover > th {
+  background: var(--a-surface-3);
+}
+
+/* Bootstrap paints nested tables white (e.g. user details in the settings) */
+html.aurora .table .table {
+  background-color: transparent;
+}
+
+html.aurora .table tbody tr.success > td {
+  background: color-mix(in srgb, var(--a-success) 12%, transparent);
+}
+
+html.aurora .table tbody tr.error > td {
+  background: color-mix(in srgb, var(--a-danger) 12%, transparent);
+}
+
+html.aurora .table tbody tr.warning > td {
+  background: color-mix(in srgb, var(--a-warning) 12%, transparent);
+}
+
+html.aurora .table tbody tr.info > td {
+  background: color-mix(in srgb, var(--a-info) 12%, transparent);
+}
+
+/* ===== Alerts, labels, wells ========================================= */
+
+html.aurora .alert {
+  background: color-mix(in srgb, var(--a-warning) 12%, var(--a-surface));
+  border: 1px solid color-mix(in srgb, var(--a-warning) 30%, transparent);
+  border-radius: var(--a-radius-sm);
+  color: var(--a-text);
+  text-shadow: none;
+}
+
+html.aurora .alert-error,
+html.aurora .alert-danger {
+  background: color-mix(in srgb, var(--a-danger) 12%, var(--a-surface));
+  border-color: color-mix(in srgb, var(--a-danger) 30%, transparent);
+}
+
+html.aurora .alert-success {
+  background: color-mix(in srgb, var(--a-success) 12%, var(--a-surface));
+  border-color: color-mix(in srgb, var(--a-success) 30%, transparent);
+}
+
+html.aurora .alert-info {
+  background: color-mix(in srgb, var(--a-info) 12%, var(--a-surface));
+  border-color: color-mix(in srgb, var(--a-info) 30%, transparent);
+}
+
+html.aurora .alert h4,
+html.aurora .alert .alert-heading {
+  color: inherit;
+}
+
+html.aurora .label,
+html.aurora .badge {
+  border-radius: 999px;
+  text-shadow: none;
+  font-weight: 600;
+  padding: 2px 8px;
+  background: var(--a-surface-3);
+  color: var(--a-text-2);
+}
+
+html.aurora .label-success,
+html.aurora .badge-success {
+  background: var(--a-success-fill);
+  color: #fff;
+}
+
+html.aurora .label-important,
+html.aurora .badge-important {
+  background: var(--a-danger-fill);
+  color: #fff;
+}
+
+html.aurora .label-warning,
+html.aurora .badge-warning {
+  background: var(--a-warning-fill);
+  color: #fff;
+}
+
+html.aurora .label-info,
+html.aurora .badge-info {
+  background: var(--a-info-fill);
+  color: #fff;
+}
+
+html.aurora .well {
+  background: var(--a-surface-2);
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius-sm);
+  box-shadow: none;
+}
+
+html.aurora .close {
+  color: var(--a-text);
+  opacity: 0.45;
+  text-shadow: none;
+}
+
+html.aurora .close:hover {
+  opacity: 0.8;
+}
+
+/* "Support OctoPrint" banner in the About dialog */
+html.aurora .funding-banner {
+  background: color-mix(in srgb, var(--a-success) 12%, var(--a-surface));
+  border-color: color-mix(in srgb, var(--a-success) 30%, transparent);
+  border-radius: var(--a-radius-sm);
+}
+
+html.aurora .funding-banner a {
+  color: var(--a-text);
+  text-decoration: underline;
+}
+
+/* ===== Progress ======================================================= */
+
+html.aurora .progress {
+  background: var(--a-surface-3);
+  background-image: none;
+  border-radius: 999px;
+  box-shadow: none;
+  filter: none;
+}
+
+html.aurora .progress .bar {
+  background-color: var(--a-accent);
+  background-image: linear-gradient(90deg, var(--a-accent), var(--a-accent-2));
+  box-shadow: none;
+  filter: none;
+}
+
+html.aurora .progress-striped .bar {
+  background-image:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent),
+    linear-gradient(90deg, var(--a-accent), var(--a-accent-2));
+  background-size: 40px 40px, 100% 100%;
+}
+
+html.aurora .progress .bar-success,
+html.aurora .progress-success .bar {
+  background: var(--a-success);
+}
+
+html.aurora .progress .bar-danger,
+html.aurora .progress-danger .bar {
+  background: var(--a-danger);
+}
+
+html.aurora .progress .bar-warning,
+html.aurora .progress-warning .bar {
+  background: var(--a-warning);
+}
+
+html.aurora .progress-text-centered .progress-text-front {
+  color: var(--a-on-accent);
+}
+
+html.aurora .progress-text-centered .progress-text-back {
+  color: var(--a-text);
+}
+
+/* ===== Modals ========================================================= */
+
+html.aurora .modal-backdrop,
+html.aurora .modal-backdrop.fade.in {
+  background: #05060a;
+  opacity: 0.55;
+}
+
+html.aurora .modal {
+  background: var(--a-surface);
+  border: 1px solid var(--a-border-strong);
+  border-radius: calc(var(--a-radius) + 4px);
+  box-shadow: var(--a-shadow-lg);
+  color: var(--a-text);
+  overflow: hidden;
+}
+
+html.aurora .modal-header {
+  border-bottom: 1px solid var(--a-border);
+  padding: 16px 22px;
+}
+
+html.aurora .modal-header h3 {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+html.aurora .modal-body {
+  padding: 18px 22px;
+}
+
+html.aurora .modal-footer {
+  background: var(--a-surface-2);
+  border-top: 1px solid var(--a-border);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 14px 22px;
+}
+
+/* ===== Popovers / tooltips / notifications =========================== */
+
+html.aurora .popover {
+  background: var(--a-surface);
+  border: 1px solid var(--a-border-strong);
+  border-radius: var(--a-radius-sm);
+  box-shadow: var(--a-shadow-lg);
+  color: var(--a-text);
+}
+
+html.aurora .popover-title {
+  background: var(--a-surface-2);
+  border-bottom-color: var(--a-border);
+  border-radius: var(--a-radius-sm) var(--a-radius-sm) 0 0;
+}
+
+html.aurora .popover.top .arrow::after {
+  border-top-color: var(--a-surface);
+}
+
+html.aurora .popover.bottom .arrow::after {
+  border-bottom-color: var(--a-surface);
+}
+
+html.aurora .popover.left .arrow::after {
+  border-left-color: var(--a-surface);
+}
+
+html.aurora .popover.right .arrow::after {
+  border-right-color: var(--a-surface);
+}
+
+html.aurora .tooltip-inner {
+  background: var(--a-text);
+  color: var(--a-bg);
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+
+html.aurora .tooltip.top .tooltip-arrow {
+  border-top-color: var(--a-text);
+}
+
+html.aurora .tooltip.bottom .tooltip-arrow {
+  border-bottom-color: var(--a-text);
+}
+
+html.aurora .tooltip.left .tooltip-arrow {
+  border-left-color: var(--a-text);
+}
+
+html.aurora .tooltip.right .tooltip-arrow {
+  border-right-color: var(--a-text);
+}
+
+html.aurora .ui-pnotify .alert,
+html.aurora .ui-pnotify-container {
+  border-radius: var(--a-radius);
+  box-shadow: var(--a-shadow-lg);
+}
+
+html.aurora .ui-pnotify .alert {
+  background: color-mix(in srgb, var(--a-surface) 92%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-left: 4px solid var(--a-warning);
+}
+
+html.aurora .ui-pnotify .alert-error {
+  border-left-color: var(--a-danger);
+}
+
+html.aurora .ui-pnotify .alert-success {
+  border-left-color: var(--a-success);
+}
+
+html.aurora .ui-pnotify .alert-info {
+  border-left-color: var(--a-info);
+}
+
+html.aurora .pagination ul {
+  box-shadow: none;
+}
+
+html.aurora .pagination ul > li > a,
+html.aurora .pagination ul > li > span {
+  background: var(--a-surface);
+  border-color: var(--a-border);
+  color: var(--a-text-2);
+}
+
+html.aurora .pagination ul > li > a:hover {
+  background: var(--a-surface-3);
+}
+
+html.aurora .pagination ul > .active > a,
+html.aurora .pagination ul > .active > span {
+  background: var(--a-accent);
+  color: var(--a-on-accent);
+}
+
+html.aurora .pagination ul > li:first-child > a {
+  border-radius: var(--a-radius-sm) 0 0 var(--a-radius-sm);
+}
+
+html.aurora .pagination ul > li:last-child > a {
+  border-radius: 0 var(--a-radius-sm) var(--a-radius-sm) 0;
+}
+
+/* ===== Temperature tab =============================================== */
+
+html.aurora #temperature-graph {
+  border-radius: var(--a-radius-sm);
+}
+
+html.aurora.aurora-no-watermark #temperature-graph {
+  background-image: none;
+}
+
+html.aurora #temperature-graph .flot-tick-label,
+html.aurora #temperature-graph .tickLabel,
+html.aurora #temperature-graph .legendLabel {
+  color: var(--a-text-3);
+  font-size: 11px;
+}
+
+html.aurora #temperature-graph .legend > div {
+  background: transparent !important;
+}
+
+html.aurora #temperature-graph .legend table {
+  color: var(--a-text-2);
+}
+
+html.aurora #temperature-graph .legendColorBox > div {
+  border: 0 !important;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+html.aurora #temperature-table {
+  margin-top: var(--a-gap);
+}
+
+html.aurora #temperature-table th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+html.aurora #temperature-table td.temperature_actual,
+html.aurora #temperature-table td:nth-child(2) {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  font-size: 15px;
+}
+
+/* ===== Control tab ==================================================== */
+
+html.aurora #control .jog-panel h1 {
+  color: var(--a-text-2);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+html.aurora #control .jog-panel .btn.box {
+  border-radius: var(--a-radius-sm);
+}
+
+/* fixed-width jog buttons: keep labels like "Motors off" inside */
+html.aurora #control .jog-panel .btn {
+  padding-left: 4px;
+  padding-right: 4px;
+  font-weight: 500;
+}
+
+html.aurora #webcam_container,
+html.aurora #webcam_img_container,
+html.aurora #webcam_rotator,
+html.aurora .webcam_rotator {
+  border-radius: var(--a-radius);
+  overflow: hidden;
+  background: #000;
+}
+
+/* the webcam area stays black in both themes (e.g. "stream not loaded" text) */
+html.aurora #webcam_container a,
+html.aurora #webcam_img_container a,
+html.aurora #webcam_container strong,
+html.aurora #webcam_img_container strong {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+html.aurora #control .control-box,
+html.aurora #control .btn-block.control-box {
+  border-radius: var(--a-radius-sm);
+}
+
+/* ===== Terminal ======================================================= */
+
+html.aurora #terminal-output,
+html.aurora #terminal-output-lowfi {
+  background: #0a0c12;
+  color: #cdd3e6;
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius-sm);
+  font-family: var(--a-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 12px 14px;
+}
+
+html.aurora #term .terminal input[type="text"],
+html.aurora #terminal-command {
+  font-family: var(--a-mono);
+}
+
+/* ===== GCode viewer =================================================== */
+
+html.aurora #gcode_canvas,
+html.aurora #gcode canvas {
+  border-radius: var(--a-radius-sm);
+}
+
+/* Range sliders (GCode viewer layers/commands, plugins) */
+html.aurora .slider .slider-track {
+  background: var(--a-surface-3);
+  background-image: none;
+  border-radius: 999px;
+  box-shadow: none;
+  filter: none;
+}
+
+html.aurora .slider .slider-selection {
+  background: var(--a-accent-soft);
+  background-image: none;
+  border-radius: 999px;
+  box-shadow: none;
+  filter: none;
+}
+
+html.aurora .slider .slider-handle {
+  background: var(--a-accent);
+  background-image: none;
+  border: 3px solid var(--a-surface);
+  box-shadow: 0 0 0 1px var(--a-border-strong);
+  filter: none;
+  opacity: 1;
+}
+
+html.aurora .slider.slider-disabled .slider-handle {
+  background: var(--a-text-3);
+}
+
+html.aurora #gcode_canvas,
+html.aurora #gcode canvas {
+  border: 1px solid var(--a-border);
+}
+
+/* ===== Footer ========================================================= */
+
+html.aurora .footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 var(--a-gap);
+  padding: 14px 0 0;
+  border-top: 1px solid var(--a-border);
+  color: var(--a-text-3);
+}
+
+html.aurora .footer ul {
+  float: none;
+  margin: 0;
+}
+
+html.aurora .footer ul li a {
+  color: var(--a-text-3);
+}
+
+html.aurora .footer ul li a:hover {
+  color: var(--a-text);
+}
+
+/* ===== Navbar theme toggle =========================================== */
+
+html.aurora #navbar_plugin_aurora > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+}
+
+html:not(.aurora) #navbar_plugin_aurora {
+  display: none;
+}
+
+/* ===== Settings page of the plugin =================================== */
+
+html.aurora #settings_plugin_aurora .aurora-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+html.aurora #settings_plugin_aurora .aurora-swatch {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 999px;
+  border: 2px solid var(--a-surface);
+  box-shadow: 0 0 0 1px var(--a-border-strong);
+  cursor: pointer;
+}
+
+html.aurora #settings_plugin_aurora .aurora-swatch.active {
+  box-shadow: 0 0 0 2px var(--a-text);
+}
+
+html.aurora #settings_plugin_aurora input[type="color"] {
+  width: 44px;
+  height: 30px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+html.aurora #settings_plugin_aurora input[type="range"] {
+  width: 220px;
+  vertical-align: middle;
+}
+
+/* ===== Responsive ===================================================== */
+
+@media (max-width: 1100px) {
+  html.aurora {
+    --a-sidebar-w: 320px;
+  }
+}
+
+@media (max-width: 979px) {
+  html.aurora .octoprint-container > .row,
+  html.aurora[data-aurora-sidebar="right"] .octoprint-container > .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html.aurora[data-aurora-sidebar="right"] .octoprint-container > .row > #sidebar {
+    order: 0;
+  }
+
+  html.aurora #navbar .nav-collapse {
+    height: auto;
+    overflow: visible;
+    clear: none;
+  }
+
+  html.aurora #navbar .nav-collapse .nav {
+    float: right;
+    margin: 0;
+  }
+
+  html.aurora #navbar .nav-collapse .nav > li {
+    float: left;
+  }
+
+  html.aurora #navbar .nav-collapse .nav > li > a {
+    margin: 12px 2px;
+  }
+
+  html.aurora #navbar .nav-collapse .dropdown-menu {
+    position: absolute;
+    right: 0;
+    left: auto;
+    float: none;
+    display: none;
+    background: var(--a-surface);
+    border: 1px solid var(--a-border-strong);
+    box-shadow: var(--a-shadow-lg);
+  }
+
+  html.aurora #navbar .nav-collapse .open > .dropdown-menu {
+    display: block;
+  }
+}
+
+@media (max-width: 767px) {
+  html.aurora body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  html.aurora #navbar {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  html.aurora #navbar .container,
+  html.aurora .octoprint-container {
+    padding: 0 12px;
+  }
+
+  html.aurora #navbar .navbar-inner .brand {
+    font-size: 16px;
+    padding-right: 8px;
+  }
+
+  html.aurora #navbar > .navbar-inner .nav > li > a {
+    padding: 8px 9px;
+  }
+
+  html.aurora #tabs > li > a {
+    padding: 7px 11px;
+  }
+
+  html.aurora .modal {
+    border-radius: var(--a-radius);
+  }
+}
+
+/* ===== UI Customizer ================================================== */
+
+/* It fixes the header to the top and the footer to the bottom
+   (body.UICfixedHeader / body.UICfixedFooter) and keeps its own column
+   layout; Aurora only provides the colors there. */
+html.aurora body.UICfixedHeader #navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-bottom: 0;
+}
+
+html.aurora body.UICfixedHeader {
+  margin-top: calc(61px + var(--a-gap));
+}
+
+html.aurora body.UICfixedFooter .footer {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border-top: 0;
+}
+
+html.aurora .footer .navbar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px 16px;
+  width: auto;
+  min-height: 0;
+  padding: 8px 24px;
+  background: var(--a-surface);
+  background-image: none;
+  filter: none;
+  border: 0;
+  border-top: 1px solid var(--a-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html.aurora.aurora-glass .footer .navbar-inner {
+  background: var(--a-nav-bg);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+}
+
+html.aurora .footer .navbar-inner .nav,
+html.aurora .footer .navbar-inner .brand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  float: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--a-text-3);
+  text-shadow: none;
+}
+
+html.aurora .footer .navbar-inner .nav > li {
+  float: none;
+}
+
+html.aurora .footer .navbar-inner .nav > li > a {
+  padding: 4px 0;
+  color: var(--a-text-3);
+  text-shadow: none;
+  background: transparent;
+}
+
+html.aurora .footer .navbar-inner .nav > li > a:hover {
+  color: var(--a-text);
+}
+
+/* its settings menu (a navbar inside the settings dialog) and breadcrumb */
+html.aurora #UICsettingsMenuNav {
+  background: var(--a-surface);
+  background-image: none;
+}
+
+html.aurora #UICsettingsMenuNav .navbar-inner {
+  background: var(--a-surface-2);
+  background-image: none;
+  filter: none;
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius-sm);
+  box-shadow: none;
+}
+
+html.aurora #UICsettingsMenu > li > a {
+  color: var(--a-text-2);
+  text-shadow: none;
+  border-radius: calc(var(--a-radius-sm) * 0.75);
+}
+
+html.aurora #UICsettingsMenu > li > a:hover,
+html.aurora #UICsettingsMenu > li > a:focus,
+html.aurora #UICsettingsMenu > li.open > a,
+html.aurora #UICsettingsMenu > li.active > a {
+  background: var(--a-surface-3);
+  color: var(--a-text);
+}
+
+html.aurora #UICsettingsMenu .caret {
+  border-top-color: currentColor;
+  border-bottom-color: currentColor;
+}
+
+html.aurora #settings_dialog_label * {
+  color: var(--a-text-2);
+}
+
+/* keep the end of the page clear of the fixed footer */
+html.aurora body.UICfixedFooter {
+  padding-bottom: 56px;
+}
+
+/* Chartist charts (UI Customizer's temperature widget) */
+html.aurora .ct-label {
+  color: var(--a-text-3);
+  fill: var(--a-text-3);
+}
+
+html.aurora .ct-grid {
+  stroke: var(--a-border-strong);
+}
+
+/* ===== Browsers without color-mix() ================================== */
+
+/* Older browsers (e.g. the one on a printer's touch screen) drop the
+   tinted backgrounds above; give those elements plain, readable ones. */
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  html.aurora .alert,
+  html.aurora .funding-banner {
+    background: var(--a-surface-2);
+    border-color: var(--a-border-strong);
+    border-left: 4px solid var(--a-warning);
+  }
+
+  html.aurora .alert-error,
+  html.aurora .alert-danger {
+    border-left-color: var(--a-danger);
+  }
+
+  html.aurora .alert-success,
+  html.aurora .funding-banner {
+    border-left-color: var(--a-success);
+  }
+
+  html.aurora .alert-info {
+    border-left-color: var(--a-info);
+  }
+
+  html.aurora .table tbody tr.success > td,
+  html.aurora .table tbody tr.error > td,
+  html.aurora .table tbody tr.warning > td,
+  html.aurora .table tbody tr.info > td {
+    background: var(--a-surface-2);
+  }
+
+  html.aurora .ui-pnotify .alert {
+    background: var(--a-surface);
+  }
+
+  html.aurora #drop_overlay .dropzone_background,
+  html.aurora #drop_overlay #drop_background,
+  html.aurora #drop_overlay #drop_locally_background,
+  html.aurora #drop_overlay #drop_sd_background {
+    background: var(--a-bg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.aurora * {
+    transition: none !important;
+  }
+}

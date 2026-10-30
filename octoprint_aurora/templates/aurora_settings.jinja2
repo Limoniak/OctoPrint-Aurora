@@ -1,0 +1,124 @@
+<h3>Aurora UI</h3>
+
+<div class="alert alert-info" data-bind="visible: touchUiActive" style="display: none">
+    {{ _('TouchUI is active in this browser: Aurora is paused while it is in use.') }}
+</div>
+
+<div class="alert" data-bind="visible: s.enabled() && themeifyActive()" style="display: none">
+    {{ _('Themeify is also active. Two themes at the same time give mixed results: disable one of them.') }}
+</div>
+
+<form class="form-horizontal" onsubmit="return false;">
+    <div class="control-group">
+        <div class="controls">
+            <label class="checkbox">
+                <input type="checkbox" data-bind="checked: s.enabled"> {{ _('Enable the Aurora theme') }}
+            </label>
+            <span class="help-block">{{ _('Changes are previewed live. They are only kept once you click Save.') }}</span>
+        </div>
+    </div>
+
+    <div data-bind="visible: s.enabled">
+        <legend>{{ _('Appearance') }}</legend>
+
+        <div class="control-group">
+            <label class="control-label">{{ _('Theme') }}</label>
+            <div class="controls">
+                <div class="btn-group">
+                    <button type="button" class="btn" data-bind="css: { active: s.mode() === 'auto' }, click: function() { setMode('auto') }"><i class="fas fa-circle-half-stroke"></i> {{ _('Auto') }}</button>
+                    <button type="button" class="btn" data-bind="css: { active: s.mode() === 'light' }, click: function() { setMode('light') }"><i class="fas fa-sun"></i> {{ _('Light') }}</button>
+                    <button type="button" class="btn" data-bind="css: { active: s.mode() === 'dark' }, click: function() { setMode('dark') }"><i class="fas fa-moon"></i> {{ _('Dark') }}</button>
+                </div>
+                <span class="help-block">{{ _('"Auto" follows the operating system. The moon/sun button in the navbar lets each browser override it.') }}</span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">{{ _('Accent color') }}</label>
+            <div class="controls">
+                <div class="aurora-swatches">
+                    <!-- ko foreach: presets -->
+                    <button type="button" class="aurora-swatch" data-bind="style: { background: $data }, css: { active: $parent.s.accent() === $data }, click: function() { $parent.selectAccent($data) }, attr: { title: $data, 'aria-label': $data }"></button>
+                    <!-- /ko -->
+                    <input type="color" data-bind="value: s.accent, valueUpdate: 'input'" title="{{ _('Custom color')|edq }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">{{ _('Logo') }}</label>
+            <div class="controls">
+                <div class="btn-group">
+                    <button type="button" class="btn" data-bind="css: { active: s.logo() === 'octoprint' }, click: function() { s.logo('octoprint') }">{{ _('OctoPrint (original)') }}</button>
+                    <button type="button" class="btn" data-bind="css: { active: s.logo() === 'aurora' }, click: function() { s.logo('aurora') }">{{ _('Nozzle') }}</button>
+                    <button type="button" class="btn" data-bind="css: { active: s.logo() === 'none' }, click: function() { s.logo('none') }">{{ _('Text only') }}</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">{{ _('Instance color') }}</label>
+            <div class="controls">
+                <select data-bind="value: s.instance">
+                    <option value="stripe">{{ _('Thin stripe at the top') }}</option>
+                    <option value="accent">{{ _('Use as accent color') }}</option>
+                    <option value="none">{{ _('Ignore') }}</option>
+                </select>
+                <span class="help-block">{{ _('Uses the color chosen in Settings > Appearance, to tell several printers apart.') }}</span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">{{ _('Corner radius') }}</label>
+            <div class="controls">
+                <input type="range" min="0" max="28" step="1" data-bind="value: s.radius, valueUpdate: 'input'">
+                <span class="muted" data-bind="text: s.radius() + ' px'"></span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">{{ _('Effects') }}</label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.glass"> {{ _('Background glow and translucent navbar') }}
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.graph"> {{ _('Theme the temperature graph colors') }}
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.watermark"> {{ _('Show the OctoPrint watermark behind the temperature graph') }}
+                </label>
+            </div>
+        </div>
+
+        <legend>{{ _('Layout') }}</legend>
+
+        <div class="control-group">
+            <label class="control-label">{{ _('Density') }}</label>
+            <div class="controls">
+                <select data-bind="value: s.density">
+                    <option value="comfortable">{{ _('Comfortable') }}</option>
+                    <option value="compact">{{ _('Compact') }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">{{ _('Sidebar position') }}</label>
+            <div class="controls">
+                <select data-bind="value: s.sidebar">
+                    <option value="left">{{ _('Left') }}</option>
+                    <option value="right">{{ _('Right') }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.wide"> {{ _('Use the full width of large screens') }}
+                </label>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,191 @@
+{#- Login page stylesheet, rendered by the plugin's /login.css route.
+    The theme tokens come straight from static/css/aurora.css (single source);
+    only the accent-derived values and the larger card shadow are set here. -#}
+{%- macro light() -%}
+{{ tokens.light }}
+  --a-accent-text: {{ accent_text_light }};
+  --a-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 24px 64px -16px rgba(15, 23, 42, 0.18);
+{%- endmacro -%}
+{%- macro dark() -%}
+{{ tokens.dark }}
+  --a-accent-text: {{ accent_text_dark }};
+  --a-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 30px 80px -10px rgba(0, 0, 0, 0.7);
+{%- endmacro -%}
+:root {
+  --a-accent: {{ accent }};
+  --a-radius: {{ radius }}px;
+  --a-radius-sm: calc(var(--a-radius) * 0.6);
+  --a-font: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+{% if mode == "dark" %}{{ dark() }}{% else %}{{ light() }}{% endif %}
+}
+{% if mode == "auto" %}
+@media (prefers-color-scheme: dark) {
+  :root {
+{{ dark() }}
+  }
+}
+{% endif %}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(900px 500px at 15% -10%, {{ glow_1 }}, transparent 60%),
+    radial-gradient(700px 400px at 100% 100%, {{ glow_2 }}, transparent 60%),
+    var(--a-bg);
+  color: var(--a-text);
+  font-family: var(--a-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+#login.container,
+#mfa.container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0;
+}
+
+.form-signin {
+  max-width: none;
+  padding: 36px 32px 32px;
+  margin: 0;
+  background: var(--a-surface);
+  border: 1px solid var(--a-border);
+  border-radius: calc(var(--a-radius) + 6px);
+  box-shadow: var(--a-shadow);
+}
+
+.form-signin-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  margin: 0 0 24px;
+  color: var(--a-text);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+{% if logo == "aurora" %}
+.form-signin-heading::before {
+  content: "";
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background:
+    url("{{ url_for('plugin.aurora.static', filename='img/brand.svg') }}") center / 28px 28px no-repeat,
+    linear-gradient(135deg, var(--a-accent), {{ accent_2 }});
+  box-shadow: 0 10px 24px -8px var(--a-accent);
+}
+{% elif logo != "none" %}
+.form-signin-heading::before {
+  content: "";
+  width: 44px;
+  height: 44px;
+  background: url("{{ url_for('static', filename='img/tentacle-76x76.png') }}") center / contain no-repeat;
+}
+{% endif %}
+
+.form-signin p,
+.form-signin label {
+  color: var(--a-text-2);
+}
+
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+  height: auto;
+  padding: 11px 14px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  background: var(--a-surface-2);
+  border: 1px solid var(--a-border-strong);
+  border-radius: var(--a-radius-sm);
+  box-shadow: none;
+  color: var(--a-text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-signin input[type="text"]:focus,
+.form-signin input[type="password"]:focus {
+  outline: 0;
+  border-color: var(--a-accent);
+  box-shadow: 0 0 0 3px {{ accent_ring }};
+}
+
+.form-signin input::placeholder {
+  color: var(--a-text-3);
+}
+
+.form-signin input[type="checkbox"] {
+  accent-color: var(--a-accent);
+}
+
+.form-signin .checkbox {
+  margin: 4px 0 22px;
+}
+
+.form-signin a {
+  color: var(--a-accent-text);
+}
+
+.form-signin .btn-primary {
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  background: var(--a-accent);
+  background-image: none;
+  border: 0;
+  border-radius: var(--a-radius-sm);
+  box-shadow: 0 10px 24px -10px var(--a-accent);
+  color: {{ on_accent }};
+  text-shadow: none;
+  filter: none;
+  transition: filter 0.15s;
+}
+
+.form-signin .btn-primary:hover,
+.form-signin .btn-primary:focus {
+  filter: brightness(1.08);
+}
+
+.form-signin .alert {
+  background: color-mix(in srgb, var(--a-danger) 12%, var(--a-surface));
+  border: 1px solid color-mix(in srgb, var(--a-danger) 30%, transparent);
+  border-radius: var(--a-radius-sm);
+  color: var(--a-text);
+  text-shadow: none;
+}
+
+#mfa-options .accordion-group {
+  border-color: var(--a-border);
+  border-radius: var(--a-radius-sm);
+}
+
+#login-overlay .background {
+  background: var(--a-bg);
+}
+
+#login-overlay .content {
+  color: var(--a-accent);
+}
+
+/* Older browsers without color-mix(): plain error box */
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .form-signin .alert {
+    background: var(--a-surface-2);
+    border-color: var(--a-border-strong);
+    border-left: 4px solid var(--a-danger);
+  }
+}

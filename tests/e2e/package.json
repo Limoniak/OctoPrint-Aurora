@@ -1,0 +1,9 @@
+{
+  "name": "octoprint-aurora-e2e",
+  "private": true,
+  "description": "Browser tests for Aurora UI, run by tests/run_e2e.sh",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}
