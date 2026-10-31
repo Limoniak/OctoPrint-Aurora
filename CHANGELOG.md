@@ -19,6 +19,7 @@ First release.
 - Print progress in the browser tab: title ("42% · file") and a progress ring as the tab icon.
 - Floating webcam opened from the navbar: stays on screen on every tab, can be dragged and resized, and popped out into picture-in-picture where the browser supports it. The stream stops when it is closed.
 - Terminal tools: G-code coloring, the last commands sent from this browser one click away, and favorite commands as buttons (edited in the settings or starred from the terminal).
+- File list grid view: a button in the Files panel header switches between the list and a grid of cards with each model's thumbnail (Slicer Thumbnails, Cura Thumbnails); clicking a thumbnail loads the file or opens the folder. Remembered per browser.
 - Customizable layout: hide and reorder sidebar panels and tabs from the settings, with live preview; folded panels stay folded per browser. Turned off when UI Customizer manages the layout.
 
 ### Settings and languages

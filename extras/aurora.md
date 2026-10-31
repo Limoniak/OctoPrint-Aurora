@@ -52,6 +52,8 @@ forms, a styled login page, and a temperature graph and GCode viewer drawn in th
 * **Light, dark or automatic theme**, following the operating system, with a navbar button to switch per browser.
 * **Accent color** of your choice; text on colored buttons stays readable automatically.
 * **Layout options**: sidebar left or right, compact density, full width, corner radius.
+* **Built for printing**: a print status card with thumbnail and progress, progress in the browser tab, a floating webcam, a colored terminal with favorite commands, and a file grid with thumbnails.
+* **Your layout**: hide and reorder sidebar panels and tabs.
 * **Instance color** from Settings > Appearance shown as a thin stripe, to tell several printers apart.
 * **Translated** into English, French, Spanish, Portuguese, Russian, German and Italian.
 * **Accessible**: text contrast meets WCAG AA in both themes.

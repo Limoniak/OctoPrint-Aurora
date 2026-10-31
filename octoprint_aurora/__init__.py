@@ -14,7 +14,7 @@ INSTANCE_MODES = ("stripe", "accent", "none")
 HEX_COLOR = re.compile(r"^#[0-9a-fA-F]{6}$")
 ELEMENT_ID = re.compile(r"^[A-Za-z0-9_-]{1,100}$")
 
-FEATURE_FLAGS = ("print_card", "tab_progress", "webcam_float", "terminal_tools")
+FEATURE_FLAGS = ("print_card", "tab_progress", "webcam_float", "terminal_tools", "file_grid")
 LAYOUT_LISTS = (
     "layout_sidebar_order",
     "layout_sidebar_hidden",
@@ -123,6 +123,7 @@ class AuroraPlugin(
             "tab_progress": True,
             "webcam_float": True,
             "terminal_tools": True,
+            "file_grid": True,
             "terminal_favorites": ["M114", "M105", "M503", "G28", "M84"],
             # layout: element ids of the sidebar panels and tabs
             "layout_sidebar_order": [],
@@ -181,6 +182,7 @@ class AuroraPlugin(
                 "js/aurora_webcam.js",
                 "js/aurora_terminal.js",
                 "js/aurora_layout.js",
+                "js/aurora_files.js",
             ],
         }
 
@@ -205,6 +207,7 @@ class AuroraPlugin(
             {"type": "generic", "template": "aurora_printcard.jinja2", "custom_bindings": True},
             {"type": "generic", "template": "aurora_floating_webcam.jinja2", "custom_bindings": True},
             {"type": "generic", "template": "aurora_terminal.jinja2", "custom_bindings": True},
+            {"type": "generic", "template": "aurora_files_view.jinja2", "custom_bindings": True},
         ]
 
     ##~~ BlueprintPlugin
