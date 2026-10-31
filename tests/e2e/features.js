@@ -119,6 +119,12 @@ const stateText = (page) => page.evaluate(() => document.querySelector("#state")
         await page.click("#navbar_plugin_aurora_webcam > a");
         await page.waitForTimeout(1500);
         t.check(await page.isVisible("#aurora_webcam"), "the floating webcam opens");
+        const sizes = [];
+        for (let i = 0; i < 4; i++) {
+            sizes.push(await page.$eval("#aurora_webcam", (el) => el.offsetWidth + "x" + el.offsetHeight));
+            await page.waitForTimeout(400);
+        }
+        t.check(new Set(sizes).size === 1, `it keeps its size once open (${sizes.join(" ")})`);
         const src = await page.$eval("#aurora_webcam img", (img) => img.getAttribute("src"));
         t.check(src && !src.startsWith(BLANK), `it shows the stream (${src})`);
 

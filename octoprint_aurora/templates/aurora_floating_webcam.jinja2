@@ -8,8 +8,8 @@
             <i class="fas fa-times" aria-hidden="true"></i>
         </button>
     </div>
-    <div class="aurora-webcam-body">
-        <img alt="{{ _('Webcam stream')|edq }}" data-bind="attr: { src: streamSrc }, style: { transform: transform }, event: { load: onLoad, error: onError }">
+    <div class="aurora-webcam-body" data-bind="style: bodyStyle">
+        <img alt="{{ _('Webcam stream')|edq }}" data-bind="attr: { src: streamSrc }, event: { load: onLoad, error: onError }">
         <p class="aurora-webcam-error" style="display: none" data-bind="visible: error">{{ _('The webcam stream could not be loaded.') }}</p>
     </div>
 </div>

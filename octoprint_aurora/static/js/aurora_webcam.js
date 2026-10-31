@@ -68,15 +68,78 @@
             return self.showing() ? self.streamUrl() : BLANK;
         });
 
+        // width / height of the stream, known once its first frame is in
+        self.ratio = ko.observable(16 / 9);
+
+        self.rotated = ko.pureComputed(function () {
+            var c = cam();
+            return !!(c && c.rotate90 && c.rotate90());
+        });
+
+        // same order as OctoPrint's own webcam: turned, then mirrored
         self.transform = ko.pureComputed(function () {
             var c = cam();
             if (!c) return "";
             var parts = [];
+            if (self.rotated()) parts.push("rotate(-90deg)");
             if (c.flipH && c.flipH()) parts.push("scaleX(-1)");
             if (c.flipV && c.flipV()) parts.push("scaleY(-1)");
-            if (c.rotate90 && c.rotate90()) parts.push("rotate(-90deg)");
             return parts.join(" ");
         });
+
+        // a turned stream gets a portrait window, and the picture is sized
+        // before it is turned so that, once turned, it fills it exactly
+        self.bodyStyle = ko.pureComputed(function () {
+            var ratio = self.ratio();
+            return {aspectRatio: self.rotated() ? "1 / " + ratio : ratio + " / 1"};
+        });
+
+        var imageStyle = function () {
+            if (self.inPip()) {
+                return self.rotated()
+                    ? {position: "", maxWidth: "", left: "", top: "", width: "100vh", height: "100vw", objectFit: "contain", transform: self.transform()}
+                    : {position: "", maxWidth: "", left: "", top: "", width: "100%", height: "100%", objectFit: "contain", transform: self.transform()};
+            }
+            if (!self.rotated()) {
+                return {position: "", maxWidth: "", left: "", top: "", width: "", height: "", objectFit: "", transform: self.transform()};
+            }
+            var ratio = self.ratio();
+            return {
+                position: "absolute",
+                // Bootstrap caps images at the width of their box: this one
+                // is wider than the box until it is turned
+                maxWidth: "none",
+                left: "50%",
+                top: "50%",
+                width: ratio * 100 + "%",
+                height: 100 / ratio + "%",
+                objectFit: "",
+                transform: "translate(-50%, -50%) " + self.transform()
+            };
+        };
+
+        var image = function () {
+            var el = document.getElementById("aurora_webcam");
+            return el && el.querySelector("img");
+        };
+
+        // reads the stream's size: an MJPEG stream never finishes loading, so
+        // its size is polled for a few seconds once the window opens
+        var sizeTimer = null;
+        var readSize = function () {
+            window.clearInterval(sizeTimer);
+            var tries = 0;
+            sizeTimer = window.setInterval(function () {
+                var img = image();
+                tries++;
+                if (img && img.naturalWidth && img.naturalHeight) {
+                    self.ratio(img.naturalWidth / img.naturalHeight);
+                    window.clearInterval(sizeTimer);
+                } else if (tries > 40) {
+                    window.clearInterval(sizeTimer);
+                }
+            }, 250);
+        };
 
         self.buttonTitle = ko.pureComputed(function () {
             return self.open() ? gettext("Close the floating webcam") : gettext("Open the floating webcam");
@@ -86,13 +149,25 @@
             return self.inPip() ? gettext("Back to the page") : gettext("Picture in picture");
         });
 
+        self.viewportHeight = ko.observable(window.innerHeight);
+
+        // the width the window is drawn at: a turned (portrait) picture is
+        // narrowed so that the window is never taller than the screen
+        var BAR_HEIGHT = 40;
+        self.shownWidth = ko.pureComputed(function () {
+            var width = self.width();
+            if (!self.rotated()) return width;
+            var fit = Math.floor((self.viewportHeight() - 2 * MARGIN - BAR_HEIGHT) / self.ratio());
+            return Math.max(MIN_WIDTH, Math.min(width, fit));
+        });
+
         self.frameStyle = ko.pureComputed(function () {
             return {
                 left: self.x() === undefined ? "auto" : self.x() + "px",
                 top: self.y() === undefined ? "auto" : self.y() + "px",
                 right: self.x() === undefined ? MARGIN + "px" : "auto",
                 bottom: self.y() === undefined ? MARGIN + "px" : "auto",
-                width: self.width() + "px"
+                width: self.shownWidth() + "px"
             };
         });
 
@@ -129,8 +204,11 @@
             if (self.open()) self.toggle();
         };
 
-        self.onLoad = function () {
+        self.onLoad = function (data, event) {
+            var img = event.target;
+            if (img.getAttribute("src") === BLANK) return;
             self.error(false);
+            if (img.naturalWidth && img.naturalHeight) self.ratio(img.naturalWidth / img.naturalHeight);
         };
 
         self.onError = function (data, event) {
@@ -171,20 +249,16 @@
                 pipWindow.close();
                 return;
             }
-            var img = frame().querySelector("img");
-            var height = Math.round((self.width() * 9) / 16);
+            var img = image();
+            var height = Math.round(self.rotated() ? self.shownWidth() * self.ratio() : self.shownWidth() / self.ratio());
             window.documentPictureInPicture
-                .requestWindow({width: self.width(), height: height})
+                .requestWindow({width: self.shownWidth(), height: height})
                 .then(function (win) {
                     pipWindow = win;
-                    win.document.body.style.cssText = "margin:0;background:#000;display:grid;place-items:center;height:100vh";
-                    img.style.width = "100%";
-                    img.style.height = "100%";
-                    img.style.objectFit = "contain";
+                    win.document.body.style.cssText = "margin:0;background:#000;display:grid;place-items:center;height:100vh;overflow:hidden";
                     win.document.body.appendChild(img);
                     self.inPip(true);
                     win.addEventListener("pagehide", function () {
-                        img.style.cssText = "";
                         frame().querySelector(".aurora-webcam-body").prepend(img);
                         pipWindow = null;
                         self.inPip(false);
@@ -211,15 +285,31 @@
                     if (!self.frameVisible()) return;
                     window.clearTimeout(timer);
                     timer = window.setTimeout(function () {
-                        var width = Math.round(el.getBoundingClientRect().width);
-                        if (width >= MIN_WIDTH && width !== self.width()) {
+                        // offsetWidth matches the CSS width (border-box); a gap of a
+                        // pixel or two is rounding, not a resize by the user
+                        var width = el.offsetWidth;
+                        if (width >= MIN_WIDTH && Math.abs(width - self.shownWidth()) > 2) {
                             self.width(width);
                             save();
                         }
                     }, 250);
                 }).observe(el);
             }
-            window.addEventListener("resize", clamp);
+            window.addEventListener("resize", function () {
+                self.viewportHeight(window.innerHeight);
+                clamp();
+            });
+
+            // the picture's size and turn follow the webcam settings, in the
+            // window and in picture in picture
+            ko.computed(function () {
+                var img = image();
+                if (img) $(img).css(imageStyle());
+            });
+            self.showing.subscribe(function (showing) {
+                if (showing) readSize();
+            });
+            if (self.showing()) readSize();
         };
     }
 

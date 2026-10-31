@@ -1969,6 +1969,9 @@ html.aurora .aurora-printcard-ring span {
 html.aurora .aurora-webcam {
   position: fixed;
   z-index: 1040;
+  /* the width saved after a resize is the outer width: it must be the
+     width the window is drawn at, border included */
+  box-sizing: border-box;
   min-width: 200px;
   max-width: calc(100vw - 32px);
   overflow: hidden;
