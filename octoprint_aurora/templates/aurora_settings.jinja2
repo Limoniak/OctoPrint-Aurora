@@ -168,6 +168,7 @@
                 <label class="checkbox">
                     <input type="checkbox" data-bind="checked: s.tab_progress"> {{ _('Print progress in the browser tab') }}
                 </label>
+                <span class="help-block" style="display: none" data-bind="visible: s.tab_progress() && settingsViewModel.settings.plugins.DisplayLayerProgress && settingsViewModel.settings.plugins.DisplayLayerProgress.showOnBrowserTitle && settingsViewModel.settings.plugins.DisplayLayerProgress.showOnBrowserTitle()">{{ _('DisplayLayerProgress already writes the progress in the tab title: Aurora leaves the title to it and shows the progress on the tab icon.') }}</span>
                 <label class="checkbox">
                     <input type="checkbox" data-bind="checked: s.webcam_float"> {{ _('Floating webcam button in the navbar') }}
                 </label>

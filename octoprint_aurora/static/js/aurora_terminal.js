@@ -9,12 +9,19 @@
 
     // ----- Syntax coloring
 
+    // pieces are built as HTML text and set in one go: far cheaper than one
+    // DOM node per piece, at several lines a second while printing
+    var ESCAPES = {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"};
+
+    function escapeHtml(text) {
+        return text.replace(/[&<>"]/g, function (c) {
+            return ESCAPES[c];
+        });
+    }
+
     function piece(text, cls) {
-        if (!cls) return document.createTextNode(text);
-        var span = document.createElement("span");
-        span.className = cls;
-        span.textContent = text;
-        return span;
+        if (!text) return "";
+        return cls ? '<span class="' + cls + '">' + escapeHtml(text) + "</span>" : escapeHtml(text);
     }
 
     // Splits text with a global regex whose groups map to classes
@@ -52,7 +59,7 @@
         var newline = line.endsWith("\n") ? "\n" : "";
         var text = newline ? line.slice(0, -1) : line;
         var match = /^(Send:|Recv:)(\s?)(.*)$/.exec(text);
-        if (!match) return [piece(text, "t-info"), piece(newline)];
+        if (!match) return [piece(text, "t-info"), newline];
 
         var nodes = [piece(match[1], "t-dir"), piece(match[2])];
         var rest = match[3];
@@ -68,18 +75,14 @@
         } else {
             nodes = nodes.concat(temps(rest));
         }
-        nodes.push(piece(newline));
+        nodes.push(newline);
         return nodes;
     }
 
     function highlight(span) {
         if (!span || span.nodeName !== "SPAN" || span.dataset.auroraColored) return;
         span.dataset.auroraColored = "1";
-        var nodes = highlightLine(span.textContent);
-        span.textContent = "";
-        nodes.forEach(function (node) {
-            span.appendChild(node);
-        });
+        span.innerHTML = highlightLine(span.textContent).join("");
     }
 
     // ----- View model
@@ -200,12 +203,30 @@
             });
             if (!output || !window.MutationObserver) return;
 
-            Array.prototype.forEach.call(output.children, highlight);
+            // lines are colored only while they can be seen: while printing
+            // with the terminal tab closed, nothing is done for them, and
+            // the lines still in the terminal are colored once it is opened
+            var pane = document.getElementById("term");
+            // (UI Customizer can show the terminal outside of the tabs:
+            // there, it is always colored)
+            var shown = function () {
+                return (
+                    self.enabled() &&
+                    (!pane || pane.classList.contains("active") || document.body.classList.contains("UICResponsiveMode"))
+                );
+            };
+            var highlightAll = function () {
+                if (shown()) Array.prototype.forEach.call(output.children, highlight);
+            };
+            highlightAll();
             new MutationObserver(function (mutations) {
+                if (!shown()) return;
                 mutations.forEach(function (mutation) {
                     Array.prototype.forEach.call(mutation.addedNodes, highlight);
                 });
             }).observe(output, {childList: true});
+            $('a[data-toggle="tab"][href="#term"]').on("shown", highlightAll);
+            self.enabled.subscribe(highlightAll);
         };
     }
 

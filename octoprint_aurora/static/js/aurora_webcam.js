@@ -64,8 +64,17 @@
             return self.showing() && !self.inPip();
         });
 
+        // the stream is paused while the page is hidden (another browser tab,
+        // a minimized window, a tablet's screen turned off): an MJPEG stream
+        // otherwise keeps downloading, which a Raspberry Pi feels. Picture in
+        // picture is meant to be watched from elsewhere, so it keeps playing.
+        self.pageVisible = ko.observable(!document.hidden);
+        document.addEventListener("visibilitychange", function () {
+            self.pageVisible(!document.hidden);
+        });
+
         self.streamSrc = ko.pureComputed(function () {
-            return self.showing() ? self.streamUrl() : BLANK;
+            return self.showing() && (self.pageVisible() || self.inPip()) ? self.streamUrl() : BLANK;
         });
 
         // width / height of the stream, known once its first frame is in

@@ -93,8 +93,9 @@
             if (tools.length && tools[0].actual() !== undefined && tools[0].actual() !== null) {
                 parts.push(Math.round(tools[0].actual()) + " °C");
             }
-            if (self.temperature.hasBed() && self.temperature.bedTemp.actual() !== undefined) {
-                parts.push(gettext("bed") + " " + Math.round(self.temperature.bedTemp.actual()) + " °C");
+            var bed = self.temperature.hasBed() ? self.temperature.bedTemp.actual() : null;
+            if (bed !== undefined && bed !== null) {
+                parts.push(gettext("bed") + " " + Math.round(bed) + " °C");
             }
             return parts.join(" · ");
         });
@@ -164,18 +165,33 @@
 
         // ----- Tab title and favicon
 
+        // DisplayLayerProgress can write the progress into the title too, on
+        // each of its updates: both at once would make the title flicker
+        // between two formats, so the title is then left to it (the icon
+        // ring stays)
+        self.titleOwnedByDlp = ko.pureComputed(function () {
+            var dlp = self.settingsViewModel.settings.plugins.DisplayLayerProgress;
+            return !!(dlp && dlp.showOnBrowserTitle && dlp.showOnBrowserTitle());
+        });
+
+        var titleWasSet = false;
+
         var updateTab = function () {
             var base = self.appearance.title();
             var show = AuroraUI.active() && self.s && self.s.tab_progress() && self.isActive();
+            AuroraUI.setTabProgress(show ? self.percent() : null);
+            if (self.titleOwnedByDlp()) return;
             if (!show) {
-                AuroraUI.setTabProgress(null);
-                if (document.title !== base) document.title = base;
+                // only undo a title Aurora set itself
+                if (titleWasSet && document.title !== base) document.title = base;
+                titleWasSet = false;
                 return;
             }
             var prefix = (self.isPaused() ? "⏸ " : "") + self.percent() + "%";
             var name = self.fileName();
-            document.title = prefix + (name ? " · " + name : "") + " · " + base;
-            AuroraUI.setTabProgress(self.percent());
+            var title = prefix + (name ? " · " + name : "") + " · " + base;
+            if (document.title !== title) document.title = title;
+            titleWasSet = true;
         };
 
         self.onBeforeBinding = function () {

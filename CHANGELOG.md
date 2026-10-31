@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.2 – 2026-10-31
+
+### Performance
+- Terminal coloring only runs while the terminal can be seen: while printing with another tab open, it costs nothing, and the lines still in the terminal are colored when it is opened. Each line is built in one operation instead of one element per piece. Style and layout work on the terminal tab during a print is halved.
+- The temperature graph no longer reads the theme colors from the stylesheet on every update (about once a second while printing): they are kept until the theme changes.
+- Thin scrollbars are set on the elements that scroll instead of on every element: that rule was checked against the ~14,000 elements of the page at each style update.
+- The tab icon and title are only rewritten when they change.
+- The floating webcam pauses its stream while the page is hidden (another browser tab, a minimized window, a tablet's screen turned off), which spares the Raspberry Pi; picture in picture keeps playing.
+- The file list thumbnails are only prepared when the grid view is on.
+
+### Fixes
+- With DisplayLayerProgress showing the progress in the browser title (its default), the title flickered between its format and Aurora's. Aurora now leaves the title to it, keeps the progress ring on the tab icon, and says so in its settings.
+- The print status card showed "bed 0 °C" while the bed temperature was still unknown.
+
+Measured with Chrome slowed down 4× during a long simulated print, Aurora now adds about 5% of CPU time to stock OctoPrint, and no memory growth.
+
 ## 0.2.1 – 2026-10-31
 
 ### Fixes
