@@ -130,7 +130,7 @@ header.top {
 .btn svg { width: 18px; height: 18px; }
 
 /* ---------- hero */
-.hero { padding: 52px 0 32px; text-align: center; }
+.hero { padding-top: 52px; padding-bottom: 32px; text-align: center; }
 .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); color: var(--text-2); font-size: 14px; font-weight: 550; box-shadow: var(--shadow); }
 .eyebrow b { color: var(--accent-text); }
 .hero h1 { margin: 22px auto 16px; max-width: 900px; font-size: clamp(38px, 6.4vw, 68px); line-height: 1.04; letter-spacing: -0.035em; font-weight: 800; }
@@ -157,7 +157,8 @@ section { padding: 72px 0; }
 :root[data-theme="dark"] .compare .only-dark { display: block; }
 :root[data-theme="dark"] .compare .only-light { display: none; }
 .compare { position: relative; max-width: 1160px; margin: 0 auto; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg); aspect-ratio: 1440 / 900; background: var(--surface); touch-action: pan-y; user-select: none; }
-.compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.compare picture, .compare img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.compare img { object-fit: cover; object-position: top center; }
 .compare .after { clip-path: inset(0 0 0 var(--pos, 50%)); }
 .compare .divider { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 3px; margin-left: -1.5px; background: #ffffff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2); pointer-events: none; }
 .compare .knob { position: absolute; top: 50%; left: var(--pos, 50%); width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: #ffffff; color: #6d4aff; display: grid; place-items: center; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); pointer-events: none; }
@@ -167,6 +168,13 @@ section { padding: 72px 0; }
 .compare .tag.r { right: 14px; background: linear-gradient(135deg, #6d4aff, #af60e5); }
 .compare input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
 .compare input:focus-visible ~ .knob { outline: 3px solid #ffffff; outline-offset: 3px; }
+@media (max-width: 640px) {
+  .compare { aspect-ratio: 1170 / 1800; max-width: 420px; margin-left: auto; margin-right: auto; }
+  .compare .tag { top: 10px; padding: 3px 9px; font-size: 11.5px; }
+  .compare .tag.l { left: 10px; }
+  .compare .tag.r { right: 10px; }
+  .compare .knob { width: 40px; height: 40px; margin: -20px 0 0 -20px; }
+}
 .hint { text-align: center; color: var(--text-3); font-size: 14px; margin-top: 14px; }
 
 /* features */
@@ -252,16 +260,16 @@ footer a { color: var(--text-2); }
     </div>
     <div class="facts"><span>OctoPrint 1.11</span><span>7 languages</span><span>WCAG AA contrast</span><span>Off in one click</span></div>
     <div class="compare" id="cmp" style="--pos: 50%">
-      <img src="compare-before.webp" alt="Stock OctoPrint interface during a print" width="2880" height="1800" fetchpriority="high">
-      <img class="after only-light" src="compare-after-light.webp" alt="The same page with Aurora UI, light theme" width="2880" height="1800">
-      <img class="after only-dark" src="compare-after-dark.webp" alt="The same page with Aurora UI, dark theme" width="2880" height="1800">
+      <picture><source media="(max-width: 640px)" srcset="compare-phone-before.webp" width="1170" height="1800"><img src="compare-before.webp" alt="Stock OctoPrint during a print" width="2880" height="1800" fetchpriority="high"></picture>
+      <picture class="after only-light"><source media="(max-width: 640px)" srcset="compare-phone-after-light.webp" width="1170" height="1800"><img src="compare-after-light.webp" alt="The same page with Aurora UI, light theme" width="2880" height="1800"></picture>
+      <picture class="after only-dark"><source media="(max-width: 640px)" srcset="compare-phone-after-dark.webp" width="1170" height="1800"><img src="compare-after-dark.webp" alt="The same page with Aurora UI, dark theme" width="2880" height="1800"></picture>
       <span class="tag l">Stock OctoPrint</span>
       <span class="tag r">Aurora UI</span>
       <span class="divider" aria-hidden="true"></span>
       <input type="range" min="0" max="100" value="50" aria-label="Compare: stock interface on the left, Aurora on the right">
       <span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></span>
     </div>
-    <p class="hint">Drag the handle: the same page during the same print, stock on the left, Aurora on the right. Switch the site's theme to see Aurora's dark side.</p>
+    <p class="hint">Drag the handle: the same page during the same print, stock on the left, Aurora on the right. The site's theme switch shows Aurora in light or dark.</p>
   </div>
 
   <section id="features">
