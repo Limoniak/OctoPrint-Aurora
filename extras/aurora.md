@@ -36,7 +36,7 @@ featuredimage: /assets/img/plugins/aurora/main-dark.png
 
 compatibility:
   octoprint:
-  - 1.11.0
+  - ">=1.11.0"
   os:
   - linux
   - windows
@@ -61,5 +61,5 @@ forms, a styled login page, and a temperature graph and GCode viewer drawn in th
 Everything is scoped to the theme, so unticking "Enable" in the settings restores the stock look
 instantly. Tested with the ten most used third-party plugins, including UI Customizer.
 
-**Before submitting:** copy `docs/main-dark.png`, `docs/main-light.png` and `docs/settings-light.png`
-(as `settings.png`) to `assets/img/plugins/aurora/` in the plugins.octoprint.org repository.
+**Before submitting:** copy `docs/main-dark.png`, `docs/main-light.png` and `docs/settings.png`
+to `assets/img/plugins/aurora/` in the plugins.octoprint.org repository.

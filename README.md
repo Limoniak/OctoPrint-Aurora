@@ -20,7 +20,7 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 
 - **Redesigned from top to bottom.** Card panels, pill tabs, modern buttons and forms, tables, dialogs, menus, notifications, terminal and file list.
 - **Light, dark or automatic theme.** Automatic follows your operating system. A moon/sun button in the navbar lets each browser pick its own.
-- **Your accent color.** Nine presets or any color you like. Text on colored buttons switches between white and black so it always stays readable.
+- **Your accent color.** Nine presets or any color you like. Text on colored buttons switches between white and black so it always stays readable, and a color too close to the background (white in the light theme, black in the dark one) is shown in a slightly darker or lighter shade so buttons and icons never disappear.
 - **Themed graphs.** The temperature graph and the GCode viewer are drawn in the theme colors, so the dark theme stays dark everywhere.
 - **Layout options.** Sidebar on the left or right, comfortable or compact density, full width on large screens, adjustable corner radius.
 - **A styled login page**, using the same theme and accent color.
@@ -93,7 +93,7 @@ Everything lives in **Settings › Aurora UI**.
 | --- | --- | --- |
 | Enable the Aurora theme | on / off | on |
 | Theme | Auto, Light, Dark | Auto |
-| Accent color | 9 presets or a custom color | violet `#6d4aff` |
+| Accent color | 9 presets or a custom color (shown in a readable shade if too close to the background) | violet `#6d4aff` |
 | Logo | Nozzle, OctoPrint (original), Text only | Nozzle |
 | Instance color | Thin stripe at the top, Use as accent color, Ignore | Thin stripe |
 | Corner radius | 0 to 28 px | 14 px |
@@ -115,7 +115,9 @@ The navbar's moon/sun button overrides the theme for the current browser only, s
 
 **OctoPrint.** Developed and tested on OctoPrint 1.11.8, including the setup wizard, every settings page, the About dialog, a full simulated print (heating, printing, pause, resume, cancel) and the GCode viewer.
 
-**Browsers.** Full rendering on Chrome/Edge 111+, Firefox 113+ and Safari 16.2+. Older browsers, such as the one on a printer's touch screen, get the same theme with a few tinted backgrounds replaced by plain ones.
+**Browsers.** Tested in Chromium (Chrome, Edge) on desktop, tablet and phone sizes. The CSS it relies on is supported by Chrome/Edge 111+, Firefox 113+ and Safari 16.2+, but Firefox and Safari have not been tested yet: reports are welcome. Older browsers, such as the one on a printer's touch screen, get the same theme with a few tinted backgrounds replaced by plain ones.
+
+**Performance.** Measured with Chrome slowed down 4× during a long simulated print, Aurora adds about 5% of CPU time to stock OctoPrint, with no memory growth. The floating webcam pauses its stream while the page is hidden.
 
 **Third-party plugins.** Tested together, on OctoPrint 1.11.8, with the ten most used plugins according to OctoPrint's official usage statistics (October 2026):
 
@@ -127,7 +129,7 @@ as well as Octolapse, OctoEverywhere and Obico, and with a real-world setup of f
 | --- | --- |
 | **UI Customizer** | Fully supported. UI Customizer keeps its layout (columns, widgets, fixed header and footer, settings menu) and Aurora provides the colors. Aurora's own panel and tab options step aside, since UI Customizer manages the layout. |
 | **Themeify** | Another complete theme: running both gives mixed results. Aurora shows a notice when both are active, so you can disable one. |
-| **TouchUI** | Aurora steps aside in any browser where TouchUI is active, and comes back when it is turned off. |
+| **TouchUI** | Aurora steps aside in any browser where TouchUI is active, and comes back when it is turned off (checked by simulating the marker TouchUI sets on the page, not with TouchUI itself). |
 
 ## Languages
 

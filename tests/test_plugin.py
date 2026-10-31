@@ -265,6 +265,38 @@ def test_login_stylesheet_renders(mode, logo):
     assert ("tentacle" in css) == (logo == "octoprint")
 
 
+def test_login_route_passes_exactly_what_the_template_uses():
+    """The route and the template are edited separately: a variable the
+    template uses but the route forgets would render as an empty value."""
+    from jinja2 import meta
+
+    env = jinja2.Environment(autoescape=True)
+    source = read("templates", "aurora_login_css.jinja2")
+    used = meta.find_undeclared_variables(env.parse(source)) - {"url_for"}
+
+    plugin = aurora.AuroraPlugin()
+    plugin._basefolder = PACKAGE
+    plugin._identifier = "aurora"
+    settings = {"accent": "#ffffff", "instance": "stripe", "mode": "auto", "logo": "aurora"}
+    plugin._settings = mock.Mock()
+    plugin._settings.get.side_effect = lambda path: settings[path[0]]
+    plugin._settings.get_int.return_value = None  # invalid value in config.yaml
+    plugin._settings.global_get.return_value = None
+
+    with mock.patch.object(aurora.flask, "render_template", return_value="css") as render, mock.patch.object(
+        aurora.flask, "make_response", side_effect=lambda body: mock.Mock(headers={})
+    ):
+        plugin.login_css()
+
+    name, = render.call_args.args
+    passed = render.call_args.kwargs
+    assert name.endswith("aurora_login_css.jinja2")
+    assert set(passed) == used
+    assert passed["radius"] == 14
+    # a white accent is adjusted for the light theme only
+    assert passed["accent_light"] != "#ffffff" and passed["accent_dark"] == "#ffffff"
+
+
 ##~~ translations
 
 

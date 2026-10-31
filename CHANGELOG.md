@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.5 – 2026-10-31
+
+### Fixes
+- UI Customizer on narrow screens: its collapsible navbar menu was forced open by Aurora's narrow-screen navbar rules, and its menu button did nothing. Those rules now leave UI Customizer's menu alone.
+- Link-style buttons (recent terminal commands, "Clear"…) turned into grey boxes while focused, after a click.
+- The dropdown half of split buttons lost its keyboard focus ring.
+- Date, time and color fields now get the same focus ring as the other fields.
+- Read-only fields (API keys, URLs to copy) showed a "not allowed" cursor; it is kept for disabled fields only.
+- The blur behind the "offline" and drag-and-drop overlays now also works in Safari before version 18.
+
+### Tests and documentation
+- New unit test: the login page route passes exactly the variables its template uses.
+- README: browser support stated as tested (Chromium) versus expected (Firefox, Safari); performance figures; accent shade adjustment; how TouchUI was checked.
+- Plugin listing: compatibility written as ">=1.11.0", and the screenshot to copy is docs/settings.png.
+
+### Checked
+- Every line of the stylesheet, the login page template, the scripts changed since their last review, the tests and the documentation.
+
 ## 0.2.4 – 2026-10-31
 
 ### Fixes
