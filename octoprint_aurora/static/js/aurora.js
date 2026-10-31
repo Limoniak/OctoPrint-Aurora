@@ -160,6 +160,27 @@
         return mode;
     }
 
+    // OctoPrint's main page declares no viewport, so phones lay it out as a
+    // 980px desktop page shrunk to fit, and Aurora's phone layout never
+    // applies. While the theme is on, declare the device width; a viewport
+    // set by someone else (UI Customizer's responsive mode, a kiosk setup)
+    // is left alone, and ours is removed when the theme is turned off.
+    var VIEWPORT_ID = "aurora-viewport";
+
+    function setViewport(enabled) {
+        var ours = document.getElementById(VIEWPORT_ID);
+        var other = document.querySelector('meta[name="viewport"]:not(#' + VIEWPORT_ID + ")");
+        if (enabled && !other && !ours) {
+            var meta = document.createElement("meta");
+            meta.id = VIEWPORT_ID;
+            meta.name = "viewport";
+            meta.content = "width=device-width, initial-scale=1";
+            document.head.appendChild(meta);
+        } else if ((!enabled || other) && ours) {
+            ours.parentNode.removeChild(ours);
+        }
+    }
+
     function setMetaThemeColor(theme) {
         var meta = document.querySelector('meta[name="theme-color"]');
         if (!meta) {
@@ -257,6 +278,7 @@
         // stay out of its way while it is active.
         var enabled = !!current.enabled && root.id !== "touch";
         root.classList.toggle("aurora", enabled);
+        setViewport(enabled);
         if (window.AuroraUI) AuroraUI.active(enabled);
         window.setTimeout(themeGcodeViewer, 0);
         if (!enabled) {

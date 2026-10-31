@@ -7,7 +7,7 @@
     <div class="aurora-printcard-main">
         <div class="aurora-printcard-head">
             <span class="aurora-printcard-state" data-bind="text: stateText"></span>
-            <h2 class="aurora-printcard-file" data-bind="text: fileName, attr: { title: fileName }"></h2>
+            <h2 id="aurora_printcard_file" class="aurora-printcard-file" data-bind="text: fileName, attr: { title: fileName }"></h2>
         </div>
 
         <dl class="aurora-printcard-stats">
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="aurora-printcard-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="attr: { 'aria-valuenow': percent }">
+    <div class="aurora-printcard-ring" role="progressbar" aria-labelledby="aurora_printcard_file" aria-valuemin="0" aria-valuemax="100" data-bind="attr: { 'aria-valuenow': percent }">
         <svg viewBox="0 0 100 100" aria-hidden="true">
             <circle class="track" cx="50" cy="50" r="42"></circle>
             <circle class="value" cx="50" cy="50" r="42" data-bind="attr: { 'stroke-dasharray': ringLength, 'stroke-dashoffset': ringOffset }"></circle>

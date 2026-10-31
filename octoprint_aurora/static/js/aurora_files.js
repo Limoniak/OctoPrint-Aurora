@@ -44,10 +44,23 @@
                 thumb.appendChild(icon("fa-cube"));
             }
         }
-        // same as clicking the name: loads the file, or opens the folder
-        thumb.addEventListener("click", function () {
-            var title = entry.querySelector(".title");
-            if (title) title.click();
+        // same as clicking the name: loads the file, or opens the folder.
+        // OctoPrint's name cannot be reached from the keyboard, so the
+        // thumbnail is a real button there: Tab to it, Enter or Space.
+        var title = entry.querySelector(".title");
+        thumb.setAttribute("role", "button");
+        thumb.setAttribute("tabindex", "0");
+        if (title) thumb.setAttribute("aria-label", title.textContent.replace(/\s+/g, " ").trim());
+        var activate = function () {
+            var current = entry.querySelector(".title");
+            if (current) current.click();
+        };
+        thumb.addEventListener("click", activate);
+        thumb.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                activate();
+            }
         });
         entry.insertBefore(thumb, entry.firstChild);
     }
