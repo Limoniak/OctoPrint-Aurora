@@ -22,5 +22,6 @@ First release.
 - Text contrast meets WCAG AA (4.5:1) in both themes.
 - Older browsers without `color-mix()` get the same theme with plain backgrounds instead of tinted ones.
 - Tested with the 10 most used third-party plugins (Bed Level Visualizer, PrintTimeGenius, Firmware Updater, Dashboard, UI Customizer, Slicer Thumbnails, Cancelobject, DisplayLayerProgress, Themeify, Preheat Button), plus Octolapse, OctoEverywhere and Obico.
+- Tested with a fourteen-plugin setup on Python 3.11 (Arc Welder, BLTouch, Change Filament, Cura Thumbnails, Navbar Temperature, Print History, Resource Monitor, Simple Filament Change Buttons, Telegram and others). Print History's summary rows and Resource Monitor's mini graphs now follow the dark theme.
 - UI Customizer: its layout is kept, Aurora provides the colors.
 - Themeify and TouchUI: Aurora warns when Themeify is also active, and pauses itself while TouchUI is in use.

@@ -97,7 +97,7 @@ The navbar's moon/sun button overrides the theme for the current browser only, s
 
 > Bed Level Visualizer · PrintTimeGenius · Firmware Updater · Dashboard · UI Customizer · Slicer Thumbnails · Cancelobject · DisplayLayerProgress · Themeify · Preheat Button
 
-as well as Octolapse, OctoEverywhere and Obico. Their tabs, panels and settings pick up the theme, with no JavaScript errors and readable contrast in both themes. A few elements keep the colors their plugin forces on purpose: Obico's branded panel, Octolapse's preview box and warning label, and Dashboard's webcam buttons and chart labels.
+as well as Octolapse, OctoEverywhere and Obico, and with a real-world setup of fourteen plugins installed together on Python 3.11: Arc Welder, Bed Visualizer, BLTouch, Cancel Objects, Change Filament, Cura Thumbnails, DisplayLayerProgress, Navbar Temperature, Print History, PrintTimeGenius, Resource Monitor, Simple Filament Change Buttons, Slicer Thumbnails and Telegram. Their tabs, panels and settings pick up the theme, with no JavaScript errors and readable contrast in both themes. A few elements keep the colors their plugin forces on purpose: Obico's branded panel, Octolapse's preview box and warning label, Dashboard's webcam buttons and chart labels, and Change Filament's red warning. Print History's summary rows and Resource Monitor's mini graphs, which were hard-coded light, are adapted to the dark theme.
 
 | Plugin | How Aurora handles it |
 | --- | --- |
