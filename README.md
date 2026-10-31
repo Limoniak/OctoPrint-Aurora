@@ -27,15 +27,16 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 - **Tells your printers apart.** The instance color from *Settings › Appearance* shows as a thin stripe at the top of the screen, or becomes the accent color.
 - **Live preview.** Changes in the settings apply as you make them, and are reverted if you close without saving.
 - **Accessible.** Text contrast meets WCAG AA (4.5:1) in both themes, on every OctoPrint page.
+- **Made for phones too.** OctoPrint's page does not tell phones its width, so they show it as a shrunken desktop page. Aurora declares the device width, so a phone gets a real one-column layout: print card first, readable settings, a navbar that scrolls away.
 - **Off in one click.** Untick *Enable* and the stock interface is back instantly.
 
 ### Built for printing
 
 - **Print status card.** While printing, a card above the tabs shows the model thumbnail (from Slicer Thumbnails or Cura Thumbnails), a progress ring, time left, the expected finish time, the current layer (with DisplayLayerProgress) and temperatures, with Pause, Resume and Cancel at hand. On a phone it comes first on the page.
 - **Progress in the browser tab.** The tab title reads *42% · benchy.gcode* and its icon fills up as a ring, so you can follow a print from another tab.
-- **Floating webcam.** A camera button in the navbar opens the webcam in a small window that stays on screen whatever the tab. Drag it by its title bar, resize it from the corner, or pop it out into a picture-in-picture window (Chrome and Edge).
+- **Floating webcam.** A camera button in the navbar opens the webcam in a small window that stays on screen whatever the tab. Drag it by its title bar, resize it from the corner grip (mouse or finger), close it with Escape, or pop it out into a picture-in-picture window (Chrome and Edge).
 - **A better terminal.** G-code is colored (commands, parameters, `ok`, errors, temperatures, comments), the last commands you sent are one click away, and your favorite commands (M114, G28, M84…) are buttons. Star the command you typed to add it.
-- **File grid with thumbnails.** One click in the Files panel header turns the file list into a grid of cards showing each model's thumbnail (from Slicer Thumbnails or Cura Thumbnails). Click a thumbnail to load the file or open the folder. Each browser remembers its choice.
+- **File grid with thumbnails.** One click in the Files panel header turns the file list into a grid of cards showing each model's thumbnail (from Slicer Thumbnails or Cura Thumbnails). Click a thumbnail, or Tab to it and press Enter, to load the file or open the folder. Each browser remembers its choice.
 - **Your layout.** Hide or reorder sidebar panels and tabs from the settings, with live preview. Panels you fold stay folded in that browser.
 
 ## Screenshots

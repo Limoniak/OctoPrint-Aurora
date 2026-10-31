@@ -1,6 +1,6 @@
 /*
  * Aurora UI: floating webcam window, opened from the navbar, that stays
- * visible on every tab. Can be dragged, resized and, where the browser
+ * visible on every tab. Can be dragged, resized from its corner grip and, where the browser
  * supports it, popped out into a picture-in-picture window.
  */
 (function () {
@@ -227,6 +227,16 @@
             if (self.open()) self.toggle();
         };
 
+        // Escape closes the window while the focus is in it
+        self.onKeyDown = function (data, event) {
+            if (event.key === "Escape") {
+                self.close();
+                $("#navbar_plugin_aurora_webcam > a").trigger("focus");
+                return false;
+            }
+            return true;
+        };
+
         self.onLoad = function (data, event) {
             var img = event.target;
             if (img.getAttribute("src") === BLANK) return;
@@ -260,6 +270,41 @@
                 window.removeEventListener("pointermove", move);
                 window.removeEventListener("pointerup", stop);
                 window.removeEventListener("pointercancel", stop);
+                save();
+            };
+            window.addEventListener("pointermove", move);
+            window.addEventListener("pointerup", stop);
+            window.addEventListener("pointercancel", stop);
+            event.preventDefault();
+            return false;
+        };
+
+        // ----- Resizing from the corner grip (mouse, pen or finger: the CSS
+        // resize handle does not exist on touch screens)
+
+        self.startResize = function (data, event) {
+            if (event.button !== 0) return true;
+            var el = frame();
+            var startX = event.clientX;
+            var startWidth = el.offsetWidth;
+            var maxWidth = window.innerWidth - 2 * MARGIN;
+            // the window grows towards the right and the bottom: pin its
+            // top left corner first if it was anchored to the bottom right
+            var rect = el.getBoundingClientRect();
+            self.x(Math.round(rect.left));
+            self.y(Math.round(rect.top));
+            el.classList.add("resizing");
+
+            var move = function (e) {
+                var width = Math.max(MIN_WIDTH, Math.min(maxWidth, Math.round(startWidth + e.clientX - startX)));
+                self.width(width);
+            };
+            var stop = function () {
+                el.classList.remove("resizing");
+                window.removeEventListener("pointermove", move);
+                window.removeEventListener("pointerup", stop);
+                window.removeEventListener("pointercancel", stop);
+                clamp();
                 save();
             };
             window.addEventListener("pointermove", move);
@@ -305,23 +350,6 @@
             var el = frame();
             // a fixed window: keep it out of any container that could hide or clip it
             if (el && el.parentElement !== document.body) document.body.appendChild(el);
-            // remember the width after a resize with the corner handle
-            if (window.ResizeObserver && el) {
-                var timer = null;
-                new ResizeObserver(function () {
-                    if (!self.frameVisible()) return;
-                    window.clearTimeout(timer);
-                    timer = window.setTimeout(function () {
-                        // offsetWidth matches the CSS width (border-box); a gap of a
-                        // pixel or two is rounding, not a resize by the user
-                        var width = el.offsetWidth;
-                        if (width >= MIN_WIDTH && Math.abs(width - self.shownWidth()) > 2) {
-                            self.width(width);
-                            save();
-                        }
-                    }, 250);
-                }).observe(el);
-            }
             window.addEventListener("resize", function () {
                 self.viewportHeight(window.innerHeight);
                 clamp();

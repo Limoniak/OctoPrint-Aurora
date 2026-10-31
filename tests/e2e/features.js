@@ -89,6 +89,23 @@ const stateText = (page) => page.evaluate(() => document.querySelector("#state")
     await page.waitForTimeout(1500);
     const loaded = await page.evaluate(() => OctoPrint.coreui.viewmodels.printerStateViewModel.filename());
     t.check(loaded === "aurora_test_cube.gcode", `clicking the thumbnail loads the file (${loaded})`);
+    // keyboard: the thumbnail is a button (OctoPrint's file name is not reachable by keyboard)
+    // a second file, so that loading it is visible
+    await page.evaluate(() =>
+        new Promise((resolve) => {
+            const blob = new Blob(["G28\nG1 X10 Y10\n"], { type: "text/plain" });
+            OctoPrint.files.upload("local", blob, { filename: "aurora_test_keyboard.gcode" }).always(resolve);
+        })
+    );
+    await page.waitForTimeout(2500);
+    await dismissNotifications(page);
+    const other = page.locator("#files .gcode_files .entry", { hasText: "aurora_test_keyboard.gcode" }).first();
+    const otherName = "aurora_test_keyboard.gcode";
+    await other.locator(".aurora-file-thumb").focus();
+    await page.keyboard.press("Enter");
+    await page.waitForTimeout(1500);
+    const viaKeyboard = await page.evaluate(() => OctoPrint.coreui.viewmodels.printerStateViewModel.filename());
+    t.check(viaKeyboard === otherName, `Enter on a focused thumbnail loads the file (${viaKeyboard})`);
     await page.reload();
     await page.waitForTimeout(7000);
     t.check(await page.evaluate(() => document.querySelector("#files .gcode_files").classList.contains("aurora-grid")), "the grid view is remembered after a reload");
@@ -168,10 +185,31 @@ const stateText = (page) => page.evaluate(() => document.querySelector("#state")
         const resumed = await page.$eval("#aurora_webcam img", (img) => img.getAttribute("src"));
         t.check(paused.startsWith(BLANK) && resumed === src, "the stream pauses while the page is hidden, and resumes");
 
-        await page.click("#aurora_webcam .aurora-webcam-button[aria-label]:last-child");
+        // resizing from the corner grip, remembered after a reload
+        const grip = await page.$eval("#aurora_webcam .aurora-webcam-resize", (el) => {
+            const r = el.getBoundingClientRect();
+            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        });
+        const widthBefore = await page.$eval("#aurora_webcam", (el) => el.offsetWidth);
+        await page.mouse.move(grip.x, grip.y);
+        await page.mouse.down();
+        await page.mouse.move(grip.x + 120, grip.y + 40, { steps: 6 });
+        await page.mouse.up();
+        await page.waitForTimeout(300);
+        const widthAfter = await page.$eval("#aurora_webcam", (el) => el.offsetWidth);
+        t.check(widthAfter >= widthBefore + 100, `the corner grip resizes it (${widthBefore} -> ${widthAfter} px)`);
+        await page.reload();
+        await page.waitForTimeout(7000);
+        await dismissNotifications(page);
+        const widthReloaded = await page.$eval("#aurora_webcam", (el) => el.offsetWidth);
+        t.check(Math.abs(widthReloaded - widthAfter) <= 2, `the new size is remembered (${widthReloaded} px)`);
+
+        // Escape closes it while the focus is inside
+        await page.focus("#aurora_webcam .aurora-webcam-button");
+        await page.keyboard.press("Escape");
         await page.waitForTimeout(800);
         const closed = await page.$eval("#aurora_webcam img", (img) => img.getAttribute("src"));
-        t.check(!(await page.isVisible("#aurora_webcam")) && closed.startsWith(BLANK), "closing it stops the stream");
+        t.check(!(await page.isVisible("#aurora_webcam")) && closed.startsWith(BLANK), "Escape closes it and stops the stream");
     } else {
         console.log("  skip  floating webcam (no webcam stream configured)");
     }

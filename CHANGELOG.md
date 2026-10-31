@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.2.6 – 2026-10-31
+
+### Phones
+- OctoPrint's main page declares no viewport, so phones laid it out as a 980px desktop page shrunk to fit, and Aurora's phone layout never applied there. While Aurora is on, the page now declares the device width (a viewport set by another plugin, such as UI Customizer's responsive mode, is left alone, and Aurora's is removed when the theme is turned off).
+- On phones the navbar, which plugins' items can spread over several lines, scrolls away with the page instead of staying pinned and covering a third of the screen.
+- Floating webcam: a corner grip replaces the browser's resize handle, which does not exist on touch screens; it works with a mouse, a pen or a finger.
+
+### Accessibility
+- Grid view: thumbnails are buttons, reachable with Tab and activated with Enter or Space (OctoPrint's file names cannot be reached by keyboard), with a visible focus ring.
+- Floating webcam: Escape closes it and gives the focus back to its navbar button.
+- Print card: the progress ring is labelled with the file name for screen readers.
+
+### Translations
+- German: "Abbrechen" (was "Abbruch"), "Druckt" (was "Drucke"), "Verstrichen" (was "Vergangen").
+- Clearer wording for bringing the webcam back from picture in picture (French, German, Italian, Spanish, Portuguese).
+- Spanish: "Disposición" for the layout heading, like the rest of the page. Russian: clearer Themeify warning.
+
 ## 0.2.5 – 2026-10-31
 
 ### Fixes

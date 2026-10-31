@@ -1832,6 +1832,13 @@ html.aurora #settings_plugin_aurora input[type="range"] {
     padding-right: 0;
   }
 
+  /* on a phone the navbar, with the items plugins add (temperatures, layer
+     progress...), can wrap onto several lines: pinned to the top, it would
+     keep a third of the screen. It scrolls away with the page instead. */
+  html.aurora #navbar {
+    position: relative;
+  }
+
   html.aurora #navbar {
     margin-left: 0;
     margin-right: 0;
@@ -2051,7 +2058,6 @@ html.aurora .aurora-webcam {
   min-width: 200px;
   max-width: calc(100vw - 32px);
   overflow: hidden;
-  resize: horizontal;
   background: #000000;
   border: 1px solid var(--a-border-strong);
   border-radius: var(--a-radius);
@@ -2061,6 +2067,25 @@ html.aurora .aurora-webcam {
 html.aurora .aurora-webcam.dragging {
   cursor: grabbing;
   user-select: none;
+}
+
+html.aurora .aurora-webcam.resizing {
+  cursor: nwse-resize;
+  user-select: none;
+}
+
+/* corner grip to resize the window, large enough for a finger */
+html.aurora .aurora-webcam-resize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  cursor: nwse-resize;
+  touch-action: none;
+  background:
+    linear-gradient(135deg, transparent 0 55%, rgba(255, 255, 255, 0.55) 55% 60%, transparent 60% 70%, rgba(255, 255, 255, 0.55) 70% 75%, transparent 75%);
 }
 
 html.aurora .aurora-webcam-bar {
@@ -2420,6 +2445,11 @@ html.aurora #files .gcode_files.aurora-grid .aurora-file-thumb {
   background: var(--a-surface-3);
   border-radius: calc(var(--a-radius-sm) * 0.8);
   cursor: pointer;
+}
+
+html.aurora #files .gcode_files.aurora-grid .aurora-file-thumb:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--a-accent-ring);
 }
 
 html.aurora #files .gcode_files.aurora-grid .aurora-file-thumb img {
