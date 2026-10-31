@@ -1,5 +1,5 @@
-// Aurora's features: customizable layout, remembered panels, terminal tools,
-// floating webcam, print status card and print progress in the browser tab.
+// Aurora's features: customizable layout, remembered panels, file grid view,
+// terminal tools, floating webcam, print status card and progress in the browser tab.
 
 const { BASE_URL, launch, openUi, dismissNotifications, contrastScan, createChecker, uploadTestCube } = require("./helpers");
 
@@ -75,6 +75,26 @@ const stateText = (page) => page.evaluate(() => document.querySelector("#state")
     t.check(!(await page.evaluate(() => document.getElementById("files").classList.contains("in"))), "a collapsed panel stays collapsed after a reload");
     await page.click("#files_wrapper .accordion-toggle");
     await page.waitForTimeout(1000);
+    await dismissNotifications(page);
+
+    // ----- File list grid view
+
+    const cube = await uploadTestCube(page);
+    t.check(await page.isVisible("#files_wrapper > .accordion-heading #aurora_files_view a"), "the grid toggle is in the Files panel header");
+    await page.click("#aurora_files_view a");
+    await page.waitForTimeout(800);
+    t.check(await page.evaluate(() => document.querySelector("#files .gcode_files").classList.contains("aurora-grid")), "the toggle switches the file list to a grid");
+    t.check(await cube.locator(".aurora-file-thumb").isVisible(), "each file card has a thumbnail area");
+    await cube.locator(".aurora-file-thumb").click();
+    await page.waitForTimeout(1500);
+    const loaded = await page.evaluate(() => OctoPrint.coreui.viewmodels.printerStateViewModel.filename());
+    t.check(loaded === "aurora_test_cube.gcode", `clicking the thumbnail loads the file (${loaded})`);
+    await page.reload();
+    await page.waitForTimeout(7000);
+    t.check(await page.evaluate(() => document.querySelector("#files .gcode_files").classList.contains("aurora-grid")), "the grid view is remembered after a reload");
+    await page.click("#aurora_files_view a");
+    await page.waitForTimeout(800);
+    t.check(!(await page.evaluate(() => document.querySelector("#files .gcode_files").classList.contains("aurora-grid"))), "the toggle switches back to the list");
     await dismissNotifications(page);
 
     // ----- Terminal tools

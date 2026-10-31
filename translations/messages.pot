@@ -9,6 +9,12 @@ msgid ""
 "disable one of them."
 msgstr ""
 
+msgid "List view"
+msgstr ""
+
+msgid "Grid view"
+msgstr ""
+
 msgid "Paused"
 msgstr ""
 
@@ -213,6 +219,9 @@ msgid "Floating webcam button in the navbar"
 msgstr ""
 
 msgid "Terminal tools: colors, recent commands and favorites"
+msgstr ""
+
+msgid "Grid view with thumbnails for the file list"
 msgstr ""
 
 msgid "Favorite commands"

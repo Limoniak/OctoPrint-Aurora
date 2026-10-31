@@ -40,6 +40,7 @@
         tab_progress: true,
         webcam_float: true,
         terminal_tools: true,
+        file_grid: true,
         terminal_favorites: ["M114", "M105", "M503", "G28", "M84"],
         layout_sidebar_order: [],
         layout_sidebar_hidden: [],

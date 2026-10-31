@@ -35,6 +35,7 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 - **Progress in the browser tab.** The tab title reads *42% · benchy.gcode* and its icon fills up as a ring, so you can follow a print from another tab.
 - **Floating webcam.** A camera button in the navbar opens the webcam in a small window that stays on screen whatever the tab. Drag it by its title bar, resize it from the corner, or pop it out into a picture-in-picture window (Chrome and Edge).
 - **A better terminal.** G-code is colored (commands, parameters, `ok`, errors, temperatures, comments), the last commands you sent are one click away, and your favorite commands (M114, G28, M84…) are buttons. Star the command you typed to add it.
+- **File grid with thumbnails.** One click in the Files panel header turns the file list into a grid of cards showing each model's thumbnail (from Slicer Thumbnails or Cura Thumbnails). Click a thumbnail to load the file or open the folder. Each browser remembers its choice.
 - **Your layout.** Hide or reorder sidebar panels and tabs from the settings, with live preview. Panels you fold stay folded in that browser.
 
 ## Screenshots
@@ -50,6 +51,8 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 | ![Print status card above the tabs, with the floating webcam](docs/print-card.png) | ![Colored terminal with favorite and recent commands](docs/terminal.png) |
 | **Panels and tabs** | **On a phone** |
 | ![Layout settings: hide and reorder panels and tabs](docs/layout-settings.png) | <img src="docs/print-card-mobile.png" width="260" alt="Print status card first on a phone"> |
+| **File grid with thumbnails** | |
+| ![The file list as a grid of thumbnails, dark and light themes](docs/file-grid.png) | |
 
 <table>
   <tr>
@@ -103,6 +106,7 @@ Everything lives in **Settings › Aurora UI**.
 | Print progress in the browser tab | on / off | on |
 | Floating webcam button in the navbar | on / off | on |
 | Terminal tools | on / off | on |
+| Grid view with thumbnails for the file list | on / off (then list or grid per browser) | on, list shown until you switch |
 | Favorite commands | any G-code, up to 20 | M114, M105, M503, G28, M84 |
 
 The navbar's moon/sun button overrides the theme for the current browser only, so a tablet next to the printer can stay dark while your desktop follows the system.
@@ -143,9 +147,10 @@ octoprint_aurora/
 │   ├── js/aurora_webcam.js     floating webcam
 │   ├── js/aurora_terminal.js   terminal coloring, recent and favorite commands
 │   ├── js/aurora_layout.js     hidden and reordered panels and tabs
+│   ├── js/aurora_files.js      grid view of the file list
 │   └── img/                    the Nozzle logo and OctoPrint's original logo
 ├── templates/                  settings page, navbar buttons, print card, floating webcam,
-│                               terminal tools, login stylesheet
+│                               terminal tools, file view toggle, login stylesheet
 └── translations/               de, es, fr, it, pt, ru (.po and compiled .mo)
 tests/
 ├── test_plugin.py              unit tests (pytest)
@@ -211,7 +216,7 @@ cd tests/e2e && npm install && npx playwright install chromium && cd ../..
 tests/run_e2e.sh
 ```
 
-They check the contrast of every page in both themes, run a simulated print, exercise the features (layout, remembered panels, terminal tools, floating webcam, print status card, tab progress) and go through the settings (live preview, revert, save, reload, disable). `TESTS="features.js" tests/run_e2e.sh` runs a single file. OctoPrint refuses to run as root, so run them as a regular user.
+They check the contrast of every page in both themes, run a simulated print, exercise the features (layout, remembered panels, file grid, terminal tools, floating webcam, print status card, tab progress) and go through the settings (live preview, revert, save, reload, disable). `TESTS="features.js" tests/run_e2e.sh` runs a single file. OctoPrint refuses to run as root, so run them as a regular user.
 
 ## License
 

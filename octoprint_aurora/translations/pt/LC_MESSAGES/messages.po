@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OctoPrint-Aurora 0.1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-31 09:13+0000\n"
+"POT-Creation-Date: 2026-10-31 10:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pt\n"
@@ -280,4 +280,13 @@ msgstr "Voltar a colocar este comando no campo de entrada"
 
 msgid "Clear"
 msgstr "Limpar"
+
+msgid "List view"
+msgstr "Vista em lista"
+
+msgid "Grid view"
+msgstr "Vista em grelha"
+
+msgid "Grid view with thumbnails for the file list"
+msgstr "Vista em grelha com miniaturas para a lista de ficheiros"
 
