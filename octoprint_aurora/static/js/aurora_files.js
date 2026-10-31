@@ -93,17 +93,24 @@
                 list.classList.toggle("aurora-grid", self.isGrid());
             });
 
-            // OctoPrint re-renders entries when the list changes: decorate the new ones
+            // OctoPrint re-renders entries when the list changes: decorate the
+            // new ones. Only the grid shows thumbnails, so the list view costs
+            // nothing; the entries are decorated when the grid is turned on.
             var pending = false;
             var decorateAll = function () {
                 pending = false;
+                if (!self.isGrid()) return;
                 Array.prototype.forEach.call(wrapper.children, function (child) {
                     if (child.classList && child.classList.contains("entry")) decorate(child);
                 });
             };
             decorateAll();
+            self.isGrid.subscribe(decorateAll);
+            // each entry is drawn by a template that can be redrawn on its own
+            // (removing the thumbnail), so changes inside entries count too;
+            // they are batched to one pass per frame
             new MutationObserver(function () {
-                if (pending) return;
+                if (pending || !self.isGrid()) return;
                 pending = true;
                 window.requestAnimationFrame(decorateAll);
             }).observe(wrapper, {childList: true, subtree: true});

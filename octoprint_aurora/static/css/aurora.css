@@ -209,9 +209,25 @@ html.aurora .text-info {
   color: var(--a-accent-text);
 }
 
-html.aurora * {
-  scrollbar-width: thin;
+/* scrollbar colors are inherited: set once on <html>. Their width is not,
+   so it goes on the elements that scroll, not on every element: a rule on
+   "*" is checked against all ~14,000 elements of the page at each style
+   update, which made it the costliest rule of the theme */
+html.aurora {
   scrollbar-color: var(--a-border-strong) transparent;
+}
+
+html.aurora,
+html.aurora .scrollable,
+html.aurora .pre-scrollable,
+html.aurora .scroll-wrapper,
+html.aurora .modal-body,
+html.aurora .dropdown-menu,
+html.aurora .tab-content,
+html.aurora pre,
+html.aurora textarea,
+html.aurora .table-responsive {
+  scrollbar-width: thin;
 }
 
 html.aurora ::-webkit-scrollbar {
@@ -2529,7 +2545,7 @@ html.aurora #UICsettingsMenu .caret {
   border-bottom-color: currentColor;
 }
 
-html.aurora #settings_dialog_label * {
+html.aurora #settings_dialog_label > * {
   color: var(--a-text-2);
 }
 

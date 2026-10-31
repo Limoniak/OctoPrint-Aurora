@@ -136,6 +136,7 @@
         '<rect x="3" y="22.4" width="15.5" height="3.8" rx="1.9"/>' +
         '<rect x="3" y="27.4" width="26" height="2.2" rx="1.1" opacity=".45"/>';
     var originalFavicons = null;
+    var lastFavicon;
 
     // Mix two hex colors, like color-mix(in srgb, a weight, b) in the CSS
     function mixHex(a, b, weight) {
@@ -198,6 +199,9 @@
         } else if (active && useBrand) {
             href = brandFavicon(faviconAccent);
         }
+        // the browser decodes the icon again on each change: skip repeats
+        if (href === lastFavicon) return;
+        lastFavicon = href;
         originalFavicons.forEach(function (entry) {
             entry.link.setAttribute("href", href || entry.href);
         });
@@ -206,6 +210,7 @@
     function apply(config) {
         var previous = current;
         current = withDefaults(config);
+        cssCache = {};
 
         // TouchUI replaces the whole interface and marks <html id="touch">:
         // stay out of its way while it is active.
@@ -323,8 +328,17 @@
     };
     var targetColorMap = null;
 
+    // Theme colors read from the stylesheet. The temperature graph asks for
+    // them on every update (every second or so while printing), and each
+    // read can force the browser to recompute styles: they are kept until
+    // the theme changes. Empty values (stylesheet not loaded yet) are not kept.
+    var cssCache = {};
+
     function cssVar(name) {
-        return getComputedStyle(root).getPropertyValue(name).trim();
+        if (cssCache[name]) return cssCache[name];
+        var value = getComputedStyle(root).getPropertyValue(name).trim();
+        if (value) cssCache[name] = value;
+        return value;
     }
 
     function graphThemed() {

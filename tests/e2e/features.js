@@ -113,6 +113,16 @@ const stateText = (page) => page.evaluate(() => document.querySelector("#state")
     t.check(output.includes("Send: " + favorite), `the favorite ${favorite} is sent to the printer`);
     t.check((await page.$$("#terminal-output .t-cmd")).length > 0, "G-code in the terminal is colored");
 
+    // lines that arrive while the terminal is closed are colored once it opens
+    await page.click("#temp_link a");
+    await page.evaluate(() => OctoPrint.control.sendGcode("M105"));
+    await page.waitForTimeout(2000);
+    const waiting = await page.$$eval("#terminal-output > span:not([data-aurora-colored])", (spans) => spans.length);
+    await page.click("#term_link a");
+    await page.waitForTimeout(800);
+    const uncolored = await page.$$eval("#terminal-output > span:not([data-aurora-colored])", (spans) => spans.length);
+    t.check(waiting > 0 && uncolored === 0, `lines are colored only while the terminal is open (${waiting} waiting, ${uncolored} left)`);
+
     // ----- Floating webcam
 
     if (await page.isVisible("#navbar_plugin_aurora_webcam > a")) {
@@ -143,6 +153,20 @@ const stateText = (page) => page.evaluate(() => document.querySelector("#state")
         await page.click("#temp_link a");
         await page.waitForTimeout(800);
         t.check(await page.isVisible("#aurora_webcam"), "it stays visible on another tab");
+
+        // the page hidden (another browser tab, screen off): the stream pauses
+        const setHidden = (hidden) =>
+            page.evaluate((hidden) => {
+                Object.defineProperty(document, "hidden", { configurable: true, get: () => hidden });
+                document.dispatchEvent(new Event("visibilitychange"));
+            }, hidden);
+        await setHidden(true);
+        await page.waitForTimeout(300);
+        const paused = await page.$eval("#aurora_webcam img", (img) => img.getAttribute("src"));
+        await setHidden(false);
+        await page.waitForTimeout(300);
+        const resumed = await page.$eval("#aurora_webcam img", (img) => img.getAttribute("src"));
+        t.check(paused.startsWith(BLANK) && resumed === src, "the stream pauses while the page is hidden, and resumes");
 
         await page.click("#aurora_webcam .aurora-webcam-button[aria-label]:last-child");
         await page.waitForTimeout(800);
