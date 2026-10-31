@@ -107,6 +107,47 @@
         return withDark > withWhite ? "#0b0d14" : "#ffffff";
     }
 
+    function contrastRatio(a, b) {
+        var lum = function (hex) {
+            return hexToRgb(hex)
+                .map(function (c) {
+                    c = c / 255;
+                    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+                })
+                .reduce(function (sum, c, i) {
+                    return sum + c * [0.2126, 0.7152, 0.0722][i];
+                }, 0);
+        };
+        var la = lum(a);
+        var lb = lum(b);
+        return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+    }
+
+    // Backgrounds an accent is drawn on (page and panels), per theme: same
+    // values as --a-bg and --a-surface in aurora.css and READABLE_BACKGROUNDS
+    // in __init__.py
+    var READABLE_BACKGROUNDS = {
+        light: ["#f3f4f9", "#ffffff"],
+        dark: ["#0b0d14", "#131722"]
+    };
+
+    // The accent, or the closest darker (light theme) or lighter (dark theme)
+    // shade of it that stands out from the backgrounds at 3:1 (WCAG minimum
+    // for buttons and icons): a white accent in the light theme, or a black
+    // one in the dark theme, would otherwise hide the active tab, buttons
+    // and icons. Same rule as readable_accent() in __init__.py.
+    function readableAccent(accent, theme) {
+        var target = theme === "light" ? "#000000" : "#ffffff";
+        for (var step = 0; step <= 20; step++) {
+            var color = mixHex(accent, target, 1 - step / 20);
+            var readable = READABLE_BACKGROUNDS[theme].every(function (background) {
+                return contrastRatio(color, background) >= 3;
+            });
+            if (readable) return color;
+        }
+        return target;
+    }
+
     function modeOverride() {
         return storageGet(MODE_OVERRIDE_KEY);
     }
@@ -227,8 +268,9 @@
         var accent = hexToRgb(current.accent) ? current.accent : DEFAULTS.accent;
         var instanceColor = INSTANCE_COLORS[instanceColorName];
         if (current.instance === "accent" && instanceColor) accent = instanceColor;
+        accent = readableAccent(accent, theme);
         root.classList.toggle("aurora-instance-stripe", current.instance === "stripe" && !!instanceColor);
-        root.style.setProperty("--a-instance", instanceColor || "transparent");
+        root.style.setProperty("--a-instance", instanceColor ? readableAccent(instanceColor, theme) : "transparent");
         var radius = parseInt(current.radius, 10);
         if (isNaN(radius)) radius = DEFAULTS.radius;
 
@@ -573,6 +615,15 @@
             storageSet(CACHE_KEY, JSON.stringify(withDefaults(config)));
             self.isDark(root.getAttribute("data-aurora-theme") === "dark");
         };
+
+        // the chosen color is shown in a darker or lighter shade in the
+        // current theme (see readableAccent): say so next to the picker
+        self.accentAdjusted = ko.pureComputed(function () {
+            if (!self.s) return false;
+            var accent = self.s.accent();
+            if (!hexToRgb(accent)) return false;
+            return readableAccent(accent, self.isDark() ? "dark" : "light").toLowerCase() !== accent.toLowerCase();
+        });
 
         self.selectAccent = function (color) {
             self.s.accent(color);

@@ -110,6 +110,12 @@ msgstr ""
 msgid "Custom color"
 msgstr ""
 
+msgid ""
+"This color is too close to the background of the current theme: Aurora "
+"uses a darker or lighter shade of it, so that buttons and icons stay "
+"visible."
+msgstr ""
+
 msgid "Logo"
 msgstr ""
 

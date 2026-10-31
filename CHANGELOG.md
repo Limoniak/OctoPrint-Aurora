@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.3 – 2026-10-31
+
+### Colors
+- An accent too close to the theme's background (a white or yellow accent in the light theme, a black or dark blue one in the dark theme, including OctoPrint's instance colors used as accent) made the active tab, buttons and panel icons disappear. Aurora now uses the nearest darker or lighter shade of it that stands out at 3:1 (WCAG minimum for buttons and icons), in the interface and on the login page, and says so under the color picker. The nine presets are never changed.
+- The instance color stripe gets the same treatment, so a white stripe stays visible in the light theme.
+- Links in alerts and notifications take the message's own color (underlined): the accent color was not readable on every alert type.
+- Red error text in the light theme reaches 4.5:1 on every background.
+- Dark (inverse) labels and badges now match the dark button, and "info" progress bars are blue like the other info elements.
+
+### Buttons
+- Dark (inverse) buttons no longer turn light on hover or when pressed (dark in the dark theme).
+- Colored buttons keep their color while pressed on touch screens instead of turning grey.
+- The -/+ buttons of the temperature table had 4px corners instead of the theme's radius.
+
+Checked: 586 buttons on every tab, settings page and dialog, in both themes. They follow five sizes with one corner radius, line up with their neighbours, and fields and buttons in groups have the same height.
+
 ## 0.2.2 – 2026-10-31
 
 ### Performance

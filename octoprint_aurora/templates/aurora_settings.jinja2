@@ -42,6 +42,7 @@
                     <!-- /ko -->
                     <input type="color" data-bind="value: s.accent, valueUpdate: 'input'" title="{{ _('Custom color')|edq }}">
                 </div>
+                <span class="help-block" style="display: none" data-bind="visible: accentAdjusted">{{ _('This color is too close to the background of the current theme: Aurora uses a darker or lighter shade of it, so that buttons and icons stay visible.') }}</span>
             </div>
         </div>
 

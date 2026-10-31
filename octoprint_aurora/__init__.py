@@ -66,6 +66,48 @@ def mix_colors(color_a, color_b, weight):
     )
 
 
+def contrast_ratio(color_a, color_b):
+    """WCAG contrast ratio between two #rrggbb colors."""
+
+    def luminance(color):
+        def linear(channel):
+            c = int(channel, 16) / 255
+            return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+
+        r, g, b = (linear(color[i : i + 2]) for i in (1, 3, 5))
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+    high, low = sorted((luminance(color_a), luminance(color_b)), reverse=True)
+    return (high + 0.05) / (low + 0.05)
+
+
+# Backgrounds an accent is drawn on (page and panels), per theme: same values
+# as --a-bg and --a-surface in aurora.css, and as READABLE_BACKGROUNDS in aurora.js
+READABLE_BACKGROUNDS = {
+    "light": ("#f3f4f9", "#ffffff"),
+    "dark": ("#0b0d14", "#131722"),
+}
+# WCAG minimum for buttons, icons and other non-text elements
+READABLE_CONTRAST = 3.0
+
+
+def readable_accent(accent, theme):
+    """The accent, or the closest darker (light theme) or lighter (dark theme)
+    shade of it that stands out from that theme's backgrounds at 3:1, so a
+    white accent in the light theme, or a black one in the dark theme, does
+    not make the active tab, buttons and icons disappear. Same rule as
+    readableAccent() in aurora.js."""
+    target = "#000000" if theme == "light" else "#ffffff"
+    for step in range(21):
+        color = mix_colors(accent, target, 1 - step / 20)
+        if all(
+            contrast_ratio(color, background) >= READABLE_CONTRAST
+            for background in READABLE_BACKGROUNDS[theme]
+        ):
+            return color
+    return target
+
+
 def with_alpha(hex_color, alpha):
     r, g, b = (int(hex_color[i : i + 2], 16) for i in (1, 3, 5))
     return f"rgba({r}, {g}, {b}, {alpha})"
@@ -252,13 +294,16 @@ class AuroraPlugin(
             mode=self._settings.get(["mode"]),
             logo=self._settings.get(["logo"]),
             accent=accent,
+            accent_light=readable_accent(accent, "light"),
+            accent_dark=readable_accent(accent, "dark"),
+            on_accent_light=contrast_color(readable_accent(accent, "light")),
+            on_accent_dark=contrast_color(readable_accent(accent, "dark")),
             accent_2=mix_colors(accent, "#ff7ac6", 0.55),
             accent_ring=with_alpha(accent, 0.35),
-            accent_text_light=mix_colors(accent, "#000000", 0.62),
-            accent_text_dark=mix_colors(accent, "#ffffff", 0.6),
+            accent_text_light=mix_colors(readable_accent(accent, "light"), "#000000", 0.62),
+            accent_text_dark=mix_colors(readable_accent(accent, "dark"), "#ffffff", 0.6),
             glow_1=with_alpha(accent, 0.22),
             glow_2=with_alpha(accent, 0.12),
-            on_accent=contrast_color(accent),
             radius=self._settings.get_int(["radius"]),
         )
         response = flask.make_response(css)

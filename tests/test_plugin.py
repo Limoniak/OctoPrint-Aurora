@@ -170,6 +170,51 @@ def test_accent_presets_keep_white_text_readable():
         assert contrast(preset, "#ffffff") >= 4.5, preset
 
 
+def test_presets_are_never_adjusted():
+    script = read("static", "js", "aurora.js")
+    block = re.search(r"self\.presets = \[(.*?)\];", script, re.S).group(1)
+    for preset in re.findall(r'"(#[0-9a-f]{6})"', block):
+        for theme in ("light", "dark"):
+            assert aurora.readable_accent(preset, theme) == preset, (preset, theme)
+
+
+@pytest.mark.parametrize(
+    "accent, theme",
+    [
+        ("#ffffff", "light"),
+        ("#eeeeee", "light"),  # OctoPrint's "white" instance color
+        ("#f2de28", "light"),  # "yellow"
+        ("#77ff28", "light"),  # "green"
+        ("#000000", "dark"),
+        ("#383838", "dark"),  # "black"
+        ("#0044cc", "dark"),  # "blue"
+    ],
+)
+def test_accents_too_close_to_the_background_are_adjusted(accent, theme):
+    adjusted = aurora.readable_accent(accent, theme)
+    assert adjusted != accent
+    for background in aurora.READABLE_BACKGROUNDS[theme]:
+        assert aurora.contrast_ratio(adjusted, background) >= 3, (adjusted, background)
+    # darker in the light theme, lighter in the dark theme
+    brighter = sum(int(adjusted[i : i + 2], 16) for i in (1, 3, 5)) > sum(
+        int(accent[i : i + 2], 16) for i in (1, 3, 5)
+    )
+    assert brighter == (theme == "dark")
+
+
+def test_readable_backgrounds_match_the_stylesheet_and_the_script():
+    css = read("static", "css", "aurora.css")
+    script = read("static", "js", "aurora.js")
+    block = re.search(r"var READABLE_BACKGROUNDS = \{(.*?)\};", script, re.S).group(1)
+    for theme, (bg, surface) in aurora.READABLE_BACKGROUNDS.items():
+        tokens = re.search(
+            r'html\.aurora\[data-aurora-theme="%s"\]\s*\{(.*?)\}' % theme, css, re.S
+        ).group(1)
+        assert "--a-bg: %s;" % bg in tokens
+        assert "--a-surface: %s;" % surface in tokens
+        assert re.search(r'%s: \["%s", "%s"\]' % (theme, bg, surface), block), theme
+
+
 def test_theme_tokens_are_read_from_the_stylesheet():
     plugin = aurora.AuroraPlugin()
     plugin._basefolder = PACKAGE
@@ -202,7 +247,10 @@ def test_login_stylesheet_renders(mode, logo):
         accent_text_dark="#a792ff",
         glow_1="rgba(109, 74, 255, 0.22)",
         glow_2="rgba(109, 74, 255, 0.12)",
-        on_accent="#ffffff",
+        accent_light="#6d4aff",
+        accent_dark="#6d4aff",
+        on_accent_light="#ffffff",
+        on_accent_dark="#ffffff",
         radius=14,
     )
     assert "{{" not in css and "&#" not in css

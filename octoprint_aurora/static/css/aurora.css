@@ -60,7 +60,8 @@ html.aurora[data-aurora-theme="light"] {
   --a-accent-text: #442e9e;
   --a-success: #15803d;
   --a-warning: #b45309;
-  --a-danger: #dc2626;
+  /* 4.5:1 on every light background, panel headers included */
+  --a-danger: #c81e1e;
   --a-info: #0369a1;
   --a-graph-1: #ef4444;
   --a-graph-2: #3b82f6;
@@ -182,6 +183,15 @@ html.aurora .muted {
 
 html.aurora .text-error {
   color: var(--a-danger);
+}
+
+/* links in alerts and notifications take the message's own color, which is
+   readable on each alert type; the accent color was not on all of them */
+html.aurora .alert a:not(.btn),
+html.aurora .ui-pnotify a:not(.btn) {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
 }
 
 html.aurora .text-success {
@@ -886,7 +896,8 @@ html.aurora .btn-primary:active {
 
 html.aurora .btn-success:hover,
 html.aurora .btn-success:focus,
-html.aurora .btn-success.active {
+html.aurora .btn-success.active,
+html.aurora .btn-success:active {
   background: var(--a-success-fill);
   color: #fff;
   filter: brightness(1.08);
@@ -894,7 +905,8 @@ html.aurora .btn-success.active {
 
 html.aurora .btn-danger:hover,
 html.aurora .btn-danger:focus,
-html.aurora .btn-danger.active {
+html.aurora .btn-danger.active,
+html.aurora .btn-danger:active {
   background: var(--a-danger-fill);
   color: #fff;
   filter: brightness(1.08);
@@ -902,7 +914,8 @@ html.aurora .btn-danger.active {
 
 html.aurora .btn-warning:hover,
 html.aurora .btn-warning:focus,
-html.aurora .btn-warning.active {
+html.aurora .btn-warning.active,
+html.aurora .btn-warning:active {
   background: var(--a-warning-fill);
   color: #fff;
   filter: brightness(1.08);
@@ -910,10 +923,22 @@ html.aurora .btn-warning.active {
 
 html.aurora .btn-info:hover,
 html.aurora .btn-info:focus,
-html.aurora .btn-info.active {
+html.aurora .btn-info.active,
+html.aurora .btn-info:active {
   background: var(--a-info-fill);
   color: #fff;
   filter: brightness(1.08);
+}
+
+/* the hover and pressed rules of plain buttons must not turn a dark button
+   light (and the other way round in the dark theme) */
+html.aurora .btn-inverse:hover,
+html.aurora .btn-inverse:focus,
+html.aurora .btn-inverse.active,
+html.aurora .btn-inverse:active {
+  background: var(--a-text);
+  color: var(--a-bg);
+  filter: brightness(1.15);
 }
 
 html.aurora .btn-link,
@@ -1061,6 +1086,7 @@ html.aurora .input-prepend .btn {
 
 html.aurora .input-append > :first-child,
 html.aurora .input-prepend > :first-child,
+html.aurora .input-prepend.input-append > :first-child,
 html.aurora .input-append > .btn-group:first-child > .btn:first-child,
 html.aurora .input-prepend > .btn-group:first-child > .btn:first-child {
   border-top-left-radius: var(--a-radius-sm);
@@ -1069,6 +1095,7 @@ html.aurora .input-prepend > .btn-group:first-child > .btn:first-child {
 
 html.aurora .input-append > :last-child,
 html.aurora .input-prepend > :last-child,
+html.aurora .input-prepend.input-append > :last-child,
 html.aurora .input-append > .btn-group:last-child > .btn:last-child,
 html.aurora .input-prepend > .btn-group:last-child > .btn:last-child,
 html.aurora .input-append > .btn-group:last-child > .dropdown-toggle {
@@ -1224,6 +1251,13 @@ html.aurora .badge-warning {
   color: #fff;
 }
 
+/* dark like .btn-inverse (light in the dark theme) */
+html.aurora .label-inverse,
+html.aurora .badge-inverse {
+  background: var(--a-text);
+  color: var(--a-bg);
+}
+
 html.aurora .label-info,
 html.aurora .badge-info {
   background: var(--a-info-fill);
@@ -1296,6 +1330,11 @@ html.aurora .progress-danger .bar {
 html.aurora .progress .bar-warning,
 html.aurora .progress-warning .bar {
   background: var(--a-warning);
+}
+
+html.aurora .progress .bar-info,
+html.aurora .progress-info .bar {
+  background: var(--a-info);
 }
 
 html.aurora .progress-text-centered .progress-text-front {
