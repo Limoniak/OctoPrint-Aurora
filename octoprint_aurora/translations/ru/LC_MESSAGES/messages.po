@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OctoPrint-Aurora 0.1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-31 19:58+0000\n"
+"POT-Creation-Date: 2026-10-31 21:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -305,4 +305,83 @@ msgstr ""
 
 msgid "Grid view with thumbnails for the file list"
 msgstr "Сетка с миниатюрами для списка файлов"
+
+msgid "Allow notifications in this browser"
+msgstr "Разрешить уведомления в этом браузере"
+
+msgid ""
+"Applied after Aurora's own styles, only while the theme is on, and "
+"previewed as you type. Start your selectors with html.aurora to take "
+"precedence. The theme colors are available as variables, e.g. "
+"var(--a-accent)."
+msgstr ""
+"Применяется после стилей Aurora, только когда тема включена; изменения "
+"видны сразу при вводе. Начинайте селекторы с html.aurora, чтобы они имели"
+" приоритет. Цвета темы доступны как переменные, например var(--a-accent)."
+
+msgid ""
+"Browser notifications need OctoPrint to be opened over HTTPS (or on the "
+"computer it runs on). The sound works everywhere."
+msgstr ""
+"Для уведомлений браузера OctoPrint нужно открывать по HTTPS (или на "
+"компьютере, где он запущен). Звук работает везде."
+
+msgid ""
+"Buttons, fields, tabs and menus become at least 44px high, easy to hit "
+"with a finger on a screen next to the printer."
+msgstr ""
+"Кнопки, поля, вкладки и меню становятся высотой не меньше 44 px — по ним "
+"легко попасть пальцем на экране рядом с принтером."
+
+msgid "Custom CSS"
+msgstr "Собственный CSS"
+
+msgid "Full screen"
+msgstr "Во весь экран"
+
+msgid ""
+"Notifications are blocked for this site in this browser: allow them in "
+"the browser's site settings."
+msgstr ""
+"Уведомления для этого сайта заблокированы в этом браузере: разрешите их в"
+" настройках сайта в браузере."
+
+msgid ""
+"Pauses you ask for yourself and cancelled prints do not raise an alert. "
+"The sound plays once you have clicked anywhere on the page."
+msgstr ""
+"Паузы, которые вы ставите сами, и отменённые печати не вызывают "
+"оповещения. Звук может прозвучать только после первого щелчка по "
+"странице."
+
+msgid "Play a sound when a print finishes, fails or pauses"
+msgstr ""
+"Воспроизводить звук, когда печать завершается, прерывается ошибкой или "
+"ставится на паузу"
+
+msgid "Print alerts"
+msgstr "Оповещения о печати"
+
+msgid "Print failed"
+msgstr "Ошибка печати"
+
+msgid "Print finished"
+msgstr "Печать завершена"
+
+msgid "Print paused"
+msgstr "Печать на паузе"
+
+msgid "Show a browser notification when a print finishes, fails or pauses"
+msgstr ""
+"Показывать уведомление браузера, когда печать завершается, прерывается "
+"ошибкой или ставится на паузу"
+
+msgid "Test"
+msgstr "Проверить"
+
+msgid "This is how a finished print will sound and look."
+msgstr "Так будет звучать и выглядеть оповещение о завершённой печати."
+
+msgid "Touch screen (large buttons)"
+msgstr "Сенсорный экран (крупные кнопки)"
 

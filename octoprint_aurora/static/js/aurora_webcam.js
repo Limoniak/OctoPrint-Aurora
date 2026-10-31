@@ -33,6 +33,9 @@
         self.error = ko.observable(false);
         self.inPip = ko.observable(false);
         self.pipSupported = "documentPictureInPicture" in window;
+        // element full screen (not available for images on iPhones)
+        self.fullscreenSupported = !!(document.fullscreenEnabled && Element.prototype.requestFullscreen);
+        self.inFullscreen = ko.observable(false);
 
         var pipWindow = null;
 
@@ -112,13 +115,18 @@
         // before it is turned so that, once turned, it fills it exactly
         self.bodyStyle = ko.pureComputed(function () {
             var ratio = self.ratio();
+            // in full screen the box is the whole screen (see the CSS)
+            if (self.inFullscreen()) return {aspectRatio: ""};
             return {aspectRatio: self.rotated() ? "1 / " + ratio : ratio + " / 1"};
         });
 
         var imageStyle = function () {
-            if (self.inPip()) {
+            // full screen fills the screen like picture in picture fills its window
+            if (self.inPip() || self.inFullscreen()) {
+                // turned: sized before turning, so the screen's height becomes
+                // its width (and Bootstrap's 100% width cap must not apply)
                 return self.rotated()
-                    ? {position: "", maxWidth: "", left: "", top: "", width: "100vh", height: "100vw", objectFit: "contain", transform: self.transform()}
+                    ? {position: "", maxWidth: "none", left: "", top: "", width: "100vh", height: "100vw", objectFit: "contain", transform: self.transform()}
                     : {position: "", maxWidth: "", left: "", top: "", width: "100%", height: "100%", objectFit: "contain", transform: self.transform()};
             }
             if (!self.rotated()) {
@@ -313,6 +321,25 @@
             event.preventDefault();
             return false;
         };
+
+        // ----- Full screen (double-click on the picture, or the bar button)
+
+        self.toggleFullscreen = function () {
+            if (!self.fullscreenSupported || self.inPip()) return;
+            var body = frame().querySelector(".aurora-webcam-body");
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                body.requestFullscreen().catch(function () {
+                    // refused (not from a user gesture...): nothing to undo
+                });
+            }
+        };
+
+        document.addEventListener("fullscreenchange", function () {
+            var el = frame();
+            self.inFullscreen(!!(el && document.fullscreenElement && el.contains(document.fullscreenElement)));
+        });
 
         // ----- Picture in picture (Document Picture-in-Picture API)
 

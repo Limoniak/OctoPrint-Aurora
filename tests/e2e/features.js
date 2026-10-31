@@ -259,6 +259,90 @@ const stateText = (page) => page.evaluate(() => document.querySelector("#state")
     t.check(!(await page.isVisible("#aurora_printcard")), "the card goes away once the print is cancelled");
     t.check(!/%/.test(await page.title()), `the tab title is restored (${await page.title()})`);
 
+    // ----- Print alerts (the sound and the notification are recorded, not played)
+
+    await page.context().addInitScript(() => {
+        window.__notes = [];
+        window.Notification = function (title, options) {
+            window.__notes.push(title + " | " + ((options && options.body) || ""));
+            return { close() {} };
+        };
+        window.Notification.permission = "granted";
+        window.Notification.requestPermission = () => Promise.resolve("granted");
+        window.__oscillators = 0;
+        const proto = (window.AudioContext || window.webkitAudioContext).prototype;
+        const original = proto.createOscillator;
+        proto.createOscillator = function () {
+            window.__oscillators++;
+            return original.call(this);
+        };
+    });
+    await page.evaluate(() => OctoPrint.settings.save({ plugins: { aurora: { alert_sound: true, alert_notify: true } } }));
+    await page.reload();
+    await page.waitForTimeout(7000);
+    await dismissNotifications(page);
+    await page.mouse.click(10, 300); // a first click unlocks the sound
+    const fire = (event, payload) =>
+        page.evaluate(
+            ([event, payload]) => {
+                window.__notes = [];
+                window.__oscillators = 0;
+                OctoPrint.coreui.viewmodels.auroraAlertsViewModel[event](payload);
+                return { notes: window.__notes.slice(), oscillators: window.__oscillators };
+            },
+            [event, payload]
+        );
+    let alert = await fire("onEventPrintDone", { name: "cube.gcode" });
+    t.check(alert.notes[0] === "Print finished | cube.gcode" && alert.oscillators > 0, `a finished print plays a sound and shows a notification (${JSON.stringify(alert)})`);
+    alert = await fire("onEventPrintFailed", { name: "cube.gcode", reason: "cancelled" });
+    t.check(!alert.notes.length && !alert.oscillators, "a print cancelled on purpose raises no alert");
+    alert = await fire("onEventPrintPaused", { name: "cube.gcode", user: "admin" });
+    t.check(!alert.notes.length, "a pause asked for by the user raises no alert");
+    alert = await fire("onEventPrintPaused", { name: "cube.gcode" });
+    t.check(/Print paused/.test(alert.notes[0] || ""), "a pause from the printer (filament change) raises one");
+    await page.evaluate(() => OctoPrint.settings.save({ plugins: { aurora: { alert_sound: false, alert_notify: false } } }));
+
+    // ----- Custom CSS: previewed, reverted when closed without saving
+
+    await page.evaluate(() => OctoPrint.coreui.viewmodels.settingsViewModel.show());
+    await page.waitForTimeout(2500);
+    await page.evaluate(() => $('#settings_dialog a[href="#settings_plugin_aurora"]').tab("show"));
+    await page.waitForTimeout(500);
+    await page.fill("#settings_plugin_aurora .aurora-custom-css textarea", "html.aurora #tabs { outline: 3px solid rgb(255, 0, 0); }");
+    await page.waitForTimeout(300);
+    t.check(await page.evaluate(() => getComputedStyle(document.getElementById("tabs")).outlineColor === "rgb(255, 0, 0)"), "custom CSS is previewed while typing");
+    await page.evaluate(() => $("#settings_dialog").modal("hide"));
+    await page.waitForTimeout(1200);
+    t.check(await page.evaluate(() => !document.getElementById("aurora-custom-css")), "and removed when the settings are closed without saving");
+
+    // ----- Touch screen density: 44px targets
+
+    await page.evaluate(() => OctoPrint.settings.save({ plugins: { aurora: { density: "touch" } } }));
+    await page.waitForTimeout(1500);
+    await page.click("#temp_link a");
+    await page.waitForTimeout(800);
+    const small = await page.evaluate(() =>
+        [...document.querySelectorAll("#temp .btn, #temp input[type=number], #temp input[type=text], #sidebar .btn, #tabs > li > a")]
+            .filter((e) => e.offsetParent && !e.closest(".dropdown-menu"))
+            .filter((e) => e.getBoundingClientRect().height < (e.matches(".btn-mini, .btn-small") ? 36 : 44) - 0.5)
+            .map((e) => (e.textContent.trim() || e.title || e.tagName).slice(0, 12))
+    );
+    t.check(small.length === 0, `touch density: every target is at least 44px (${small.join(", ")})`);
+    await page.evaluate(() => OctoPrint.settings.save({ plugins: { aurora: { density: "comfortable" } } }));
+
+    // ----- Full screen webcam
+
+    if (await page.isVisible("#navbar_plugin_aurora_webcam > a")) {
+        await page.click("#navbar_plugin_aurora_webcam > a");
+        await page.waitForTimeout(1200);
+        await page.dblclick("#aurora_webcam img");
+        await page.waitForTimeout(800);
+        t.check(await page.evaluate(() => !!document.fullscreenElement && document.fullscreenElement.classList.contains("aurora-webcam-body")), "double-clicking the webcam goes full screen");
+        await page.evaluate(() => document.exitFullscreen());
+        await page.waitForTimeout(500);
+        await page.click("#navbar_plugin_aurora_webcam > a");
+    }
+
     t.check(!page.errors.length, `no page errors ${page.errors.join("; ")}`);
     await browser.close();
     t.done();

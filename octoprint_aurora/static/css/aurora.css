@@ -43,6 +43,12 @@ html.aurora[data-aurora-density="compact"] {
   --a-sidebar-w: 320px;
 }
 
+/* "touch": for a screen next to the printer, see "Touch screen density" */
+html.aurora[data-aurora-density="touch"] {
+  --a-gap: 18px;
+  --a-pad: 18px;
+}
+
 html.aurora[data-aurora-theme="light"] {
   color-scheme: light;
   --a-bg: #f3f4f9;
@@ -2141,6 +2147,14 @@ html.aurora .aurora-webcam-body {
   background: #000000;
 }
 
+/* full screen: the picture's box becomes the whole screen */
+html.aurora .aurora-webcam-body:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  aspect-ratio: auto;
+  background: #000000;
+}
+
 html.aurora .aurora-webcam-body img {
   width: 100%;
   height: 100%;
@@ -2330,6 +2344,135 @@ html.aurora #settings_plugin_aurora .aurora-favorites code {
   padding: 0;
   background: transparent;
   border: 0;
+}
+
+/* ===== Touch screen density ============================================ */
+
+/* Targets of at least 44px (36px for the small button sizes), the usual
+   minimum for a finger. Fields use 16px text, which also stops iPhones from
+   zooming in when one is tapped. Groups (field + unit + button) keep one
+   height, so they stay aligned. */
+html.aurora[data-aurora-density="touch"] .btn {
+  /* <a> and <span> buttons count their padding like <button> ones, so
+     every kind ends up 44px, not 66 */
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 15px;
+  line-height: 22px;
+}
+
+html.aurora[data-aurora-density="touch"] .btn-mini,
+html.aurora[data-aurora-density="touch"] .btn-small {
+  min-height: 36px;
+  padding: 7px 12px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+html.aurora[data-aurora-density="touch"] select,
+html.aurora[data-aurora-density="touch"] textarea,
+html.aurora[data-aurora-density="touch"] input[type="text"],
+html.aurora[data-aurora-density="touch"] input[type="password"],
+html.aurora[data-aurora-density="touch"] input[type="number"],
+html.aurora[data-aurora-density="touch"] input[type="email"],
+html.aurora[data-aurora-density="touch"] input[type="url"],
+html.aurora[data-aurora-density="touch"] input[type="search"],
+html.aurora[data-aurora-density="touch"] input[type="tel"],
+html.aurora[data-aurora-density="touch"] .uneditable-input,
+html.aurora[data-aurora-density="touch"] .add-on {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 44px;
+  font-size: 16px;
+  line-height: 22px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+html.aurora[data-aurora-density="touch"] select {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 44px;
+}
+
+html.aurora[data-aurora-density="touch"] input[type="checkbox"],
+html.aurora[data-aurora-density="touch"] input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+}
+
+html.aurora[data-aurora-density="touch"] label.checkbox,
+html.aurora[data-aurora-density="touch"] label.radio {
+  min-height: 32px;
+  padding-left: 28px;
+  line-height: 24px;
+}
+
+html.aurora[data-aurora-density="touch"] label.checkbox input[type="checkbox"],
+html.aurora[data-aurora-density="touch"] label.radio input[type="radio"] {
+  margin-left: -28px;
+}
+
+/* a button inside a field group stays on one line, so the group keeps
+   one height */
+html.aurora[data-aurora-density="touch"] .input-append .btn,
+html.aurora[data-aurora-density="touch"] .input-prepend .btn {
+  white-space: nowrap;
+}
+
+/* OctoPrint sizes small number fields inline (30px for the temperature
+   targets): with the larger text they would cut "off" to "of" */
+html.aurora[data-aurora-density="touch"] .input-mini {
+  min-width: 56px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* file list: the larger action buttons no longer fit in the corner of a
+   card; they go on their own line below the file details */
+html.aurora[data-aurora-density="touch"] #files .gcode_files .entry .action-buttons {
+  position: static;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+html.aurora[data-aurora-density="touch"] #tabs > li > a {
+  padding: 12px 18px;
+  font-size: 15px;
+}
+
+html.aurora[data-aurora-density="touch"] #navbar > .navbar-inner .nav > li > a {
+  padding: 12px 14px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+html.aurora[data-aurora-density="touch"] .nav-list > li > a,
+html.aurora[data-aurora-density="touch"] .dropdown-menu > li > a {
+  padding: 11px 14px;
+}
+
+html.aurora[data-aurora-density="touch"] #sidebar .accordion-heading .accordion-heading-button > a {
+  width: 44px;
+  height: 44px;
+}
+
+html.aurora[data-aurora-density="touch"] #sidebar .accordion-heading .accordion-toggle {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+html.aurora #settings_plugin_aurora .aurora-custom-css textarea {
+  box-sizing: border-box;
+  width: 100%;
+  font-family: var(--a-mono);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 /* ===== Phones: wide content scrolls inside its tab ======================= */

@@ -9,6 +9,18 @@ msgid ""
 "disable one of them."
 msgstr ""
 
+msgid "Print finished"
+msgstr ""
+
+msgid "Print failed"
+msgstr ""
+
+msgid "Print paused"
+msgstr ""
+
+msgid "This is how a finished print will sound and look."
+msgstr ""
+
 msgid "List view"
 msgstr ""
 
@@ -37,6 +49,9 @@ msgid "Picture in picture"
 msgstr ""
 
 msgid "Webcam"
+msgstr ""
+
+msgid "Full screen"
 msgstr ""
 
 msgid "Close"
@@ -172,6 +187,14 @@ msgstr ""
 msgid "Compact"
 msgstr ""
 
+msgid "Touch screen (large buttons)"
+msgstr ""
+
+msgid ""
+"Buttons, fields, tabs and menus become at least 44px high, easy to hit "
+"with a finger on a screen next to the printer."
+msgstr ""
+
 msgid "Sidebar position"
 msgstr ""
 
@@ -235,6 +258,36 @@ msgstr ""
 msgid "Grid view with thumbnails for the file list"
 msgstr ""
 
+msgid "Print alerts"
+msgstr ""
+
+msgid "Play a sound when a print finishes, fails or pauses"
+msgstr ""
+
+msgid "Show a browser notification when a print finishes, fails or pauses"
+msgstr ""
+
+msgid ""
+"Pauses you ask for yourself and cancelled prints do not raise an alert. "
+"The sound plays once you have clicked anywhere on the page."
+msgstr ""
+
+msgid ""
+"Browser notifications need OctoPrint to be opened over HTTPS (or on the "
+"computer it runs on). The sound works everywhere."
+msgstr ""
+
+msgid ""
+"Notifications are blocked for this site in this browser: allow them in "
+"the browser's site settings."
+msgstr ""
+
+msgid "Allow notifications in this browser"
+msgstr ""
+
+msgid "Test"
+msgstr ""
+
 msgid "Favorite commands"
 msgstr ""
 
@@ -245,6 +298,16 @@ msgid "New favorite command"
 msgstr ""
 
 msgid "Add"
+msgstr ""
+
+msgid "Custom CSS"
+msgstr ""
+
+msgid ""
+"Applied after Aurora's own styles, only while the theme is on, and "
+"previewed as you type. Start your selectors with html.aurora to take "
+"precedence. The theme colors are available as variables, e.g. "
+"var(--a-accent)."
 msgstr ""
 
 msgid "Favorites"

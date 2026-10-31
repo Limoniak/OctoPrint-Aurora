@@ -120,6 +120,15 @@ def test_every_on_off_setting_must_be_a_boolean():
     assert cleaned == {"glass": False, "graph": True}
 
 
+def test_new_settings_are_validated():
+    assert save({"density": "touch"}) == {"density": "touch"}
+    assert save({"alert_sound": True, "alert_notify": "yes"}) == {"alert_sound": True}
+    assert save({"custom_css": 42}) == {}
+    css = "html.aurora #tabs { gap: 2px; }"
+    assert save({"custom_css": css}) == {"custom_css": css}
+    assert len(save({"custom_css": "a" * 50000})["custom_css"]) == aurora.MAX_CUSTOM_CSS
+
+
 def test_favorites_are_capped():
     assert len(aurora.clean_favorites(["G%d" % i for i in range(50)])) == aurora.MAX_FAVORITES
 

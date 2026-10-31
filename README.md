@@ -11,6 +11,7 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 [![OctoPrint](https://img.shields.io/badge/OctoPrint-1.11-6d4aff)](https://octoprint.org)
 [![Python](https://img.shields.io/badge/python-3.7%2B-6d4aff)](pyproject.toml)
 [![Languages](https://img.shields.io/badge/languages-7-6d4aff)](#languages)
+[![Website](https://img.shields.io/badge/website-limoniak.github.io-6d4aff)](https://limoniak.github.io/OctoPrint-Aurora/)
 
 <img src="docs/hero.png" alt="Aurora UI in the light theme (left) and the dark theme (right) during a print">
 
@@ -22,7 +23,8 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 - **Light, dark or automatic theme.** Automatic follows your operating system. A moon/sun button in the navbar lets each browser pick its own.
 - **Your accent color.** Nine presets or any color you like. Text on colored buttons switches between white and black so it always stays readable, and a color too close to the background (white in the light theme, black in the dark one) is shown in a slightly darker or lighter shade so buttons and icons never disappear.
 - **Themed graphs.** The temperature graph and the GCode viewer are drawn in the theme colors, so the dark theme stays dark everywhere.
-- **Layout options.** Sidebar on the left or right, comfortable or compact density, full width on large screens, adjustable corner radius.
+- **Layout options.** Sidebar on the left or right, comfortable, compact or touch screen density (44px targets for a screen next to the printer), full width on large screens, adjustable corner radius.
+- **Custom CSS.** Add your own rules on top of the theme, previewed as you type.
 - **A styled login page**, using the same theme and accent color.
 - **Tells your printers apart.** The instance color from *Settings › Appearance* shows as a thin stripe at the top of the screen, or becomes the accent color.
 - **Live preview.** Changes in the settings apply as you make them, and are reverted if you close without saving.
@@ -34,7 +36,8 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 
 - **Print status card.** While printing, a card above the tabs shows the model thumbnail (from Slicer Thumbnails or Cura Thumbnails), a progress ring, time left, the expected finish time, the current layer (with DisplayLayerProgress) and temperatures, with Pause, Resume and Cancel at hand. On a phone it comes first on the page.
 - **Progress in the browser tab.** The tab title reads *42% · benchy.gcode* and its icon fills up as a ring, so you can follow a print from another tab.
-- **Floating webcam.** A camera button in the navbar opens the webcam in a small window that stays on screen whatever the tab. Drag it by its title bar, resize it from the corner grip (mouse or finger), close it with Escape, or pop it out into a picture-in-picture window (Chrome and Edge).
+- **Floating webcam.** A camera button in the navbar opens the webcam in a small window that stays on screen whatever the tab. Drag it by its title bar, resize it from the corner grip (mouse or finger), go full screen with a double-click, close it with Escape, or pop it out into a picture-in-picture window (Chrome and Edge).
+- **Print alerts.** A chime and/or a browser notification when a print finishes, fails, or pauses on its own (filament change, runout). Pauses you ask for and cancelled prints stay quiet. Notifications need OctoPrint over HTTPS (or localhost); the chime works everywhere.
 - **A better terminal.** G-code is colored (commands, parameters, `ok`, errors, temperatures, comments), the last commands you sent are one click away, and your favorite commands (M114, G28, M84…) are buttons. Star the command you typed to add it.
 - **File grid with thumbnails.** One click in the Files panel header turns the file list into a grid of cards showing each model's thumbnail (from Slicer Thumbnails or Cura Thumbnails). Click a thumbnail, or Tab to it and press Enter, to load the file or open the folder. Each browser remembers its choice.
 - **Your layout.** Hide or reorder sidebar panels and tabs from the settings, with live preview. Panels you fold stay folded in that browser.
@@ -99,7 +102,7 @@ Everything lives in **Settings › Aurora UI**.
 | Instance color | Thin stripe at the top, Use as accent color, Ignore | Thin stripe |
 | Corner radius | 0 to 28 px | 14 px |
 | Effects | Background glow and translucent navbar · Themed temperature graph · OctoPrint watermark behind the graph | first two on |
-| Density | Comfortable, Compact | Comfortable |
+| Density | Comfortable, Compact, Touch screen (large buttons) | Comfortable |
 | Sidebar position | Left, Right | Left |
 | Full width on large screens | on / off | on |
 | Panels and tabs | show, hide and reorder each one | all shown, OctoPrint's order |
@@ -109,6 +112,8 @@ Everything lives in **Settings › Aurora UI**.
 | Terminal tools | on / off | on |
 | Grid view with thumbnails for the file list | on / off (then list or grid per browser) | on, list shown until you switch |
 | Favorite commands | any G-code, up to 20 | M114, M105, M503, G28, M84 |
+| Print alerts | sound · browser notification | both off |
+| Custom CSS | any CSS, up to 20,000 characters | empty |
 
 The navbar's moon/sun button overrides the theme for the current browser only, so a tablet next to the printer can stay dark while your desktop follows the system.
 
