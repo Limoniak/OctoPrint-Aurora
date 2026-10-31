@@ -36,8 +36,19 @@
 
         var pipWindow = null;
 
+        // OctoPrint 1.9 and later keep the webcam settings in the Classic
+        // Webcam plugin; before that, they were core settings
         var cam = function () {
-            return self.settingsViewModel.settings.plugins.classicwebcam;
+            var settings = self.settingsViewModel;
+            var classic = settings.settings.plugins && settings.settings.plugins.classicwebcam;
+            if (classic) return classic;
+            if (!settings.webcam_streamUrl) return null;
+            return {
+                stream: settings.webcam_streamUrl,
+                rotate90: settings.webcam_rotate90,
+                flipH: settings.webcam_flipH,
+                flipV: settings.webcam_flipV
+            };
         };
 
         self.streamUrl = ko.pureComputed(function () {
@@ -46,7 +57,8 @@
         });
 
         self.available = ko.pureComputed(function () {
-            var enabled = self.settingsViewModel.webcam_webcamEnabled();
+            var webcamEnabled = self.settingsViewModel.webcam_webcamEnabled;
+            var enabled = ko.isObservable(webcamEnabled) ? webcamEnabled() : true;
             return (
                 AuroraUI.active() &&
                 !!self.s &&
@@ -141,7 +153,9 @@
             sizeTimer = window.setInterval(function () {
                 var img = image();
                 tries++;
-                if (img && img.naturalWidth && img.naturalHeight) {
+                // right after the switch, the size can still be the blank
+                // 1x1 placeholder's: only the stream's own frames count
+                if (img && img.naturalWidth > 1 && img.naturalHeight > 1 && img.currentSrc && img.currentSrc.indexOf("data:") !== 0) {
                     self.ratio(img.naturalWidth / img.naturalHeight);
                     window.clearInterval(sizeTimer);
                 } else if (tries > 40) {
@@ -217,7 +231,7 @@
             var img = event.target;
             if (img.getAttribute("src") === BLANK) return;
             self.error(false);
-            if (img.naturalWidth && img.naturalHeight) self.ratio(img.naturalWidth / img.naturalHeight);
+            if (img.naturalWidth > 1 && img.naturalHeight > 1) self.ratio(img.naturalWidth / img.naturalHeight);
         };
 
         self.onError = function (data, event) {
@@ -239,14 +253,18 @@
                 self.y(e.clientY - dy);
                 clamp();
             };
+            // pointercancel: a touch gesture taken over by the system (scroll,
+            // notification shade) must end the drag too
             var stop = function () {
                 el.classList.remove("dragging");
                 window.removeEventListener("pointermove", move);
                 window.removeEventListener("pointerup", stop);
+                window.removeEventListener("pointercancel", stop);
                 save();
             };
             window.addEventListener("pointermove", move);
             window.addEventListener("pointerup", stop);
+            window.addEventListener("pointercancel", stop);
             event.preventDefault();
             return false;
         };
@@ -319,6 +337,13 @@
                 if (showing) readSize();
             });
             if (self.showing()) readSize();
+
+            // a position saved in a larger browser window could be off screen
+            // now: bring the window back in view whenever it appears
+            self.frameVisible.subscribe(function (visible) {
+                if (visible) window.setTimeout(clamp, 0);
+            });
+            if (self.frameVisible()) window.setTimeout(clamp, 0);
         };
     }
 

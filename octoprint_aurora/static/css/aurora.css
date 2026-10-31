@@ -2593,6 +2593,15 @@ html.aurora body.UICfixedFooter {
   padding-bottom: 56px;
 }
 
+/* the compact navbar menu of narrow screens comes with a fixed light grey
+   background, on which the theme's light text (dark theme) disappeared */
+html.aurora #navbar .nav-collapse.UICMainMenu.UICCompactMenu {
+  background: var(--a-surface);
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius-sm);
+  box-shadow: var(--a-shadow-lg);
+}
+
 /* Chartist charts (UI Customizer's temperature widget) */
 html.aurora .ct-label {
   color: var(--a-text-3);

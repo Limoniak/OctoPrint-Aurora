@@ -89,10 +89,15 @@
 
         self.tempText = ko.pureComputed(function () {
             var parts = [];
-            var tools = self.temperature.tools();
-            if (tools.length && tools[0].actual() !== undefined && tools[0].actual() !== null) {
-                parts.push(Math.round(tools[0].actual()) + " °C");
-            }
+            // one hotend: "215 °C"; several: "T0 215 °C · T1 180 °C"
+            var all = self.temperature.tools();
+            all.forEach(function (tool, index) {
+                var actual = tool.actual();
+                if (actual === undefined || actual === null) return;
+                // numbered by the tool's own position, even if another has no reading
+                var prefix = all.length > 1 ? "T" + index + " " : "";
+                parts.push(prefix + Math.round(actual) + " °C");
+            });
             var bed = self.temperature.hasBed() ? self.temperature.bedTemp.actual() : null;
             if (bed !== undefined && bed !== null) {
                 parts.push(gettext("bed") + " " + Math.round(bed) + " °C");

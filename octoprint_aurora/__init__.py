@@ -15,6 +15,8 @@ HEX_COLOR = re.compile(r"^#[0-9a-fA-F]{6}$")
 ELEMENT_ID = re.compile(r"^[A-Za-z0-9_-]{1,100}$")
 
 FEATURE_FLAGS = ("print_card", "tab_progress", "webcam_float", "terminal_tools", "file_grid")
+# every on/off setting, features included
+BOOLEAN_SETTINGS = ("enabled", "wide", "glass", "watermark", "graph") + FEATURE_FLAGS
 LAYOUT_LISTS = (
     "layout_sidebar_order",
     "layout_sidebar_hidden",
@@ -194,7 +196,7 @@ class AuroraPlugin(
                 cleaned["radius"] = max(0, min(28, int(cleaned["radius"])))
             except (TypeError, ValueError):
                 del cleaned["radius"]
-        for flag in FEATURE_FLAGS:
+        for flag in BOOLEAN_SETTINGS:
             if flag in cleaned and not isinstance(cleaned[flag], bool):
                 del cleaned[flag]
         if "terminal_favorites" in cleaned:
@@ -288,12 +290,22 @@ class AuroraPlugin(
         if self._settings.get(["instance"]) == "accent" and instance_color:
             accent = instance_color
 
+        # a value edited by hand in config.yaml could be anything
+        radius = self._settings.get_int(["radius"])
+        if radius is None:
+            radius = self.get_settings_defaults()["radius"]
+        radius = max(0, min(28, radius))
+
+        # with the plugin's template prefix ("plugin_aurora/"): loading a plugin
+        # template without it is deprecated and slated for removal in
+        # OctoPrint 2.0. Versions without the prefix still find it bare.
+        prefix = getattr(self, "template_folder_key", None)
+        template = "aurora_login_css.jinja2"
         css = flask.render_template(
-            "aurora_login_css.jinja2",
+            prefix + "/" + template if prefix else template,
             tokens=self.get_theme_tokens(),
             mode=self._settings.get(["mode"]),
             logo=self._settings.get(["logo"]),
-            accent=accent,
             accent_light=readable_accent(accent, "light"),
             accent_dark=readable_accent(accent, "dark"),
             on_accent_light=contrast_color(readable_accent(accent, "light")),
@@ -304,7 +316,7 @@ class AuroraPlugin(
             accent_text_dark=mix_colors(readable_accent(accent, "dark"), "#ffffff", 0.6),
             glow_1=with_alpha(accent, 0.22),
             glow_2=with_alpha(accent, 0.12),
-            radius=self._settings.get_int(["radius"]),
+            radius=radius,
         )
         response = flask.make_response(css)
         response.headers["Content-Type"] = "text/css; charset=utf-8"

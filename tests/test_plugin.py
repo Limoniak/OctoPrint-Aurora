@@ -115,6 +115,11 @@ def test_feature_settings_are_validated():
     }
 
 
+def test_every_on_off_setting_must_be_a_boolean():
+    cleaned = save({"enabled": "no", "wide": 1, "glass": False, "watermark": None, "graph": True})
+    assert cleaned == {"glass": False, "graph": True}
+
+
 def test_favorites_are_capped():
     assert len(aurora.clean_favorites(["G%d" % i for i in range(50)])) == aurora.MAX_FAVORITES
 
