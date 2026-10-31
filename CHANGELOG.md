@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.2.4 – 2026-10-31
+
+### Fixes
+- The login page template is loaded with the plugin's template prefix: loading it without was deprecated by OctoPrint and slated for removal in 2.0, which would have left the login page unstyled.
+- UI Customizer: on narrow screens its compact navbar menu kept a light grey background, on which the dark theme's text was nearly invisible.
+- Floating webcam: right after opening, the size of the blank placeholder could be taken for the stream's, giving a square window.
+- Floating webcam: a position saved in a larger browser window could leave it off screen; it is brought back into view whenever it appears.
+- Floating webcam: a touch drag interrupted by the system no longer leaves the window stuck in dragging mode.
+- Floating webcam: works with OctoPrint versions before 1.9, whose webcam settings were not in the Classic Webcam plugin, instead of failing.
+- Every on/off setting is now checked when saved (five of them were not), and an invalid corner radius in config.yaml no longer breaks the login page.
+
+### Improvements
+- Print status card: printers with several hotends show each one ("T0 215 °C · T1 180 °C").
+
+### Checked
+- Full review of the Python, templates, JavaScript and CSS.
+- UI Customizer and Themeify with this version; TouchUI simulated.
+- All six translations on the settings, print card and terminal tools, desktop and phone: no clipped or overflowing text.
+- Two hotends and a heated chamber, and 300 files in grid view (decorated in about a second, smooth scrolling).
+- The plugin's code on Python 3.8 and with the Python 3.7 grammar.
+
 ## 0.2.3 – 2026-10-31
 
 ### Colors
