@@ -11,7 +11,7 @@
 <meta property="og:title" content="Aurora UI for OctoPrint">
 <meta property="og:description" content="A complete redesign of the OctoPrint interface. Light and dark themes, print status card, floating webcam, real phone layout.">
 <meta property="og:url" content="https://limoniak.github.io/OctoPrint-Aurora/">
-<meta property="og:image" content="https://limoniak.github.io/OctoPrint-Aurora/hero.png">
+<meta property="og:image" content="https://limoniak.github.io/OctoPrint-Aurora/compare-after-light.webp">
 <meta name="twitter:card" content="summary_large_image">
 <style>
 :root {
@@ -130,7 +130,7 @@ header.top {
 .btn svg { width: 18px; height: 18px; }
 
 /* ---------- hero */
-.hero { padding: 72px 0 40px; text-align: center; }
+.hero { padding: 52px 0 32px; text-align: center; }
 .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); color: var(--text-2); font-size: 14px; font-weight: 550; box-shadow: var(--shadow); }
 .eyebrow b { color: var(--accent-text); }
 .hero h1 { margin: 22px auto 16px; max-width: 900px; font-size: clamp(38px, 6.4vw, 68px); line-height: 1.04; letter-spacing: -0.035em; font-weight: 800; }
@@ -139,12 +139,6 @@ header.top {
 .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 32px 0 18px; }
 .facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; color: var(--text-3); font-size: 14px; font-weight: 550; }
 .facts span::before { content: "✓"; color: var(--accent-text); margin-right: 6px; font-weight: 700; }
-.shot {
-  margin: 48px auto 0; max-width: 1080px; border-radius: var(--radius);
-  overflow: hidden; border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg); background: var(--surface);
-}
-.shot .bar { display: flex; gap: 7px; padding: 12px 14px; background: var(--surface-2); border-bottom: 1px solid var(--border); }
-.shot .bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--surface-3); }
 
 /* ---------- sections */
 section { padding: 72px 0; }
@@ -153,8 +147,16 @@ section { padding: 72px 0; }
 .section-head p { margin: 0; color: var(--text-2); font-size: 18px; }
 .kicker { display: block; margin-bottom: 10px; color: var(--accent-text); font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 
-/* before / after */
-.compare { position: relative; max-width: 1080px; margin: 0 auto; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg); aspect-ratio: 1440 / 900; background: var(--surface); touch-action: pan-y; user-select: none; }
+/* before / after: the hero picture */
+.hero .compare { margin-top: 36px; }
+.compare .only-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .compare .only-dark { display: block; }
+  :root:not([data-theme="light"]) .compare .only-light { display: none; }
+}
+:root[data-theme="dark"] .compare .only-dark { display: block; }
+:root[data-theme="dark"] .compare .only-light { display: none; }
+.compare { position: relative; max-width: 1160px; margin: 0 auto; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg); aspect-ratio: 1440 / 900; background: var(--surface); touch-action: pan-y; user-select: none; }
 .compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .compare .after { clip-path: inset(0 0 0 var(--pos, 50%)); }
 .compare .divider { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 3px; margin-left: -1.5px; background: #ffffff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2); pointer-events: none; }
@@ -175,36 +177,8 @@ section { padding: 72px 0; }
 .card h3 { margin: 0 0 8px; font-size: 19px; letter-spacing: -0.01em; }
 .card p { margin: 0; color: var(--text-2); font-size: 15.5px; }
 
-/* spotlight rows */
-.spot { display: grid; grid-template-columns: 1fr 1.25fr; gap: 48px; align-items: center; margin-bottom: 80px; }
-.spot:last-child { margin-bottom: 0; }
-.spot.rev { grid-template-columns: 1.25fr 1fr; }
-.spot.rev .txt { order: 2; }
-.spot h3 { margin: 0 0 12px; font-size: clamp(24px, 3vw, 32px); letter-spacing: -0.025em; line-height: 1.15; }
-.spot p { margin: 0 0 14px; color: var(--text-2); font-size: 17px; }
-.spot ul { margin: 0; padding: 0; list-style: none; color: var(--text-2); }
-.spot li { padding-left: 26px; position: relative; margin: 8px 0; }
-.spot li::before { content: ""; position: absolute; left: 0; top: 9px; width: 14px; height: 8px; border-left: 2.5px solid var(--accent-text); border-bottom: 2.5px solid var(--accent-text); transform: rotate(-45deg); }
-.frame { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg); background: var(--surface); }
-.phones { display: flex; gap: 18px; justify-content: center; align-items: flex-start; }
-.phone { width: min(46%, 260px); border-radius: 30px; overflow: hidden; border: 6px solid #0b0d14; box-shadow: var(--shadow-lg); background: #0b0d14; }
-.phone:nth-child(2) { margin-top: 48px; }
-@media (max-width: 860px) {
-  .spot, .spot.rev { grid-template-columns: 1fr; gap: 28px; }
-  .spot.rev .txt { order: 0; }
-}
-
-/* gallery */
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 18px; }
-.gallery button { padding: 0; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--surface); cursor: zoom-in; box-shadow: var(--shadow); text-align: left; color: var(--text); font: inherit; }
-.gallery button img { aspect-ratio: 16 / 10; width: 100%; object-fit: cover; object-position: top left; transition: transform 0.3s; }
-.gallery button:hover img { transform: scale(1.03); }
-.gallery button span { display: block; padding: 12px 16px; font-weight: 600; font-size: 15px; border-top: 1px solid var(--border); }
-dialog.lightbox { padding: 0; border: 0; background: transparent; max-width: min(1400px, 94vw); max-height: 92vh; }
-dialog.lightbox::backdrop { background: rgba(5, 6, 10, 0.82); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-dialog.lightbox img { max-height: 84vh; width: auto; margin: 0 auto; border-radius: 12px; box-shadow: var(--shadow-lg); }
-dialog.lightbox p { margin: 12px 0 0; text-align: center; color: #e7e9f1; font-weight: 600; }
-dialog.lightbox .close { position: fixed; top: 16px; right: 16px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.14); color: #ffffff; font-size: 26px; line-height: 1; cursor: pointer; }
+.more { text-align: center; margin: 28px 0 0; font-weight: 600; }
+.more a { text-decoration: none; }
 
 /* install */
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 18px; }
@@ -251,7 +225,6 @@ footer a { color: var(--text-2); }
     <a class="brand" href="#top" aria-label="Aurora UI, back to top"><img src="logo.svg" alt="" width="32" height="32"> Aurora UI</a>
     <nav aria-label="Sections">
       <a class="hide-sm" href="#features">Features</a>
-      <a class="hide-sm" href="#gallery">Screenshots</a>
       <a href="#install">Install</a>
       <a class="hide-sm" href="#faq">FAQ</a>
       <a href="https://github.com/Limoniak/OctoPrint-Aurora" aria-label="Aurora UI on GitHub">
@@ -278,31 +251,18 @@ footer a { color: var(--text-2); }
       <a class="btn" href="https://github.com/Limoniak/OctoPrint-Aurora">View on GitHub</a>
     </div>
     <div class="facts"><span>OctoPrint 1.11</span><span>7 languages</span><span>WCAG AA contrast</span><span>Off in one click</span></div>
-    <div class="shot">
-      <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
-      <img src="hero.png" width="1600" height="1000" alt="Aurora UI in the light theme on the left and the dark theme on the right, during a print">
+    <div class="compare" id="cmp" style="--pos: 50%">
+      <img src="compare-before.webp" alt="Stock OctoPrint interface during a print" width="2880" height="1800" fetchpriority="high">
+      <img class="after only-light" src="compare-after-light.webp" alt="The same page with Aurora UI, light theme" width="2880" height="1800">
+      <img class="after only-dark" src="compare-after-dark.webp" alt="The same page with Aurora UI, dark theme" width="2880" height="1800">
+      <span class="tag l">Stock OctoPrint</span>
+      <span class="tag r">Aurora UI</span>
+      <span class="divider" aria-hidden="true"></span>
+      <input type="range" min="0" max="100" value="50" aria-label="Compare: stock interface on the left, Aurora on the right">
+      <span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></span>
     </div>
+    <p class="hint">Drag the handle: the same page during the same print, stock on the left, Aurora on the right. Switch the site's theme to see Aurora's dark side.</p>
   </div>
-
-  <section id="compare">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="kicker">Before · after</span>
-        <h2>Same OctoPrint. Brand new feel.</h2>
-        <p>Drag the handle: the same page, the same print, the stock interface on the left and Aurora on the right.</p>
-      </div>
-      <div class="compare" id="cmp" style="--pos: 50%">
-        <img src="compare-before.png" alt="Stock OctoPrint interface" width="1440" height="900" loading="lazy">
-        <img class="after" src="compare-after.png" alt="The same page with Aurora UI" width="1440" height="900" loading="lazy">
-        <span class="tag l">Stock</span>
-        <span class="tag r">Aurora</span>
-        <span class="divider" aria-hidden="true"></span>
-        <input type="range" min="0" max="100" value="50" aria-label="Move the comparison: stock interface on the left, Aurora on the right">
-        <span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></span>
-      </div>
-      <p class="hint">Tip: use the arrow keys after focusing the slider.</p>
-    </div>
-  </section>
 
   <section id="features">
     <div class="wrap">
@@ -325,74 +285,7 @@ footer a { color: var(--text-2); }
         <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></div><h3>Custom CSS</h3><p>Fine-tune anything with your own rules, using the theme's color variables, previewed as you type.</p></div>
         <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3>Light on your Pi</h3><p>About 5% of CPU over stock OctoPrint while printing, and the webcam pauses when nobody is looking.</p></div>
       </div>
-    </div>
-  </section>
-
-  <section id="tour">
-    <div class="wrap">
-      <div class="spot">
-        <div class="txt">
-          <span class="kicker">While printing</span>
-          <h3>See your print at a glance, from any tab</h3>
-          <p>The print status card sits above the tabs and comes first on a phone. The browser tab shows the progress too, so you can follow a print from anywhere.</p>
-          <ul>
-            <li>Thumbnail from Slicer Thumbnails or Cura Thumbnails</li>
-            <li>Current layer with DisplayLayerProgress</li>
-            <li>Progress ring in the browser tab's icon</li>
-          </ul>
-        </div>
-        <div class="frame"><img src="print-card.png" width="1440" height="900" loading="lazy" alt="The print status card above the tabs, with the floating webcam"></div>
-      </div>
-      <div class="spot rev">
-        <div class="txt">
-          <span class="kicker">Terminal</span>
-          <h3>A terminal you can actually read</h3>
-          <p>Commands, parameters, temperatures and errors each get their color. The commands you send most often become buttons.</p>
-          <ul>
-            <li>Recent commands, one click to edit and resend</li>
-            <li>Favorites, starred right from the terminal</li>
-            <li>Only colors what you can see: no cost while printing</li>
-          </ul>
-        </div>
-        <div class="frame"><img src="terminal.png" width="700" height="470" loading="lazy" alt="Colored terminal with favorite and recent commands"></div>
-      </div>
-      <div class="spot">
-        <div class="txt">
-          <span class="kicker">On the go</span>
-          <h3>Made for the phone in your pocket</h3>
-          <p>Check a print from the couch: the card first, readable settings, wide tables that scroll in place, and a navbar that gets out of the way.</p>
-          <ul>
-            <li>Touch-friendly floating webcam</li>
-            <li>Grid of model thumbnails</li>
-            <li>Same theme, same colors as on your desktop</li>
-          </ul>
-        </div>
-        <div class="phones">
-          <div class="phone"><img src="print-card-mobile.png" width="390" height="844" loading="lazy" alt="Print status card first on a phone"></div>
-          <div class="phone"><img src="mobile-dark.png" width="520" height="1125" loading="lazy" alt="Aurora UI on a phone, dark theme"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="gallery">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="kicker">Screenshots</span>
-        <h2>Take a closer look</h2>
-        <p>Click any picture to see it full size.</p>
-      </div>
-      <div class="gallery">
-        <button type="button" data-full="main-dark.png"><img src="main-dark.png" width="1600" height="1000" loading="lazy" alt=""><span>Dark theme during a print</span></button>
-        <button type="button" data-full="main-light.png"><img src="main-light.png" width="1600" height="1000" loading="lazy" alt=""><span>Light theme</span></button>
-        <button type="button" data-full="gcode-dark.png"><img src="gcode-dark.png" width="1600" height="1000" loading="lazy" alt=""><span>GCode viewer in the theme colors</span></button>
-        <button type="button" data-full="settings.png"><img src="settings.png" width="1600" height="1000" loading="lazy" alt=""><span>Settings, with live preview</span></button>
-        <button type="button" data-full="file-grid.png"><img src="file-grid.png" width="744" height="832" loading="lazy" alt=""><span>File grid with thumbnails</span></button>
-        <button type="button" data-full="layout-settings.png"><img src="layout-settings.png" width="760" height="600" loading="lazy" alt=""><span>Hide and reorder panels and tabs</span></button>
-        <button type="button" data-full="login-dark.png"><img src="login-dark.png" width="800" height="667" loading="lazy" alt=""><span>Login page, dark</span></button>
-        <button type="button" data-full="login-light.png"><img src="login-light.png" width="800" height="667" loading="lazy" alt=""><span>Login page, light</span></button>
-        <button type="button" data-full="before.png"><img src="before.png" width="1440" height="1157" loading="lazy" alt=""><span>For comparison: stock OctoPrint</span></button>
-      </div>
+      <p class="more"><a href="https://github.com/Limoniak/OctoPrint-Aurora#screenshots">See every screenshot on GitHub →</a></p>
     </div>
   </section>
 
@@ -466,11 +359,6 @@ footer a { color: var(--text-2); }
   </div>
 </footer>
 
-<dialog class="lightbox" id="lightbox" aria-label="Screenshot">
-  <button class="close" type="button" aria-label="Close">×</button>
-  <img alt="">
-  <p></p>
-</dialog>
 
 <script>
 (function () {
@@ -515,24 +403,6 @@ footer a { color: var(--text-2); }
     });
   });
 
-  // gallery lightbox
-  var box = document.getElementById("lightbox");
-  if (box.showModal) {
-    document.querySelectorAll(".gallery button").forEach(function (b) {
-      b.addEventListener("click", function () {
-        box.querySelector("img").src = b.dataset.full;
-        box.querySelector("img").alt = b.querySelector("span").textContent;
-        box.querySelector("p").textContent = b.querySelector("span").textContent;
-        box.showModal();
-      });
-    });
-    box.querySelector(".close").addEventListener("click", function () { box.close(); });
-    box.addEventListener("click", function (e) { if (e.target === box) box.close(); });
-  } else {
-    document.querySelectorAll(".gallery button").forEach(function (b) {
-      b.addEventListener("click", function () { window.open(b.dataset.full, "_blank"); });
-    });
-  }
 })();
 </script>
 </body>
