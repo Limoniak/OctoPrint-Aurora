@@ -2231,6 +2231,76 @@ html.aurora #settings_plugin_aurora .aurora-favorites code {
   border: 0;
 }
 
+/* ===== Phones: wide content scrolls inside its tab ======================= */
+
+@media (max-width: 767px) {
+  /* the temperature table keeps one line per row and scrolls sideways
+     instead of squeezing its controls */
+  html.aurora #temperature-table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html.aurora #temperature-table th,
+  html.aurora #temperature-table td {
+    white-space: nowrap;
+  }
+
+  /* the GCode viewer draws on a fixed 568px canvas, and reads the mouse in
+     canvas pixels, so it is not scaled down: it scrolls within its tab and
+     the page itself never scrolls sideways */
+  html.aurora #gcode {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* settings: OctoPrint keeps its menu beside the pages, which leaves them
+     about 230px on a phone. The menu goes above them instead, in a short
+     scrolling box, and the pages get the full width */
+  html.aurora #settings_dialog_menu,
+  html.aurora #settings_dialog_content {
+    float: none;
+    width: auto;
+    margin-left: 0;
+  }
+
+  html.aurora #settings_dialog_menu {
+    max-height: 28vh;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--a-border);
+  }
+
+  /* labels above their fields rather than in a 160px column beside them */
+  html.aurora #settings_dialog .form-horizontal .control-label {
+    float: none;
+    width: auto;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  html.aurora #settings_dialog .form-horizontal .controls {
+    margin-left: 0;
+  }
+
+  html.aurora #settings_dialog select,
+  html.aurora #settings_dialog input[type="text"],
+  html.aurora #settings_dialog input[type="number"],
+  html.aurora #settings_dialog input[type="password"],
+  html.aurora #settings_dialog input[type="url"],
+  html.aurora #settings_dialog textarea {
+    max-width: 100%;
+  }
+
+  html.aurora #settings_dialog .btn-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+  }
+}
+
 /* ===== File list grid view =========================================== */
 
 /* the thumbnail area only shows in the grid view */

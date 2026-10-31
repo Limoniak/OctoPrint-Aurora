@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.1 – 2026-10-31
+
+### Fixes
+- Floating webcam: once opened, the window kept growing on its own (the saved width was measured border included and applied border excluded).
+- Floating webcam: a stream turned by 90° (Settings > Webcam) overflowed its box and was cropped. The window now follows the stream's proportions, portrait when turned, and stays within the screen height.
+- Floating webcam: the turn and mirroring are kept after coming back from picture in picture.
+- Phones: the settings menu now sits above the pages instead of squeezing them into a narrow column, and form labels go above their fields.
+- Phones: the temperature table and the GCode viewer scroll sideways within their tab, instead of squeezing their controls or making the whole page scroll.
+
 ## 0.2.0 – 2026-10-31
 
 ### Features
