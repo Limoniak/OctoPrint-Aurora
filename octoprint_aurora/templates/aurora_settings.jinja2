@@ -100,7 +100,9 @@
                 <select data-bind="value: s.density">
                     <option value="comfortable">{{ _('Comfortable') }}</option>
                     <option value="compact">{{ _('Compact') }}</option>
+                    <option value="touch">{{ _('Touch screen (large buttons)') }}</option>
                 </select>
+                <span class="help-block" style="display: none" data-bind="visible: s.density() === 'touch'">{{ _('Buttons, fields, tabs and menus become at least 44px high, easy to hit with a finger on a screen next to the printer.') }}</span>
             </div>
         </div>
 
@@ -182,6 +184,25 @@
             </div>
         </div>
 
+        <div class="control-group">
+            <label class="control-label">{{ _('Print alerts') }}</label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.alert_sound"> {{ _('Play a sound when a print finishes, fails or pauses') }}
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.alert_notify"> {{ _('Show a browser notification when a print finishes, fails or pauses') }}
+                </label>
+                <span class="help-block">{{ _('Pauses you ask for yourself and cancelled prints do not raise an alert. The sound plays once you have clicked anywhere on the page.') }}</span>
+                <div data-bind="visible: s.alert_notify" style="display: none">
+                    <span class="help-block" data-bind="visible: !alerts.notifySupported">{{ _('Browser notifications need OctoPrint to be opened over HTTPS (or on the computer it runs on). The sound works everywhere.') }}</span>
+                    <span class="help-block" data-bind="visible: alerts.blocked">{{ _('Notifications are blocked for this site in this browser: allow them in the browser\'s site settings.') }}</span>
+                    <button type="button" class="btn" data-bind="visible: alerts.needsPermission, click: alerts.requestPermission"><i class="fas fa-bell" aria-hidden="true"></i> {{ _('Allow notifications in this browser') }}</button>
+                </div>
+                <button type="button" class="btn" data-bind="click: alerts.test, enable: s.alert_sound() || s.alert_notify()"><i class="fas fa-play" aria-hidden="true"></i> {{ _('Test') }}</button>
+            </div>
+        </div>
+
         <div class="control-group" data-bind="visible: s.terminal_tools">
             <label class="control-label">{{ _('Favorite commands') }}</label>
             <div class="controls">
@@ -195,6 +216,15 @@
                     <input type="text" class="input-medium" maxlength="120" placeholder="G28" data-bind="value: terminal.newFavorite, valueUpdate: 'input', event: { keydown: function(data, event) { if (event.key === 'Enter') { terminal.addFavorite(); return false; } return true; } }" aria-label="{{ _('New favorite command')|edq }}">
                     <button type="button" class="btn" data-bind="click: terminal.addFavorite">{{ _('Add') }}</button>
                 </div>
+            </div>
+        </div>
+
+        <legend>{{ _('Custom CSS') }}</legend>
+
+        <div class="control-group">
+            <div class="controls aurora-custom-css">
+                <textarea rows="8" spellcheck="false" maxlength="20000" data-bind="value: s.custom_css, valueUpdate: 'input'" aria-label="{{ _('Custom CSS')|edq }}" placeholder="html.aurora #tabs { … }"></textarea>
+                <span class="help-block">{{ _('Applied after Aurora\'s own styles, only while the theme is on, and previewed as you type. Start your selectors with html.aurora to take precedence. The theme colors are available as variables, e.g. var(--a-accent).') }}</span>
             </div>
         </div>
     </div>

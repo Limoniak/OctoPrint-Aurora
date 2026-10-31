@@ -41,6 +41,9 @@
         webcam_float: true,
         terminal_tools: true,
         file_grid: true,
+        alert_sound: false,
+        alert_notify: false,
+        custom_css: "",
         terminal_favorites: ["M114", "M105", "M503", "G28", "M84"],
         layout_sidebar_order: [],
         layout_sidebar_hidden: [],
@@ -181,6 +184,26 @@
         }
     }
 
+    // The "Custom CSS" setting: a <style> at the end of <head>, so it comes
+    // after the theme's own rules, and only while the theme is applied.
+    // textContent cannot break out of the element, whatever was typed.
+    var CUSTOM_CSS_ID = "aurora-custom-css";
+
+    function setCustomCss(css) {
+        var style = document.getElementById(CUSTOM_CSS_ID);
+        if (!css) {
+            if (style) style.parentNode.removeChild(style);
+            return;
+        }
+        if (!style) {
+            style = document.createElement("style");
+            style.id = CUSTOM_CSS_ID;
+        }
+        // (re)appended last, after any stylesheet a plugin added meanwhile
+        document.head.appendChild(style);
+        if (style.textContent !== css) style.textContent = css;
+    }
+
     function setMetaThemeColor(theme) {
         var meta = document.querySelector('meta[name="theme-color"]');
         if (!meta) {
@@ -283,8 +306,10 @@
         window.setTimeout(themeGcodeViewer, 0);
         if (!enabled) {
             setFavicon(false);
+            setCustomCss("");
             return;
         }
+        setCustomCss(typeof current.custom_css === "string" ? current.custom_css : "");
 
         var theme = resolveTheme(current);
         var accent = hexToRgb(current.accent) ? current.accent : DEFAULTS.accent;
@@ -344,7 +369,11 @@
             setFavicon(current && current.logo === "aurora");
         },
         storageGet: storageGet,
-        storageSet: storageSet
+        storageSet: storageSet,
+        // the Nozzle icon in the current accent color (for notifications)
+        brandIcon: function () {
+            return brandFavicon(faviconAccent);
+        }
     };
 
     function setInstanceColor(name) {
@@ -596,9 +625,10 @@
         var self = this;
 
         self.settingsViewModel = parameters[0];
-        // used by the layout and favorites editors in the settings page
+        // used by the layout, favorites and alerts parts of the settings page
         self.layout = parameters[1];
         self.terminal = parameters[2];
+        self.alerts = parameters[3];
         self.s = undefined;
         self.saved = undefined;
         self.dialogOpen = false;
@@ -747,7 +777,7 @@
 
     OCTOPRINT_VIEWMODELS.push({
         construct: AuroraViewModel,
-        dependencies: ["settingsViewModel", "auroraLayoutViewModel", "auroraTerminalViewModel"],
+        dependencies: ["settingsViewModel", "auroraLayoutViewModel", "auroraTerminalViewModel", "auroraAlertsViewModel"],
         elements: ["#settings_plugin_aurora", "#navbar_plugin_aurora"]
     });
 })();

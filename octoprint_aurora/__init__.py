@@ -8,13 +8,21 @@ import octoprint.plugin
 
 MODES = ("auto", "light", "dark")
 LOGOS = ("octoprint", "aurora", "none")
-DENSITIES = ("comfortable", "compact")
+DENSITIES = ("comfortable", "compact", "touch")
 SIDEBAR_POSITIONS = ("left", "right")
 INSTANCE_MODES = ("stripe", "accent", "none")
 HEX_COLOR = re.compile(r"^#[0-9a-fA-F]{6}$")
 ELEMENT_ID = re.compile(r"^[A-Za-z0-9_-]{1,100}$")
 
-FEATURE_FLAGS = ("print_card", "tab_progress", "webcam_float", "terminal_tools", "file_grid")
+FEATURE_FLAGS = (
+    "print_card",
+    "tab_progress",
+    "webcam_float",
+    "terminal_tools",
+    "file_grid",
+    "alert_sound",
+    "alert_notify",
+)
 # every on/off setting, features included
 BOOLEAN_SETTINGS = ("enabled", "wide", "glass", "watermark", "graph") + FEATURE_FLAGS
 LAYOUT_LISTS = (
@@ -24,6 +32,7 @@ LAYOUT_LISTS = (
     "layout_tabs_hidden",
 )
 MAX_FAVORITES = 20
+MAX_CUSTOM_CSS = 20000
 
 # OctoPrint's navbar colors (Settings > Appearance), from its octoprint.less.
 # Same values as INSTANCE_COLORS in aurora.js.
@@ -168,6 +177,11 @@ class AuroraPlugin(
             "webcam_float": True,
             "terminal_tools": True,
             "file_grid": True,
+            # print alerts (off by default: they make noise / ask permission)
+            "alert_sound": False,
+            "alert_notify": False,
+            # extra CSS, applied after the theme while it is on
+            "custom_css": "",
             "terminal_favorites": ["M114", "M105", "M503", "G28", "M84"],
             # layout: element ids of the sidebar panels and tabs
             "layout_sidebar_order": [],
@@ -199,6 +213,11 @@ class AuroraPlugin(
         for flag in BOOLEAN_SETTINGS:
             if flag in cleaned and not isinstance(cleaned[flag], bool):
                 del cleaned[flag]
+        if "custom_css" in cleaned:
+            if isinstance(cleaned["custom_css"], str):
+                cleaned["custom_css"] = cleaned["custom_css"][:MAX_CUSTOM_CSS]
+            else:
+                del cleaned["custom_css"]
         if "terminal_favorites" in cleaned:
             favorites = clean_favorites(cleaned["terminal_favorites"])
             if favorites is None:
@@ -227,6 +246,7 @@ class AuroraPlugin(
                 "js/aurora_terminal.js",
                 "js/aurora_layout.js",
                 "js/aurora_files.js",
+                "js/aurora_alerts.js",
             ],
         }
 

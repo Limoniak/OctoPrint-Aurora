@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 – 2026-10-31
+
+Features inspired by other OctoPrint interface plugins.
+
+### New
+- Print alerts (like the browser notification plugins): a chime and/or a browser notification when a print finishes, fails, or pauses on its own (filament change, runout). Pauses asked for by the user and cancelled prints raise no alert. The chime is generated in the browser (no sound file) and plays once the page has been clicked; notifications need OctoPrint over HTTPS or localhost, and the settings say so, ask the browser's permission, and offer a Test button. Both off by default.
+- Full screen webcam (like the full screen webcam plugins): button in the floating webcam's bar, or a double-click on the picture. Turned and mirrored streams fill the screen too.
+- Touch screen density (like TouchUI's large controls): buttons, fields, tabs and menus at least 44px high (36px for small buttons), 16px text in fields (no zoom on iPhones), file buttons on their own line, field groups kept aligned.
+- Custom CSS (like Themeify's custom rules): a field in the settings, applied after the theme while it is on, previewed as you type and reverted if the settings are closed without saving; up to 20,000 characters.
+- Project website: https://limoniak.github.io/OctoPrint-Aurora/
+
 ## 0.2.6 – 2026-10-31
 
 ### Phones

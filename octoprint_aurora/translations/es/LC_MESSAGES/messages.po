@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OctoPrint-Aurora 0.1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-31 19:58+0000\n"
+"POT-Creation-Date: 2026-10-31 21:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -305,4 +305,82 @@ msgstr ""
 
 msgid "Grid view with thumbnails for the file list"
 msgstr "Vista de cuadrícula con miniaturas para la lista de archivos"
+
+msgid "Allow notifications in this browser"
+msgstr "Permitir notificaciones en este navegador"
+
+msgid ""
+"Applied after Aurora's own styles, only while the theme is on, and "
+"previewed as you type. Start your selectors with html.aurora to take "
+"precedence. The theme colors are available as variables, e.g. "
+"var(--a-accent)."
+msgstr ""
+"Se aplica después de los estilos de Aurora, solo mientras el tema está "
+"activo, con vista previa mientras escribes. Empieza tus selectores con "
+"html.aurora para que tengan prioridad. Los colores del tema están "
+"disponibles como variables, por ejemplo var(--a-accent)."
+
+msgid ""
+"Browser notifications need OctoPrint to be opened over HTTPS (or on the "
+"computer it runs on). The sound works everywhere."
+msgstr ""
+"Las notificaciones del navegador requieren abrir OctoPrint por HTTPS (o "
+"en el ordenador donde se ejecuta). El sonido funciona en cualquier caso."
+
+msgid ""
+"Buttons, fields, tabs and menus become at least 44px high, easy to hit "
+"with a finger on a screen next to the printer."
+msgstr ""
+"Botones, campos, pestañas y menús pasan a medir al menos 44 px de alto, "
+"fáciles de tocar con el dedo en una pantalla junto a la impresora."
+
+msgid "Custom CSS"
+msgstr "CSS personalizado"
+
+msgid "Full screen"
+msgstr "Pantalla completa"
+
+msgid ""
+"Notifications are blocked for this site in this browser: allow them in "
+"the browser's site settings."
+msgstr ""
+"Las notificaciones están bloqueadas para este sitio en este navegador: "
+"permítelas en la configuración del sitio del navegador."
+
+msgid ""
+"Pauses you ask for yourself and cancelled prints do not raise an alert. "
+"The sound plays once you have clicked anywhere on the page."
+msgstr ""
+"Las pausas que pides tú mismo y las impresiones canceladas no generan "
+"alerta. El sonido solo puede sonar después de un primer clic en la "
+"página."
+
+msgid "Play a sound when a print finishes, fails or pauses"
+msgstr "Reproducir un sonido cuando una impresión termina, falla o se pausa"
+
+msgid "Print alerts"
+msgstr "Avisos de impresión"
+
+msgid "Print failed"
+msgstr "La impresión ha fallado"
+
+msgid "Print finished"
+msgstr "Impresión terminada"
+
+msgid "Print paused"
+msgstr "Impresión en pausa"
+
+msgid "Show a browser notification when a print finishes, fails or pauses"
+msgstr ""
+"Mostrar una notificación del navegador cuando una impresión termina, "
+"falla o se pausa"
+
+msgid "Test"
+msgstr "Probar"
+
+msgid "This is how a finished print will sound and look."
+msgstr "Así sonará y se verá una impresión terminada."
+
+msgid "Touch screen (large buttons)"
+msgstr "Pantalla táctil (botones grandes)"
 

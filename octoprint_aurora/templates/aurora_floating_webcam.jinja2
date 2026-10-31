@@ -1,6 +1,9 @@
 <div id="aurora_webcam" class="aurora-webcam" role="dialog" aria-label="{{ _('Webcam')|edq }}" style="display: none" data-bind="visible: frameVisible, style: frameStyle, event: { keydown: onKeyDown }">
     <div class="aurora-webcam-bar" data-bind="event: { pointerdown: startDrag }">
         <span class="aurora-webcam-title"><i class="fas fa-video" aria-hidden="true"></i> {{ _('Webcam') }}</span>
+        <button type="button" class="aurora-webcam-button" data-bind="visible: fullscreenSupported, click: toggleFullscreen" title="{{ _('Full screen')|edq }}" aria-label="{{ _('Full screen')|edq }}">
+            <i class="fas fa-expand" aria-hidden="true"></i>
+        </button>
         <button type="button" class="aurora-webcam-button" data-bind="visible: pipSupported, click: togglePip, attr: { title: pipTitle, 'aria-label': pipTitle }">
             <i class="fas fa-up-right-from-square" aria-hidden="true"></i>
         </button>
@@ -9,7 +12,7 @@
         </button>
     </div>
     <div class="aurora-webcam-body" data-bind="style: bodyStyle">
-        <img alt="{{ _('Webcam stream')|edq }}" data-bind="attr: { src: streamSrc }, event: { load: onLoad, error: onError }">
+        <img alt="{{ _('Webcam stream')|edq }}" data-bind="attr: { src: streamSrc }, event: { load: onLoad, error: onError, dblclick: toggleFullscreen }">
         <p class="aurora-webcam-error" style="display: none" data-bind="visible: error">{{ _('The webcam stream could not be loaded.') }}</p>
     </div>
     <div class="aurora-webcam-resize" aria-hidden="true" data-bind="event: { pointerdown: startResize }"></div>
