@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "OctoPrint-Aurora"
-version = "0.2.4"
+version = "0.2.5"
 description = "A complete visual redesign of the OctoPrint web interface: modern cards, dark mode, accent colors and a fluid layout."
 readme = "README.md"
 license = { text = "AGPL-3.0-or-later" }

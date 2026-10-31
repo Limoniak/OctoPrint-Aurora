@@ -270,6 +270,7 @@ html.aurora #page-container-loading-spinner {
 
 html.aurora #drop_overlay,
 html.aurora #offline_overlay {
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 
@@ -943,6 +944,7 @@ html.aurora .btn-inverse:active {
 
 html.aurora .btn-link,
 html.aurora .btn-link:hover,
+html.aurora .btn-link:focus,
 html.aurora .btn-link:active {
   background: transparent;
   border-color: transparent;
@@ -975,6 +977,11 @@ html.aurora .btn-group > .btn:only-child {
 
 html.aurora .btn-group > .btn + .dropdown-toggle {
   box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.18);
+}
+
+/* the seam above must not hide the keyboard focus ring */
+html.aurora .btn-group > .btn + .dropdown-toggle:focus-visible {
+  box-shadow: 0 0 0 3px var(--a-accent-ring);
 }
 
 html.aurora .btn-group.open .btn.dropdown-toggle {
@@ -1017,11 +1024,18 @@ html.aurora select:focus,
 html.aurora textarea:focus,
 html.aurora input[type="text"]:focus,
 html.aurora input[type="password"]:focus,
+html.aurora input[type="datetime"]:focus,
+html.aurora input[type="datetime-local"]:focus,
+html.aurora input[type="date"]:focus,
+html.aurora input[type="month"]:focus,
+html.aurora input[type="time"]:focus,
+html.aurora input[type="week"]:focus,
 html.aurora input[type="number"]:focus,
 html.aurora input[type="email"]:focus,
 html.aurora input[type="url"]:focus,
 html.aurora input[type="search"]:focus,
 html.aurora input[type="tel"]:focus,
+html.aurora input[type="color"]:focus,
 html.aurora .uneditable-input:focus {
   background: var(--a-surface);
   border-color: var(--a-accent);
@@ -1037,6 +1051,18 @@ html.aurora select[readonly],
 html.aurora textarea[readonly] {
   background: var(--a-surface-3);
   color: var(--a-text-3);
+}
+
+/* read-only fields often hold text to select and copy (API keys, URLs):
+   Bootstrap's "not allowed" cursor is only right for disabled ones */
+html.aurora input[readonly]:not([disabled]),
+html.aurora textarea[readonly]:not([disabled]) {
+  cursor: text;
+}
+
+html.aurora input[disabled],
+html.aurora select[disabled],
+html.aurora textarea[disabled] {
   cursor: not-allowed;
 }
 
@@ -1636,6 +1662,7 @@ html.aurora #terminal-command {
 
 html.aurora #gcode_canvas,
 html.aurora #gcode canvas {
+  border: 1px solid var(--a-border);
   border-radius: var(--a-radius-sm);
 }
 
@@ -1667,11 +1694,6 @@ html.aurora .slider .slider-handle {
 
 html.aurora .slider.slider-disabled .slider-handle {
   background: var(--a-text-3);
-}
-
-html.aurora #gcode_canvas,
-html.aurora #gcode canvas {
-  border: 1px solid var(--a-border);
 }
 
 /* ===== Footer ========================================================= */
@@ -1757,6 +1779,8 @@ html.aurora #settings_plugin_aurora input[type="range"] {
   }
 }
 
+/* narrow screens: the navbar items stay on one line instead of Bootstrap's
+   collapsed menu (UI Customizer keeps its own collapsible menu) */
 @media (max-width: 979px) {
   html.aurora .octoprint-container > .row,
   html.aurora[data-aurora-sidebar="right"] .octoprint-container > .row {
@@ -1767,26 +1791,26 @@ html.aurora #settings_plugin_aurora input[type="range"] {
     order: 0;
   }
 
-  html.aurora #navbar .nav-collapse {
+  html.aurora body:not(.UICResponsiveMode) #navbar .nav-collapse {
     height: auto;
     overflow: visible;
     clear: none;
   }
 
-  html.aurora #navbar .nav-collapse .nav {
+  html.aurora body:not(.UICResponsiveMode) #navbar .nav-collapse .nav {
     float: right;
     margin: 0;
   }
 
-  html.aurora #navbar .nav-collapse .nav > li {
+  html.aurora body:not(.UICResponsiveMode) #navbar .nav-collapse .nav > li {
     float: left;
   }
 
-  html.aurora #navbar .nav-collapse .nav > li > a {
+  html.aurora body:not(.UICResponsiveMode) #navbar .nav-collapse .nav > li > a {
     margin: 12px 2px;
   }
 
-  html.aurora #navbar .nav-collapse .dropdown-menu {
+  html.aurora body:not(.UICResponsiveMode) #navbar .nav-collapse .dropdown-menu {
     position: absolute;
     right: 0;
     left: auto;
@@ -1797,7 +1821,7 @@ html.aurora #settings_plugin_aurora input[type="range"] {
     box-shadow: var(--a-shadow-lg);
   }
 
-  html.aurora #navbar .nav-collapse .open > .dropdown-menu {
+  html.aurora body:not(.UICResponsiveMode) #navbar .nav-collapse .open > .dropdown-menu {
     display: block;
   }
 }
@@ -1980,7 +2004,11 @@ html.aurora .aurora-printcard-ring span {
   position: absolute;
   inset: 0;
   display: grid;
+  grid-auto-flow: column;
   place-items: center;
+  align-content: center;
+  justify-content: center;
+  align-items: baseline;
   color: var(--a-text);
   font-size: 15px;
   font-variant-numeric: tabular-nums;
@@ -1989,13 +2017,6 @@ html.aurora .aurora-printcard-ring span {
 html.aurora .aurora-printcard-ring strong {
   font-size: 24px;
   font-weight: 700;
-}
-
-html.aurora .aurora-printcard-ring span {
-  grid-auto-flow: column;
-  align-content: center;
-  justify-content: center;
-  align-items: baseline;
 }
 
 @media (max-width: 640px) {
