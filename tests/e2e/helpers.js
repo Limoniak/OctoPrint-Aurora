@@ -1,6 +1,9 @@
 // Shared helpers for the browser tests. They run against a live OctoPrint
 // (see tests/run_e2e.sh) with Aurora installed and the virtual printer on.
 
+const os = require("os");
+const fs = require("fs");
+const path = require("path");
 const { chromium } = require("playwright");
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
@@ -18,7 +21,7 @@ async function openUi(browser, { scheme = "light", width = 1440, height = 1000 }
         colorScheme: scheme,
     });
     page.errors = [];
-    page.on("pageerror", (e) => page.errors.push(e.message));
+    page.on("pageerror", (e) => page.errors.push(process.env.STACKS ? e.stack : e.message));
 
     await page.goto(BASE_URL + "/login/");
     await page.fill("#login-user", USER);
@@ -118,6 +121,37 @@ function contrastScan() {
     return failures;
 }
 
+// A 20 x 20 mm, 30-layer cube: enough for a few seconds of printing
+function writeTestCube() {
+    const lines = ["M140 S60", "M104 S205", "M190 S60", "M109 S205", "G28", "G90", "M82", "G92 E0"];
+    let e = 0;
+    for (let layer = 0; layer < 30; layer++) {
+        lines.push(`;LAYER:${layer}`, `G1 Z${(0.2 * (layer + 1)).toFixed(2)} F600`);
+        const corners = [[90, 90], [110, 90], [110, 110], [90, 110], [90, 90]];
+        lines.push(`G0 X90 Y90 F6000`);
+        for (const [x, y] of corners.slice(1)) {
+            e += 0.8;
+            lines.push(`G1 X${x} Y${y} E${e.toFixed(3)} F1800`);
+        }
+    }
+    lines.push("M104 S0", "M140 S0", "G28 X0", "M84");
+    const file = path.join(os.tmpdir(), "aurora_test_cube.gcode");
+    fs.writeFileSync(file, lines.join("\n") + "\n");
+    return file;
+}
+
+// Uploads the test cube unless it is already there (OctoPrint would ask
+// whether to overwrite it) and returns its entry in the file list
+async function uploadTestCube(page) {
+    const entry = page.locator("#files .gcode_files .entry", { hasText: "aurora_test_cube.gcode" });
+    if (!(await entry.count())) {
+        await page.setInputFiles("#gcode_upload", [writeTestCube()]);
+        await page.waitForTimeout(3000);
+        await dismissNotifications(page);
+    }
+    return entry;
+}
+
 // Tiny assertion helper: collects failures and sets the exit code at the end.
 function createChecker(name) {
     const failures = [];
@@ -141,4 +175,4 @@ function createChecker(name) {
     };
 }
 
-module.exports = { BASE_URL, launch, openUi, dismissNotifications, contrastScan, createChecker };
+module.exports = { BASE_URL, launch, openUi, dismissNotifications, contrastScan, createChecker, writeTestCube, uploadTestCube };

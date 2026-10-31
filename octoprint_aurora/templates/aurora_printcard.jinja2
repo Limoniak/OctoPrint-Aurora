@@ -1,0 +1,50 @@
+<section id="aurora_printcard" class="aurora-printcard" data-bind="visible: visible, css: { paused: isPaused }" style="display: none" aria-label="{{ _('Current print')|edq }}">
+    <div class="aurora-printcard-thumb">
+        <img data-bind="attr: { src: thumbnail }, visible: thumbnail" alt="">
+        <i class="fas fa-cube" data-bind="visible: !thumbnail()" aria-hidden="true"></i>
+    </div>
+
+    <div class="aurora-printcard-main">
+        <div class="aurora-printcard-head">
+            <span class="aurora-printcard-state" data-bind="text: stateText"></span>
+            <h2 class="aurora-printcard-file" data-bind="text: fileName, attr: { title: fileName }"></h2>
+        </div>
+
+        <dl class="aurora-printcard-stats">
+            <div>
+                <dt>{{ _('Time left') }}</dt>
+                <dd data-bind="text: timeLeft"></dd>
+            </div>
+            <div>
+                <dt>{{ _('Finishes at') }}</dt>
+                <dd data-bind="text: eta"></dd>
+            </div>
+            <div data-bind="visible: layerText">
+                <dt>{{ _('Layer') }}</dt>
+                <dd data-bind="text: layerText"></dd>
+            </div>
+            <div>
+                <dt>{{ _('Elapsed') }}</dt>
+                <dd data-bind="text: elapsed"></dd>
+            </div>
+            <div data-bind="visible: tempText">
+                <dt>{{ _('Temperatures') }}</dt>
+                <dd data-bind="text: tempText"></dd>
+            </div>
+        </dl>
+
+        <div class="aurora-printcard-actions">
+            <button type="button" class="btn" data-bind="visible: isPrinting, enable: canPause, click: pause"><i class="fas fa-pause"></i> {{ _('Pause') }}</button>
+            <button type="button" class="btn btn-primary" data-bind="visible: isPaused, enable: canPause, click: resume"><i class="fas fa-play"></i> {{ _('Resume') }}</button>
+            <button type="button" class="btn" data-bind="enable: canCancel, click: cancel"><i class="fas fa-stop"></i> {{ _('Cancel') }}</button>
+        </div>
+    </div>
+
+    <div class="aurora-printcard-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="attr: { 'aria-valuenow': percent }">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="track" cx="50" cy="50" r="42"></circle>
+            <circle class="value" cx="50" cy="50" r="42" data-bind="attr: { 'stroke-dasharray': ringLength, 'stroke-dashoffset': ringOffset }"></circle>
+        </svg>
+        <span><strong data-bind="text: percent"></strong>%</span>
+    </div>
+</section>

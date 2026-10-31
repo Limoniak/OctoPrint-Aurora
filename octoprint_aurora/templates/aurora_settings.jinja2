@@ -120,5 +120,77 @@
                 </label>
             </div>
         </div>
+
+        <legend>{{ _('Panels and tabs') }}</legend>
+
+        <p class="help-block" style="display: none" data-bind="visible: layout.uicActive">
+            {{ _('UI Customizer is active and manages the layout, so these options are turned off.') }}
+        </p>
+
+        <div class="aurora-layout-editor" data-bind="visible: !layout.uicActive()">
+            <p class="help-block">{{ _('Untick a panel or a tab to hide it, and use the arrows to reorder them. The open or closed state of each panel is remembered in this browser.') }}</p>
+            <div class="aurora-layout-columns">
+                <div>
+                    <h4>{{ _('Sidebar panels') }}</h4>
+                    <ol class="aurora-layout-list" data-bind="foreach: layout.sidebarList">
+                        <li>
+                            <label class="checkbox"><input type="checkbox" data-bind="checked: visible"> <span data-bind="text: title"></span></label>
+                            <span class="aurora-layout-move">
+                                <button type="button" class="btn btn-mini" data-bind="click: $root.layout.moveSidebarUp, enable: $index() > 0" title="{{ _('Move up')|edq }}" aria-label="{{ _('Move up')|edq }}"><i class="fas fa-arrow-up" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-mini" data-bind="click: $root.layout.moveSidebarDown, enable: $index() < $root.layout.sidebarList().length - 1" title="{{ _('Move down')|edq }}" aria-label="{{ _('Move down')|edq }}"><i class="fas fa-arrow-down" aria-hidden="true"></i></button>
+                            </span>
+                        </li>
+                    </ol>
+                </div>
+                <div>
+                    <h4>{{ _('Tabs') }}</h4>
+                    <ol class="aurora-layout-list" data-bind="foreach: layout.tabList">
+                        <li>
+                            <label class="checkbox"><input type="checkbox" data-bind="checked: visible"> <span data-bind="text: title"></span></label>
+                            <span class="aurora-layout-move">
+                                <button type="button" class="btn btn-mini" data-bind="click: $root.layout.moveTabUp, enable: $index() > 0" title="{{ _('Move up')|edq }}" aria-label="{{ _('Move up')|edq }}"><i class="fas fa-arrow-up" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-mini" data-bind="click: $root.layout.moveTabDown, enable: $index() < $root.layout.tabList().length - 1" title="{{ _('Move down')|edq }}" aria-label="{{ _('Move down')|edq }}"><i class="fas fa-arrow-down" aria-hidden="true"></i></button>
+                            </span>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <button type="button" class="btn" data-bind="click: layout.reset"><i class="fas fa-rotate-left" aria-hidden="true"></i> {{ _('Reset the layout') }}</button>
+        </div>
+
+        <legend>{{ _('Features') }}</legend>
+
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.print_card"> {{ _('Print status card above the tabs') }}
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.tab_progress"> {{ _('Print progress in the browser tab') }}
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.webcam_float"> {{ _('Floating webcam button in the navbar') }}
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: s.terminal_tools"> {{ _('Terminal tools: colors, recent commands and favorites') }}
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group" data-bind="visible: s.terminal_tools">
+            <label class="control-label">{{ _('Favorite commands') }}</label>
+            <div class="controls">
+                <ul class="aurora-favorites" data-bind="foreach: terminal.favorites">
+                    <li>
+                        <code data-bind="text: $data"></code>
+                        <button type="button" class="btn btn-mini btn-link" data-bind="click: $root.terminal.removeFavorite" title="{{ _('Remove')|edq }}" aria-label="{{ _('Remove')|edq }}"><i class="fas fa-times" aria-hidden="true"></i></button>
+                    </li>
+                </ul>
+                <div class="input-append">
+                    <input type="text" class="input-medium" maxlength="120" placeholder="G28" data-bind="value: terminal.newFavorite, valueUpdate: 'input', event: { keydown: function(data, event) { if (event.key === 'Enter') { terminal.addFavorite(); return false; } return true; } }" aria-label="{{ _('New favorite command')|edq }}">
+                    <button type="button" class="btn" data-bind="click: terminal.addFavorite">{{ _('Add') }}</button>
+                </div>
+            </div>
+        </div>
     </div>
 </form>

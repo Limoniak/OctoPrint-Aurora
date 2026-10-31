@@ -1,0 +1,18 @@
+<div id="aurora_terminal" class="aurora-terminal" style="display: none" data-bind="visible: enabled() && canControl()">
+    <div class="aurora-terminal-row">
+        <span class="aurora-terminal-label">{{ _('Favorites') }}</span>
+        <!-- ko foreach: favorites -->
+        <button type="button" class="btn btn-mini aurora-terminal-chip" data-bind="text: $data, click: $parent.sendFavorite, enable: $parent.canSend, attr: { title: '{{ _('Send')|esq }} ' + $data }"></button>
+        <!-- /ko -->
+        <button type="button" class="btn btn-mini aurora-terminal-star" data-bind="visible: canEditFavorites, enable: canStar, click: starCurrent" title="{{ _('Add the command above to the favorites')|edq }}" aria-label="{{ _('Add the command above to the favorites')|edq }}">
+            <i class="far fa-star" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="aurora-terminal-row" data-bind="visible: history().length">
+        <span class="aurora-terminal-label">{{ _('Recent') }}</span>
+        <!-- ko foreach: history -->
+        <button type="button" class="btn btn-mini btn-link aurora-terminal-chip" data-bind="text: $data, click: $parent.useHistory" title="{{ _('Put this command back in the input')|edq }}"></button>
+        <!-- /ko -->
+        <button type="button" class="btn btn-mini btn-link aurora-terminal-clear" data-bind="click: clearHistory">{{ _('Clear') }}</button>
+    </div>
+</div>

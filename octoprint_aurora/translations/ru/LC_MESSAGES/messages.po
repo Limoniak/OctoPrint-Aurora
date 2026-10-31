@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OctoPrint-Aurora 0.1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-30 21:36+0000\n"
+"POT-Creation-Date: 2026-10-31 09:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -143,4 +143,142 @@ msgid ""
 msgstr ""
 "Использует цвет, выбранный в «Настройки > Внешний вид», чтобы различать "
 "несколько принтеров."
+
+msgid "Paused"
+msgstr "Пауза"
+
+msgid "Printing"
+msgstr "Печать"
+
+msgid "bed"
+msgstr "стол"
+
+msgid "Close the floating webcam"
+msgstr "Закрыть плавающую веб-камеру"
+
+msgid "Open the floating webcam"
+msgstr "Открыть плавающую веб-камеру"
+
+msgid "Back to the page"
+msgstr "Вернуть на страницу"
+
+msgid "Picture in picture"
+msgstr "Картинка в картинке"
+
+msgid "Webcam"
+msgstr "Веб-камера"
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Webcam stream"
+msgstr "Поток веб-камеры"
+
+msgid "The webcam stream could not be loaded."
+msgstr "Не удалось загрузить поток веб-камеры."
+
+msgid "Current print"
+msgstr "Текущая печать"
+
+msgid "Time left"
+msgstr "Осталось"
+
+msgid "Finishes at"
+msgstr "Окончание"
+
+msgid "Layer"
+msgstr "Слой"
+
+msgid "Elapsed"
+msgstr "Прошло"
+
+msgid "Temperatures"
+msgstr "Температуры"
+
+msgid "Pause"
+msgstr "Пауза"
+
+msgid "Resume"
+msgstr "Продолжить"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Panels and tabs"
+msgstr "Панели и вкладки"
+
+msgid ""
+"UI Customizer is active and manages the layout, so these options are "
+"turned off."
+msgstr ""
+"UI Customizer включён и сам управляет макетом, поэтому эти параметры "
+"отключены."
+
+msgid ""
+"Untick a panel or a tab to hide it, and use the arrows to reorder them. "
+"The open or closed state of each panel is remembered in this browser."
+msgstr ""
+"Снимите флажок, чтобы скрыть панель или вкладку, и меняйте порядок "
+"стрелками. Открытое или свёрнутое состояние каждой панели запоминается в "
+"этом браузере."
+
+msgid "Sidebar panels"
+msgstr "Боковые панели"
+
+msgid "Move up"
+msgstr "Вверх"
+
+msgid "Move down"
+msgstr "Вниз"
+
+msgid "Tabs"
+msgstr "Вкладки"
+
+msgid "Reset the layout"
+msgstr "Сбросить макет"
+
+msgid "Features"
+msgstr "Функции"
+
+msgid "Print status card above the tabs"
+msgstr "Карточка текущей печати над вкладками"
+
+msgid "Print progress in the browser tab"
+msgstr "Прогресс печати во вкладке браузера"
+
+msgid "Floating webcam button in the navbar"
+msgstr "Кнопка плавающей веб-камеры на панели навигации"
+
+msgid "Terminal tools: colors, recent commands and favorites"
+msgstr "Инструменты терминала: подсветка, недавние и избранные команды"
+
+msgid "Favorite commands"
+msgstr "Избранные команды"
+
+msgid "Remove"
+msgstr "Удалить"
+
+msgid "New favorite command"
+msgstr "Новая избранная команда"
+
+msgid "Add"
+msgstr "Добавить"
+
+msgid "Favorites"
+msgstr "Избранное"
+
+msgid "Send"
+msgstr "Отправить"
+
+msgid "Add the command above to the favorites"
+msgstr "Добавить команду выше в избранное"
+
+msgid "Recent"
+msgstr "Недавние"
+
+msgid "Put this command back in the input"
+msgstr "Вернуть эту команду в поле ввода"
+
+msgid "Clear"
+msgstr "Очистить"
 

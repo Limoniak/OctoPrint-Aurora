@@ -12,6 +12,16 @@ DENSITIES = ("comfortable", "compact")
 SIDEBAR_POSITIONS = ("left", "right")
 INSTANCE_MODES = ("stripe", "accent", "none")
 HEX_COLOR = re.compile(r"^#[0-9a-fA-F]{6}$")
+ELEMENT_ID = re.compile(r"^[A-Za-z0-9_-]{1,100}$")
+
+FEATURE_FLAGS = ("print_card", "tab_progress", "webcam_float", "terminal_tools")
+LAYOUT_LISTS = (
+    "layout_sidebar_order",
+    "layout_sidebar_hidden",
+    "layout_tabs_order",
+    "layout_tabs_hidden",
+)
+MAX_FAVORITES = 20
 
 # OctoPrint's navbar colors (Settings > Appearance), from its octoprint.less.
 # Same values as INSTANCE_COLORS in aurora.js.
@@ -61,6 +71,31 @@ def with_alpha(hex_color, alpha):
     return f"rgba({r}, {g}, {b}, {alpha})"
 
 
+def clean_favorites(value):
+    """Favorite terminal commands: one-line strings, deduplicated, at most 20."""
+    if not isinstance(value, list):
+        return None
+    result = []
+    for item in value:
+        if not isinstance(item, str):
+            continue
+        command = " ".join(item.split())[:120]
+        if command and command not in result:
+            result.append(command)
+    return result[:MAX_FAVORITES]
+
+
+def clean_ids(value):
+    """Element ids for the layout settings, deduplicated."""
+    if not isinstance(value, list):
+        return None
+    result = []
+    for item in value:
+        if isinstance(item, str) and ELEMENT_ID.match(item) and item not in result:
+            result.append(item)
+    return result[:100]
+
+
 class AuroraPlugin(
     octoprint.plugin.SettingsPlugin,
     octoprint.plugin.AssetPlugin,
@@ -83,6 +118,17 @@ class AuroraPlugin(
             "glass": True,
             "watermark": False,
             "graph": True,
+            # features
+            "print_card": True,
+            "tab_progress": True,
+            "webcam_float": True,
+            "terminal_tools": True,
+            "terminal_favorites": ["M114", "M105", "M503", "G28", "M84"],
+            # layout: element ids of the sidebar panels and tabs
+            "layout_sidebar_order": [],
+            "layout_sidebar_hidden": [],
+            "layout_tabs_order": [],
+            "layout_tabs_hidden": [],
         }
 
     def on_settings_save(self, data):
@@ -105,13 +151,38 @@ class AuroraPlugin(
                 cleaned["radius"] = max(0, min(28, int(cleaned["radius"])))
             except (TypeError, ValueError):
                 del cleaned["radius"]
+        for flag in FEATURE_FLAGS:
+            if flag in cleaned and not isinstance(cleaned[flag], bool):
+                del cleaned[flag]
+        if "terminal_favorites" in cleaned:
+            favorites = clean_favorites(cleaned["terminal_favorites"])
+            if favorites is None:
+                del cleaned["terminal_favorites"]
+            else:
+                cleaned["terminal_favorites"] = favorites
+        for key in LAYOUT_LISTS:
+            if key in cleaned:
+                ids = clean_ids(cleaned[key])
+                if ids is None:
+                    del cleaned[key]
+                else:
+                    cleaned[key] = ids
 
         return octoprint.plugin.SettingsPlugin.on_settings_save(self, cleaned)
 
     ##~~ AssetPlugin
 
     def get_assets(self):
-        return {"css": ["css/aurora.css"], "js": ["js/aurora.js"]}
+        return {
+            "css": ["css/aurora.css"],
+            "js": [
+                "js/aurora.js",
+                "js/aurora_progress.js",
+                "js/aurora_webcam.js",
+                "js/aurora_terminal.js",
+                "js/aurora_layout.js",
+            ],
+        }
 
     ##~~ TemplatePlugin
 
@@ -122,6 +193,18 @@ class AuroraPlugin(
         return [
             {"type": "settings", "name": "Aurora UI", "custom_bindings": True},
             {"type": "navbar", "custom_bindings": True},
+            {
+                "type": "navbar",
+                "template": "aurora_navbar_webcam.jinja2",
+                "suffix": "_webcam",
+                "custom_bindings": True,
+            },
+            # moved into place by their view models (see static/js). Note: a
+            # template named <id>_webcam.jinja2 would be taken for a webcam
+            # provider, hence "floating_webcam".
+            {"type": "generic", "template": "aurora_printcard.jinja2", "custom_bindings": True},
+            {"type": "generic", "template": "aurora_floating_webcam.jinja2", "custom_bindings": True},
+            {"type": "generic", "template": "aurora_terminal.jinja2", "custom_bindings": True},
         ]
 
     ##~~ BlueprintPlugin

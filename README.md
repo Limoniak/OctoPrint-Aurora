@@ -29,6 +29,14 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 - **Accessible.** Text contrast meets WCAG AA (4.5:1) in both themes, on every OctoPrint page.
 - **Off in one click.** Untick *Enable* and the stock interface is back instantly.
 
+### Built for printing
+
+- **Print status card.** While printing, a card above the tabs shows the model thumbnail (from Slicer Thumbnails or Cura Thumbnails), a progress ring, time left, the expected finish time, the current layer (with DisplayLayerProgress) and temperatures, with Pause, Resume and Cancel at hand. On a phone it comes first on the page.
+- **Progress in the browser tab.** The tab title reads *42% · benchy.gcode* and its icon fills up as a ring, so you can follow a print from another tab.
+- **Floating webcam.** A camera button in the navbar opens the webcam in a small window that stays on screen whatever the tab. Drag it by its title bar, resize it from the corner, or pop it out into a picture-in-picture window (Chrome and Edge).
+- **A better terminal.** G-code is colored (commands, parameters, `ok`, errors, temperatures, comments), the last commands you sent are one click away, and your favorite commands (M114, G28, M84…) are buttons. Star the command you typed to add it.
+- **Your layout.** Hide or reorder sidebar panels and tabs from the settings, with live preview. Panels you fold stay folded in that browser.
+
 ## Screenshots
 
 | Dark theme | Light theme |
@@ -36,6 +44,12 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 | ![Dark theme during a print](docs/main-dark.png) | ![Light theme during a print](docs/main-light.png) |
 | **GCode viewer** | **Settings, with live preview** |
 | ![GCode viewer in the dark theme](docs/gcode-dark.png) | ![Aurora UI settings](docs/settings.png) |
+
+| **Print status card and floating webcam** | **Terminal: colors, favorites, recent commands** |
+| --- | --- |
+| ![Print status card above the tabs, with the floating webcam](docs/print-card.png) | ![Colored terminal with favorite and recent commands](docs/terminal.png) |
+| **Panels and tabs** | **On a phone** |
+| ![Layout settings: hide and reorder panels and tabs](docs/layout-settings.png) | <img src="docs/print-card-mobile.png" width="260" alt="Print status card first on a phone"> |
 
 <table>
   <tr>
@@ -84,6 +98,12 @@ Everything lives in **Settings › Aurora UI**.
 | Density | Comfortable, Compact | Comfortable |
 | Sidebar position | Left, Right | Left |
 | Full width on large screens | on / off | on |
+| Panels and tabs | show, hide and reorder each one | all shown, OctoPrint's order |
+| Print status card above the tabs | on / off | on |
+| Print progress in the browser tab | on / off | on |
+| Floating webcam button in the navbar | on / off | on |
+| Terminal tools | on / off | on |
+| Favorite commands | any G-code, up to 20 | M114, M105, M503, G28, M84 |
 
 The navbar's moon/sun button overrides the theme for the current browser only, so a tablet next to the printer can stay dark while your desktop follows the system.
 
@@ -101,7 +121,7 @@ as well as Octolapse, OctoEverywhere and Obico, and with a real-world setup of f
 
 | Plugin | How Aurora handles it |
 | --- | --- |
-| **UI Customizer** | Fully supported. UI Customizer keeps its layout (columns, widgets, fixed header and footer, settings menu) and Aurora provides the colors. |
+| **UI Customizer** | Fully supported. UI Customizer keeps its layout (columns, widgets, fixed header and footer, settings menu) and Aurora provides the colors. Aurora's own panel and tab options step aside, since UI Customizer manages the layout. |
 | **Themeify** | Another complete theme: running both gives mixed results. Aurora shows a notice when both are active, so you can disable one. |
 | **TouchUI** | Aurora steps aside in any browser where TouchUI is active, and comes back when it is turned off. |
 
@@ -119,8 +139,13 @@ octoprint_aurora/
 ├── static/
 │   ├── css/aurora.css          the theme: color tokens, then the components
 │   ├── js/aurora.js            applies the theme, themes the graphs, settings view model
+│   ├── js/aurora_progress.js   print status card and progress in the browser tab
+│   ├── js/aurora_webcam.js     floating webcam
+│   ├── js/aurora_terminal.js   terminal coloring, recent and favorite commands
+│   ├── js/aurora_layout.js     hidden and reordered panels and tabs
 │   └── img/                    the Nozzle logo and OctoPrint's original logo
-├── templates/                  settings page, navbar button, login stylesheet
+├── templates/                  settings page, navbar buttons, print card, floating webcam,
+│                               terminal tools, login stylesheet
 └── translations/               de, es, fr, it, pt, ru (.po and compiled .mo)
 tests/
 ├── test_plugin.py              unit tests (pytest)
@@ -186,7 +211,7 @@ cd tests/e2e && npm install && npx playwright install chromium && cd ../..
 tests/run_e2e.sh
 ```
 
-They check the contrast of every page in both themes, run a simulated print, and go through the settings (live preview, revert, save, reload, disable). OctoPrint refuses to run as root, so run them as a regular user.
+They check the contrast of every page in both themes, run a simulated print, exercise the features (layout, remembered panels, terminal tools, floating webcam, print status card, tab progress) and go through the settings (live preview, revert, save, reload, disable). `TESTS="features.js" tests/run_e2e.sh` runs a single file. OctoPrint refuses to run as root, so run them as a regular user.
 
 ## License
 
