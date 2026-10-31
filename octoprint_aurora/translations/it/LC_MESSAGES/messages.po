@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OctoPrint-Aurora 0.1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-30 21:36+0000\n"
+"POT-Creation-Date: 2026-10-31 09:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -140,4 +140,142 @@ msgid ""
 msgstr ""
 "Usa il colore scelto in Impostazioni > Aspetto, per distinguere più "
 "stampanti."
+
+msgid "Paused"
+msgstr "In pausa"
+
+msgid "Printing"
+msgstr "Stampa in corso"
+
+msgid "bed"
+msgstr "piano"
+
+msgid "Close the floating webcam"
+msgstr "Chiudi la webcam mobile"
+
+msgid "Open the floating webcam"
+msgstr "Apri la webcam mobile"
+
+msgid "Back to the page"
+msgstr "Torna nella pagina"
+
+msgid "Picture in picture"
+msgstr "Picture in picture"
+
+msgid "Webcam"
+msgstr "Webcam"
+
+msgid "Close"
+msgstr "Chiudi"
+
+msgid "Webcam stream"
+msgstr "Flusso della webcam"
+
+msgid "The webcam stream could not be loaded."
+msgstr "Impossibile caricare il flusso della webcam."
+
+msgid "Current print"
+msgstr "Stampa in corso"
+
+msgid "Time left"
+msgstr "Tempo rimanente"
+
+msgid "Finishes at"
+msgstr "Fine prevista"
+
+msgid "Layer"
+msgstr "Strato"
+
+msgid "Elapsed"
+msgstr "Trascorso"
+
+msgid "Temperatures"
+msgstr "Temperature"
+
+msgid "Pause"
+msgstr "Pausa"
+
+msgid "Resume"
+msgstr "Riprendi"
+
+msgid "Cancel"
+msgstr "Annulla"
+
+msgid "Panels and tabs"
+msgstr "Pannelli e schede"
+
+msgid ""
+"UI Customizer is active and manages the layout, so these options are "
+"turned off."
+msgstr ""
+"UI Customizer è attivo e gestisce il layout, quindi queste opzioni sono "
+"disattivate."
+
+msgid ""
+"Untick a panel or a tab to hide it, and use the arrows to reorder them. "
+"The open or closed state of each panel is remembered in this browser."
+msgstr ""
+"Deseleziona un pannello o una scheda per nasconderlo e usa le frecce per "
+"riordinarli. Lo stato aperto o chiuso di ogni pannello viene ricordato in"
+" questo browser."
+
+msgid "Sidebar panels"
+msgstr "Pannelli laterali"
+
+msgid "Move up"
+msgstr "Sposta su"
+
+msgid "Move down"
+msgstr "Sposta giù"
+
+msgid "Tabs"
+msgstr "Schede"
+
+msgid "Reset the layout"
+msgstr "Ripristina il layout"
+
+msgid "Features"
+msgstr "Funzionalità"
+
+msgid "Print status card above the tabs"
+msgstr "Scheda della stampa in corso sopra le schede"
+
+msgid "Print progress in the browser tab"
+msgstr "Avanzamento della stampa nella scheda del browser"
+
+msgid "Floating webcam button in the navbar"
+msgstr "Pulsante della webcam mobile nella barra di navigazione"
+
+msgid "Terminal tools: colors, recent commands and favorites"
+msgstr "Strumenti del terminale: colori, comandi recenti e preferiti"
+
+msgid "Favorite commands"
+msgstr "Comandi preferiti"
+
+msgid "Remove"
+msgstr "Rimuovi"
+
+msgid "New favorite command"
+msgstr "Nuovo comando preferito"
+
+msgid "Add"
+msgstr "Aggiungi"
+
+msgid "Favorites"
+msgstr "Preferiti"
+
+msgid "Send"
+msgstr "Invia"
+
+msgid "Add the command above to the favorites"
+msgstr "Aggiungi il comando qui sopra ai preferiti"
+
+msgid "Recent"
+msgstr "Recenti"
+
+msgid "Put this command back in the input"
+msgstr "Rimetti questo comando nel campo di inserimento"
+
+msgid "Clear"
+msgstr "Cancella"
 

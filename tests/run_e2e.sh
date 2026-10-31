@@ -19,6 +19,9 @@ server:
   pluginBlacklist: {enabled: false}
   seenWizards: {corewizard: 4, tracking: null, backup: null, softwareupdate: null, achievements: null}
 plugins:
+  # any image works as a "stream" for the floating webcam test (the config
+  # version keeps the plugin from migrating it away)
+  classicwebcam: {stream: /static/img/tentacle-76x76.png, _config_version: 1}
   tracking: {enabled: false}
   virtual_printer: {enabled: true}
   announcements: {enabled_channels: []}
@@ -57,8 +60,9 @@ fi
 export BASE_URL="http://localhost:$port"
 status=0
 cd "$here/e2e"
-# settings.js disables the theme at the end, so it runs last
-for test in contrast.js print.js settings.js; do
+# settings.js disables the theme at the end, so it runs last.
+# TESTS="features.js" runs a subset.
+for test in ${TESTS:-contrast.js print.js features.js settings.js}; do
     echo "=== $test"
     node "$test" || status=1
 done

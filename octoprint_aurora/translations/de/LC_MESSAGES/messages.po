@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OctoPrint-Aurora 0.1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-30 21:36+0000\n"
+"POT-Creation-Date: 2026-10-31 09:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -142,4 +142,142 @@ msgid ""
 msgstr ""
 "Verwendet die unter Einstellungen > Aussehen gewählte Farbe, um mehrere "
 "Drucker zu unterscheiden."
+
+msgid "Paused"
+msgstr "Pausiert"
+
+msgid "Printing"
+msgstr "Drucke"
+
+msgid "bed"
+msgstr "Bett"
+
+msgid "Close the floating webcam"
+msgstr "Schwebende Webcam schließen"
+
+msgid "Open the floating webcam"
+msgstr "Schwebende Webcam öffnen"
+
+msgid "Back to the page"
+msgstr "Zurück in die Seite"
+
+msgid "Picture in picture"
+msgstr "Bild im Bild"
+
+msgid "Webcam"
+msgstr "Webcam"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Webcam stream"
+msgstr "Webcam-Stream"
+
+msgid "The webcam stream could not be loaded."
+msgstr "Der Webcam-Stream konnte nicht geladen werden."
+
+msgid "Current print"
+msgstr "Aktueller Druck"
+
+msgid "Time left"
+msgstr "Restzeit"
+
+msgid "Finishes at"
+msgstr "Fertig um"
+
+msgid "Layer"
+msgstr "Schicht"
+
+msgid "Elapsed"
+msgstr "Vergangen"
+
+msgid "Temperatures"
+msgstr "Temperaturen"
+
+msgid "Pause"
+msgstr "Pause"
+
+msgid "Resume"
+msgstr "Weiter"
+
+msgid "Cancel"
+msgstr "Abbruch"
+
+msgid "Panels and tabs"
+msgstr "Bereiche und Tabs"
+
+msgid ""
+"UI Customizer is active and manages the layout, so these options are "
+"turned off."
+msgstr ""
+"UI Customizer ist aktiv und verwaltet das Layout, daher sind diese "
+"Optionen deaktiviert."
+
+msgid ""
+"Untick a panel or a tab to hide it, and use the arrows to reorder them. "
+"The open or closed state of each panel is remembered in this browser."
+msgstr ""
+"Entferne den Haken, um einen Bereich oder Tab auszublenden, und ändere "
+"die Reihenfolge mit den Pfeilen. Ob ein Bereich auf- oder zugeklappt ist,"
+" merkt sich dieser Browser."
+
+msgid "Sidebar panels"
+msgstr "Seitenleisten-Bereiche"
+
+msgid "Move up"
+msgstr "Nach oben bewegen"
+
+msgid "Move down"
+msgstr "Nach unten bewegen"
+
+msgid "Tabs"
+msgstr "Tabs"
+
+msgid "Reset the layout"
+msgstr "Layout zurücksetzen"
+
+msgid "Features"
+msgstr "Funktionen"
+
+msgid "Print status card above the tabs"
+msgstr "Druckstatus-Karte über den Tabs"
+
+msgid "Print progress in the browser tab"
+msgstr "Druckfortschritt im Browser-Tab"
+
+msgid "Floating webcam button in the navbar"
+msgstr "Button für die schwebende Webcam in der Navigationsleiste"
+
+msgid "Terminal tools: colors, recent commands and favorites"
+msgstr "Terminal-Werkzeuge: Farben, letzte Befehle und Favoriten"
+
+msgid "Favorite commands"
+msgstr "Lieblingsbefehle"
+
+msgid "Remove"
+msgstr "Entfernen"
+
+msgid "New favorite command"
+msgstr "Neuer Lieblingsbefehl"
+
+msgid "Add"
+msgstr "Hinzufügen"
+
+msgid "Favorites"
+msgstr "Favoriten"
+
+msgid "Send"
+msgstr "Senden"
+
+msgid "Add the command above to the favorites"
+msgstr "Den Befehl oben zu den Favoriten hinzufügen"
+
+msgid "Recent"
+msgstr "Zuletzt"
+
+msgid "Put this command back in the input"
+msgstr "Diesen Befehl wieder ins Eingabefeld setzen"
+
+msgid "Clear"
+msgstr "Leeren"
 

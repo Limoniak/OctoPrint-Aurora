@@ -98,6 +98,51 @@ def test_radius_is_clamped(radius, expected):
     assert save({"radius": radius}) == {"radius": expected}
 
 
+def test_feature_settings_are_validated():
+    cleaned = save(
+        {
+            "print_card": False,
+            "tab_progress": "yes",
+            "terminal_favorites": ["  G28  ", "M114\nM84", 42, "G28", ""],
+            "layout_tabs_order": ["temp_link", "<script>", "temp_link", "control_link"],
+            "layout_sidebar_hidden": "files_wrapper",
+        }
+    )
+    assert cleaned == {
+        "print_card": False,
+        "terminal_favorites": ["G28", "M114 M84"],
+        "layout_tabs_order": ["temp_link", "control_link"],
+    }
+
+
+def test_favorites_are_capped():
+    assert len(aurora.clean_favorites(["G%d" % i for i in range(50)])) == aurora.MAX_FAVORITES
+
+
+##~~ assets and templates
+
+
+def test_declared_assets_exist():
+    assets = aurora.AuroraPlugin().get_assets()
+    for kind in ("css", "js"):
+        for path in assets[kind]:
+            assert os.path.isfile(os.path.join(PACKAGE, "static", path)), path
+
+
+# OctoPrint picks a template's type from its name (<plugin id>_<type>.jinja2):
+# a generic template named e.g. aurora_webcam.jinja2 would become a webcam
+# provider and be rendered inside the Control tab.
+TEMPLATE_TYPES = ("navbar", "sidebar", "tab", "settings", "usersettings", "wizard", "about", "webcam")
+
+
+def test_templates_exist_and_generic_names_are_safe():
+    for config in aurora.AuroraPlugin().get_template_configs():
+        name = config.get("template", "aurora_%s.jinja2" % config["type"])
+        assert os.path.isfile(os.path.join(PACKAGE, "templates", name)), name
+        if config["type"] == "generic":
+            assert name not in ["aurora_%s.jinja2" % t for t in TEMPLATE_TYPES], name
+
+
 ##~~ data shared between Python, CSS and JS
 
 

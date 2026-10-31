@@ -35,7 +35,16 @@
         wide: true,
         glass: true,
         watermark: false,
-        graph: true
+        graph: true,
+        print_card: true,
+        tab_progress: true,
+        webcam_float: true,
+        terminal_tools: true,
+        terminal_favorites: ["M114", "M105", "M503", "G28", "M84"],
+        layout_sidebar_order: [],
+        layout_sidebar_hidden: [],
+        layout_tabs_order: [],
+        layout_tabs_hidden: []
     };
 
     var root = document.documentElement;
@@ -154,6 +163,23 @@
         return "data:image/svg+xml," + encodeURIComponent(svg);
     }
 
+    // Print progress as a ring around the nozzle, set by aurora_progress.js
+    var faviconProgress = null;
+    var faviconAccent = DEFAULTS.accent;
+
+    function progressFavicon(accent, progress) {
+        var circumference = 2 * Math.PI * 13;
+        var done = Math.max(0, Math.min(1, progress / 100)) * circumference;
+        var svg =
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">' +
+            '<circle cx="16" cy="16" r="13" fill="none" stroke="#8b93a7" stroke-opacity=".35" stroke-width="5"/>' +
+            '<circle cx="16" cy="16" r="13" fill="none" stroke="' + accent + '" stroke-width="5"' +
+            ' stroke-linecap="round" stroke-dasharray="' + done.toFixed(2) + " " + circumference.toFixed(2) + '"' +
+            ' transform="rotate(-90 16 16)"/>' +
+            '<g fill="' + accent + '" transform="translate(9 9) scale(.4375)">' + BRAND_GLYPH + "</g></svg>";
+        return "data:image/svg+xml," + encodeURIComponent(svg);
+    }
+
     function setFavicon(useBrand, accent) {
         if (originalFavicons === null) {
             originalFavicons = Array.prototype.map.call(
@@ -163,8 +189,16 @@
                 }
             );
         }
+        if (accent) faviconAccent = accent;
+        var active = root.classList.contains("aurora");
+        var href = null;
+        if (active && faviconProgress !== null && current && current.tab_progress) {
+            href = progressFavicon(faviconAccent, faviconProgress);
+        } else if (active && useBrand) {
+            href = brandFavicon(faviconAccent);
+        }
         originalFavicons.forEach(function (entry) {
-            entry.link.setAttribute("href", useBrand ? brandFavicon(accent) : entry.href);
+            entry.link.setAttribute("href", href || entry.href);
         });
     }
 
@@ -176,6 +210,7 @@
         // stay out of its way while it is active.
         var enabled = !!current.enabled && root.id !== "touch";
         root.classList.toggle("aurora", enabled);
+        if (window.AuroraUI) AuroraUI.active(enabled);
         window.setTimeout(themeGcodeViewer, 0);
         if (!enabled) {
             setFavicon(false);
@@ -228,6 +263,19 @@
     function reapply() {
         if (current) apply(current);
     }
+
+    // What the feature modules (aurora_*.js) need from the theme core
+    var themeActive = ko.observable(false);
+    window.AuroraUI = {
+        // true while the theme is applied (enabled, and TouchUI not in use)
+        active: themeActive,
+        setTabProgress: function (progress) {
+            faviconProgress = progress === null || progress === undefined ? null : +progress;
+            setFavicon(current && current.logo === "aurora");
+        },
+        storageGet: storageGet,
+        storageSet: storageSet
+    };
 
     function setInstanceColor(name) {
         if (name === instanceColorName) return;
@@ -469,6 +517,9 @@
         var self = this;
 
         self.settingsViewModel = parameters[0];
+        // used by the layout and favorites editors in the settings page
+        self.layout = parameters[1];
+        self.terminal = parameters[2];
         self.s = undefined;
         self.saved = undefined;
         self.dialogOpen = false;
@@ -562,7 +613,14 @@
 
         self.onSettingsHidden = function () {
             self.dialogOpen = false;
-            // revert an unsaved preview
+            // revert an unsaved preview, including what the other Aurora
+            // modules preview from these settings (layout, favorites)
+            _.each(self.saved, function (value, key) {
+                var observable = self.s[key];
+                if (ko.isWriteableObservable(observable) && !_.isEqual(ko.toJS(observable), value)) {
+                    observable(_.isArray(value) ? value.slice() : value);
+                }
+            });
             self.applyAndCache(self.saved);
         };
 
@@ -601,7 +659,7 @@
 
     OCTOPRINT_VIEWMODELS.push({
         construct: AuroraViewModel,
-        dependencies: ["settingsViewModel"],
+        dependencies: ["settingsViewModel", "auroraLayoutViewModel", "auroraTerminalViewModel"],
         elements: ["#settings_plugin_aurora", "#navbar_plugin_aurora"]
     });
 })();

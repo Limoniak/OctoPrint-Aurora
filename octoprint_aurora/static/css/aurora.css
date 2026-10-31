@@ -1469,6 +1469,35 @@ html.aurora #temperature-graph .legendColorBox > div {
   overflow: hidden;
 }
 
+/* Event marks on the graph (print, pause, done...). OctoPrint draws the
+   vertical line in the label's background color, so these also color the
+   lines; all keep the white label text readable. */
+html.aurora #temperature-graph .temperature-mark-type-print {
+  background-color: var(--a-success-fill);
+}
+
+html.aurora #temperature-graph .temperature-mark-type-pause {
+  background-color: var(--a-warning-fill);
+}
+
+html.aurora #temperature-graph .temperature-mark-type-resume {
+  background-color: var(--a-info-fill);
+}
+
+html.aurora #temperature-graph .temperature-mark-type-cancel {
+  background-color: var(--a-danger-fill);
+}
+
+html.aurora #temperature-graph .temperature-mark-type-done {
+  background-color: var(--a-accent);
+  color: var(--a-on-accent);
+}
+
+html.aurora #temperature-graph .temperature-mark-type-connected,
+html.aurora #temperature-graph .temperature-mark-type-disconnected {
+  background-color: #5f667c;
+}
+
 html.aurora #temperature-table {
   margin-top: var(--a-gap);
 }
@@ -1750,6 +1779,453 @@ html.aurora #settings_plugin_aurora input[type="range"] {
   html.aurora .modal {
     border-radius: var(--a-radius);
   }
+}
+
+/* ===== Print status card ============================================== */
+
+html.aurora .aurora-printcard {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "thumb main ring";
+  align-items: center;
+  gap: var(--a-pad);
+  margin-bottom: var(--a-gap);
+  padding: var(--a-pad);
+  background: var(--a-surface);
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius);
+  box-shadow: var(--a-shadow);
+}
+
+/* first item of the page grid on a single column: the grid gap spaces it */
+html.aurora .octoprint-container > .row > .aurora-printcard {
+  margin-bottom: 0;
+}
+
+html.aurora .aurora-printcard-thumb {
+  grid-area: thumb;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  background: var(--a-surface-2);
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius-sm);
+}
+
+html.aurora .aurora-printcard-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+html.aurora .aurora-printcard-thumb i {
+  font-size: 32px;
+  color: var(--a-text-3);
+}
+
+html.aurora .aurora-printcard-main {
+  grid-area: main;
+  min-width: 0;
+}
+
+html.aurora .aurora-printcard-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+html.aurora .aurora-printcard-state {
+  flex: none;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--a-accent);
+  color: var(--a-on-accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+html.aurora .aurora-printcard.paused .aurora-printcard-state {
+  background: var(--a-warning-fill);
+  color: #ffffff;
+}
+
+html.aurora .aurora-printcard-file {
+  margin: 0;
+  overflow: hidden;
+  font-size: 18px;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+html.aurora .aurora-printcard-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 28px;
+  margin: 12px 0 14px;
+}
+
+html.aurora .aurora-printcard-stats dt {
+  color: var(--a-text-3);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+html.aurora .aurora-printcard-stats dd {
+  margin: 0;
+  color: var(--a-text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+html.aurora .aurora-printcard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+html.aurora .aurora-printcard-ring {
+  grid-area: ring;
+  position: relative;
+  width: 108px;
+  height: 108px;
+}
+
+html.aurora .aurora-printcard-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+html.aurora .aurora-printcard-ring circle {
+  fill: none;
+  stroke-width: 8;
+}
+
+html.aurora .aurora-printcard-ring .track {
+  stroke: var(--a-surface-3);
+}
+
+html.aurora .aurora-printcard-ring .value {
+  stroke: var(--a-accent);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+html.aurora .aurora-printcard.paused .aurora-printcard-ring .value {
+  stroke: var(--a-warning-fill);
+}
+
+html.aurora .aurora-printcard-ring span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--a-text);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+html.aurora .aurora-printcard-ring strong {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+html.aurora .aurora-printcard-ring span {
+  grid-auto-flow: column;
+  align-content: center;
+  justify-content: center;
+  align-items: baseline;
+}
+
+@media (max-width: 640px) {
+  html.aurora .aurora-printcard {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "thumb ring"
+      "main main";
+  }
+
+  html.aurora .aurora-printcard-thumb {
+    width: 72px;
+    height: 72px;
+  }
+
+  html.aurora .aurora-printcard-ring {
+    justify-self: end;
+    width: 84px;
+    height: 84px;
+  }
+}
+
+/* ===== Floating webcam ================================================ */
+
+/* above the navbar (1030), below OctoPrint's dialogs (1050) */
+html.aurora .aurora-webcam {
+  position: fixed;
+  z-index: 1040;
+  min-width: 200px;
+  max-width: calc(100vw - 32px);
+  overflow: hidden;
+  resize: horizontal;
+  background: #000000;
+  border: 1px solid var(--a-border-strong);
+  border-radius: var(--a-radius);
+  box-shadow: var(--a-shadow-lg);
+}
+
+html.aurora .aurora-webcam.dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+html.aurora .aurora-webcam-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 6px 5px 12px;
+  background: var(--a-surface);
+  border-bottom: 1px solid var(--a-border);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+html.aurora .aurora-webcam-title {
+  flex: 1 1 auto;
+  color: var(--a-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+html.aurora .aurora-webcam-title i {
+  margin-right: 6px;
+  color: var(--a-accent-text);
+}
+
+html.aurora .aurora-webcam-button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--a-text-2);
+  cursor: pointer;
+}
+
+html.aurora .aurora-webcam-button:hover {
+  background: var(--a-surface-3);
+  color: var(--a-text);
+}
+
+html.aurora .aurora-webcam-button:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--a-accent-ring);
+}
+
+html.aurora .aurora-webcam-body {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  background: #000000;
+}
+
+html.aurora .aurora-webcam-body img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+html.aurora .aurora-webcam-error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 12px;
+  background: #000000;
+  color: #ffffff;
+  font-size: 13px;
+  text-align: center;
+}
+
+html.aurora #navbar #navbar_plugin_aurora_webcam > a.aurora-active {
+  background: var(--a-accent-soft);
+  color: var(--a-accent-text);
+}
+
+/* ===== Terminal tools ================================================= */
+
+/* OctoPrint shows each terminal line as a block (".pre-output span"); the
+   colored pieces inside a line must stay inline */
+html.aurora #terminal-output > span > span {
+  display: inline;
+}
+
+/* the terminal stays dark in both themes, so these colors are fixed (all
+   above 4.5:1 on its #0a0c12 background) */
+html.aurora.aurora-terminal-colors #terminal-output .t-dir,
+html.aurora.aurora-terminal-colors #terminal-output .t-dim,
+html.aurora.aurora-terminal-colors #terminal-output .t-comment {
+  color: #8a92ad;
+}
+
+html.aurora.aurora-terminal-colors #terminal-output .t-comment {
+  font-style: italic;
+}
+
+html.aurora.aurora-terminal-colors #terminal-output .t-cmd {
+  color: #c4b5fd;
+  font-weight: 600;
+}
+
+html.aurora.aurora-terminal-colors #terminal-output .t-param {
+  color: #7dd3fc;
+}
+
+html.aurora.aurora-terminal-colors #terminal-output .t-ok {
+  color: #86efac;
+}
+
+html.aurora.aurora-terminal-colors #terminal-output .t-error {
+  color: #fda4af;
+}
+
+html.aurora.aurora-terminal-colors #terminal-output .t-temp {
+  color: #fcd34d;
+}
+
+html.aurora.aurora-terminal-colors #terminal-output .t-info {
+  color: #a6adc4;
+}
+
+html.aurora .aurora-terminal {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 4px;
+}
+
+html.aurora .aurora-terminal-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+html.aurora .aurora-terminal-label {
+  min-width: 72px;
+  color: var(--a-text-3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+html.aurora .aurora-terminal-chip {
+  font-family: var(--a-mono);
+  font-size: 12px;
+}
+
+html.aurora .btn-link.aurora-terminal-chip {
+  padding: 1px 8px;
+  border: 1px dashed var(--a-border-strong);
+  border-radius: 999px;
+  color: var(--a-text-2);
+}
+
+html.aurora .btn-link.aurora-terminal-chip:hover {
+  border-style: solid;
+  color: var(--a-text);
+}
+
+html.aurora .aurora-terminal-clear {
+  color: var(--a-text-3);
+  font-size: 12px;
+}
+
+/* ===== Customizable layout ============================================ */
+
+html.aurora .aurora-hidden {
+  display: none !important;
+}
+
+html.aurora #settings_plugin_aurora .aurora-layout-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--a-gap);
+  margin-bottom: 14px;
+}
+
+html.aurora #settings_plugin_aurora .aurora-layout-columns h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+html.aurora #settings_plugin_aurora .aurora-layout-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--a-border);
+  border-radius: var(--a-radius-sm);
+}
+
+html.aurora #settings_plugin_aurora .aurora-layout-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 12px;
+  border-bottom: 1px solid var(--a-border);
+}
+
+html.aurora #settings_plugin_aurora .aurora-layout-list li:last-child {
+  border-bottom: 0;
+}
+
+html.aurora #settings_plugin_aurora .aurora-layout-list label {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html.aurora #settings_plugin_aurora .aurora-layout-move {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+
+html.aurora #settings_plugin_aurora .aurora-favorites {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+html.aurora #settings_plugin_aurora .aurora-favorites li {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 2px 2px 8px;
+  background: var(--a-surface-2);
+  border: 1px solid var(--a-border);
+  border-radius: 999px;
+}
+
+html.aurora #settings_plugin_aurora .aurora-favorites code {
+  padding: 0;
+  background: transparent;
+  border: 0;
 }
 
 /* ===== Plugin fixes =================================================== */

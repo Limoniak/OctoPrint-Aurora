@@ -9,6 +9,66 @@ msgid ""
 "disable one of them."
 msgstr ""
 
+msgid "Paused"
+msgstr ""
+
+msgid "Printing"
+msgstr ""
+
+msgid "bed"
+msgstr ""
+
+msgid "Close the floating webcam"
+msgstr ""
+
+msgid "Open the floating webcam"
+msgstr ""
+
+msgid "Back to the page"
+msgstr ""
+
+msgid "Picture in picture"
+msgstr ""
+
+msgid "Webcam"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Webcam stream"
+msgstr ""
+
+msgid "The webcam stream could not be loaded."
+msgstr ""
+
+msgid "Current print"
+msgstr ""
+
+msgid "Time left"
+msgstr ""
+
+msgid "Finishes at"
+msgstr ""
+
+msgid "Layer"
+msgstr ""
+
+msgid "Elapsed"
+msgstr ""
+
+msgid "Temperatures"
+msgstr ""
+
+msgid "Pause"
+msgstr ""
+
+msgid "Resume"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
 msgid "TouchUI is active in this browser: Aurora is paused while it is in use."
 msgstr ""
 
@@ -110,5 +170,78 @@ msgid "Right"
 msgstr ""
 
 msgid "Use the full width of large screens"
+msgstr ""
+
+msgid "Panels and tabs"
+msgstr ""
+
+msgid ""
+"UI Customizer is active and manages the layout, so these options are "
+"turned off."
+msgstr ""
+
+msgid ""
+"Untick a panel or a tab to hide it, and use the arrows to reorder them. "
+"The open or closed state of each panel is remembered in this browser."
+msgstr ""
+
+msgid "Sidebar panels"
+msgstr ""
+
+msgid "Move up"
+msgstr ""
+
+msgid "Move down"
+msgstr ""
+
+msgid "Tabs"
+msgstr ""
+
+msgid "Reset the layout"
+msgstr ""
+
+msgid "Features"
+msgstr ""
+
+msgid "Print status card above the tabs"
+msgstr ""
+
+msgid "Print progress in the browser tab"
+msgstr ""
+
+msgid "Floating webcam button in the navbar"
+msgstr ""
+
+msgid "Terminal tools: colors, recent commands and favorites"
+msgstr ""
+
+msgid "Favorite commands"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "New favorite command"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "Add the command above to the favorites"
+msgstr ""
+
+msgid "Recent"
+msgstr ""
+
+msgid "Put this command back in the input"
+msgstr ""
+
+msgid "Clear"
 msgstr ""
 
