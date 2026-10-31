@@ -1,109 +1,195 @@
-# OctoPrint-Aurora
+<div align="center">
 
-Une refonte complète du design de l'interface web d'OctoPrint : cartes modernes, thème clair/sombre, couleur d'accent personnalisable et mise en page fluide. Toutes les fonctionnalités d'OctoPrint et des autres plugins restent intactes.
+<img src="docs/logo.svg" width="88" height="88" alt="Aurora UI logo">
 
-| Avant | Après (clair) | Après (sombre) |
-| --- | --- | --- |
-| ![Avant](docs/before.png) | ![Clair](docs/main-light.png) | ![Sombre](docs/main-dark.png) |
+# Aurora UI
 
-| Réglages | Connexion | Mobile |
-| --- | --- | --- |
-| ![Réglages](docs/settings-light.png) | ![Connexion](docs/login-light-1440.png) | ![Mobile](docs/mobile-dark.png) |
+**A complete redesign of the OctoPrint web interface.**<br>
+Light and dark themes, your own accent color, a cleaner layout, and nothing to relearn: every OctoPrint feature and plugin stays where it was.
 
-## Fonctionnalités
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-6d4aff)](LICENSE)
+[![OctoPrint](https://img.shields.io/badge/OctoPrint-1.11-6d4aff)](https://octoprint.org)
+[![Python](https://img.shields.io/badge/python-3.7%2B-6d4aff)](pyproject.toml)
+[![Languages](https://img.shields.io/badge/languages-7-6d4aff)](#languages)
 
-- **Nouveau design de toute l'interface** : barre de navigation translucide, panneaux en cartes, onglets en pilules, boutons, formulaires, tableaux, fenêtres modales, menus, notifications, terminal et liste de fichiers.
-- **Thème clair, sombre ou automatique** (suit le système). Un bouton lune/soleil dans la barre de navigation permet à chaque navigateur de forcer son choix.
-- **Couleur d'accent** : 9 préréglages ou n'importe quelle couleur. La couleur du texte sur l'accent (blanc ou noir) est calculée automatiquement pour rester lisible.
-- **Graphique de température redessiné** : couleurs des courbes et de la grille adaptées au thème, filigrane OctoPrint masquable.
-- **Mise en page** : barre latérale à gauche ou à droite, densité confortable ou compacte, pleine largeur sur grands écrans, rayon des coins réglable.
-- **Logo « Buse »** : une buse qui dépose un cordon de filament, sur une tuile aux couleurs de l'accent, dans la barre du haut, sur la page de connexion et en icône d'onglet. Le logo original d'OctoPrint ou le texte seul restent disponibles dans les réglages.
-- **Interface traduite** en français, espagnol, portugais, russe, allemand et italien (en plus de l'anglais) : la langue suit celle choisie dans OctoPrint.
-- **Page de connexion** stylée elle aussi (via le hook `octoprint.theming.login`).
-- **Aperçu en direct** dans les réglages : rien n'est conservé tant que vous n'avez pas cliqué sur *Save*, et un *Close* annule l'aperçu.
-- **Couleur d'instance** : la couleur choisie dans *Settings → Appearance* (utile pour distinguer plusieurs imprimantes) s'affiche en fin liseré en haut de l'écran, ou peut servir de couleur d'accent.
-- **Désactivable d'un clic** : toutes les règles sont limitées à `html.aurora`, donc décocher « Enable » restaure instantanément le design d'origine.
+<img src="docs/hero.png" alt="Aurora UI in the light theme (left) and the dark theme (right) during a print">
+
+</div>
+
+## Features
+
+- **Redesigned from top to bottom.** Card panels, pill tabs, modern buttons and forms, tables, dialogs, menus, notifications, terminal and file list.
+- **Light, dark or automatic theme.** Automatic follows your operating system. A moon/sun button in the navbar lets each browser pick its own.
+- **Your accent color.** Nine presets or any color you like. Text on colored buttons switches between white and black so it always stays readable.
+- **Themed graphs.** The temperature graph and the GCode viewer are drawn in the theme colors, so the dark theme stays dark everywhere.
+- **Layout options.** Sidebar on the left or right, comfortable or compact density, full width on large screens, adjustable corner radius.
+- **A styled login page**, using the same theme and accent color.
+- **Tells your printers apart.** The instance color from *Settings › Appearance* shows as a thin stripe at the top of the screen, or becomes the accent color.
+- **Live preview.** Changes in the settings apply as you make them, and are reverted if you close without saving.
+- **Accessible.** Text contrast meets WCAG AA (4.5:1) in both themes, on every OctoPrint page.
+- **Off in one click.** Untick *Enable* and the stock interface is back instantly.
+
+## Screenshots
+
+| Dark theme | Light theme |
+| --- | --- |
+| ![Dark theme during a print](docs/main-dark.png) | ![Light theme during a print](docs/main-light.png) |
+| **GCode viewer** | **Settings, with live preview** |
+| ![GCode viewer in the dark theme](docs/gcode-dark.png) | ![Aurora UI settings](docs/settings.png) |
+
+<table>
+  <tr>
+    <th>Login page</th>
+    <th>Phone</th>
+    <th>Before (stock OctoPrint)</th>
+  </tr>
+  <tr>
+    <td><img src="docs/login-dark.png" alt="Login page, dark theme"><br><img src="docs/login-light.png" alt="Login page, light theme"></td>
+    <td><img src="docs/mobile-dark.png" width="260" alt="Aurora UI on a phone"></td>
+    <td><img src="docs/before.png" alt="The stock OctoPrint interface, for comparison"></td>
+  </tr>
+</table>
 
 ## Installation
 
-Dans OctoPrint, ouvrez *Settings → Plugin Manager → Get More…* et collez cette adresse dans « … from URL » :
+In OctoPrint, open **Settings › Plugin Manager › Get More…**, paste this URL into **… from URL** and click **Install**:
 
 ```
 https://github.com/Limoniak/OctoPrint-Aurora/archive/refs/heads/main.zip
 ```
 
-Ou en ligne de commande, dans l'environnement Python d'OctoPrint :
+Restart OctoPrint when asked, then reload the page.
+
+Or from the command line, in OctoPrint's Python environment:
 
 ```bash
 pip install https://github.com/Limoniak/OctoPrint-Aurora/archive/refs/heads/main.zip
 ```
 
-Les mises à jour sont ensuite proposées automatiquement par OctoPrint (*Software Update*) à chaque nouvelle version publiée sur GitHub.
+Once installed, new versions published on GitHub are offered by OctoPrint's own **Software Update**.
 
-Pour le développement :
+## Settings
+
+Everything lives in **Settings › Aurora UI**.
+
+| Setting | Options | Default |
+| --- | --- | --- |
+| Enable the Aurora theme | on / off | on |
+| Theme | Auto, Light, Dark | Auto |
+| Accent color | 9 presets or a custom color | violet `#6d4aff` |
+| Logo | Nozzle, OctoPrint (original), Text only | Nozzle |
+| Instance color | Thin stripe at the top, Use as accent color, Ignore | Thin stripe |
+| Corner radius | 0 to 28 px | 14 px |
+| Effects | Background glow and translucent navbar · Themed temperature graph · OctoPrint watermark behind the graph | first two on |
+| Density | Comfortable, Compact | Comfortable |
+| Sidebar position | Left, Right | Left |
+| Full width on large screens | on / off | on |
+
+The navbar's moon/sun button overrides the theme for the current browser only, so a tablet next to the printer can stay dark while your desktop follows the system.
+
+## Compatibility
+
+**OctoPrint.** Developed and tested on OctoPrint 1.11.8, including the setup wizard, every settings page, the About dialog, a full simulated print (heating, printing, pause, resume, cancel) and the GCode viewer.
+
+**Browsers.** Full rendering on Chrome/Edge 111+, Firefox 113+ and Safari 16.2+. Older browsers, such as the one on a printer's touch screen, get the same theme with a few tinted backgrounds replaced by plain ones.
+
+**Third-party plugins.** Tested together, on OctoPrint 1.11.8, with the ten most used plugins according to OctoPrint's official usage statistics (October 2026):
+
+> Bed Level Visualizer · PrintTimeGenius · Firmware Updater · Dashboard · UI Customizer · Slicer Thumbnails · Cancelobject · DisplayLayerProgress · Themeify · Preheat Button
+
+as well as Octolapse, OctoEverywhere and Obico. Their tabs, panels and settings pick up the theme, with no JavaScript errors and readable contrast in both themes. A few elements keep the colors their plugin forces on purpose: Obico's branded panel, Octolapse's preview box and warning label, and Dashboard's webcam buttons and chart labels.
+
+| Plugin | How Aurora handles it |
+| --- | --- |
+| **UI Customizer** | Fully supported. UI Customizer keeps its layout (columns, widgets, fixed header and footer, settings menu) and Aurora provides the colors. |
+| **Themeify** | Another complete theme: running both gives mixed results. Aurora shows a notice when both are active, so you can disable one. |
+| **TouchUI** | Aurora steps aside in any browser where TouchUI is active, and comes back when it is turned off. |
+
+## Languages
+
+The plugin's own interface is available in English, French, Spanish, Portuguese (Portugal), Russian, German and Italian, and follows the language chosen in OctoPrint.
+
+Want to add or fix a translation? See [Translations](#translations) below. Pull requests are welcome.
+
+## Development
+
+```
+octoprint_aurora/
+├── __init__.py                 settings, assets, templates, login stylesheet route, hooks
+├── static/
+│   ├── css/aurora.css          the theme: color tokens, then the components
+│   ├── js/aurora.js            applies the theme, themes the graphs, settings view model
+│   └── img/                    the Nozzle logo and OctoPrint's original logo
+├── templates/                  settings page, navbar button, login stylesheet
+└── translations/               de, es, fr, it, pt, ru (.po and compiled .mo)
+tests/
+├── test_plugin.py              unit tests (pytest)
+├── e2e/                        browser tests (Playwright)
+└── run_e2e.sh                  starts a throwaway OctoPrint and runs the browser tests
+```
+
+For a development install:
 
 ```bash
 pip install -e .
 ```
 
-Redémarrez ensuite OctoPrint. Testé avec OctoPrint 1.11.8 sous Python 3.13.
+### How the theme works
 
-## Structure
+- **Scoped.** Every rule starts with `html.aurora`, so disabling the theme removes it completely.
+- **Tokens.** Colors are CSS custom properties (`--a-bg`, `--a-surface`, `--a-text`, …) defined once for the light theme and once for the dark theme at the top of `aurora.css`. The login page reads the same two blocks, so there is a single place to edit.
+- **Applied by script.** `aurora.js` sets the `aurora` class, the `data-aurora-*` attributes and the accent-derived colors on `<html>`. It caches the last settings in `localStorage`, so the theme is there before the settings have even loaded.
+- **Graphs.** The temperature graph (Flot) and the GCode viewer draw on a canvas; `aurora.js` passes them the theme colors.
+- **Plugin-friendly.** Base rules (links, headings, code, labels) are wrapped in `:where()` so they never outweigh a plugin's own classes.
 
-```
-octoprint_aurora/
-├── __init__.py                     # plugin : réglages, assets, templates, route /login.css
-├── static/
-│   ├── css/aurora.css              # le thème (tokens --a-* + composants)
-│   ├── js/aurora.js                # application du thème, graphique, view model
-│   └── img/
-│       ├── brand.svg               # logo « Buse » (aussi dessiné dans aurora.js pour l'icône d'onglet)
-│       └── tentacle.png            # logo d'origine d'OctoPrint, version verte
-└── templates/
-    ├── aurora_settings.jinja2      # page de réglages du plugin
-    ├── aurora_navbar.jinja2        # bouton clair/sombre
-    └── aurora_login_css.jinja2     # feuille de style de la page de connexion
-└── translations/<langue>/LC_MESSAGES/messages.{po,mo}   # fr, es, pt, ru, de, it
-```
+### Customizing colors
 
-### Comment ça marche
+Edit the variables in the `html.aurora[data-aurora-theme="light"]` and `html.aurora[data-aurora-theme="dark"]` blocks at the top of `octoprint_aurora/static/css/aurora.css`. The login page picks them up automatically.
 
-- `aurora.js` pose sur `<html>` la classe `aurora` et les attributs `data-aurora-theme`, `data-aurora-density` et `data-aurora-sidebar`, ainsi que les variables `--a-accent`, `--a-on-accent` et `--a-radius`. La dernière configuration est mise en cache dans `localStorage` pour l'appliquer dès le chargement, sans afficher brièvement l'ancien thème.
-- `aurora.css` définit les couleurs du thème (`--a-bg`, `--a-surface`, `--a-text`…) pour le clair et le sombre, puis stylise les composants Bootstrap 2 d'OctoPrint à partir de ces variables. La mise en page passe en CSS Grid.
-- Le graphique de température est dessiné dans un canvas par Flot : `aurora.js` enveloppe `$.plot` (uniquement pour `#temperature-graph`) pour y injecter les couleurs du thème.
+### Translations
 
-### Personnaliser
-
-Pour modifier une couleur du thème, changez la variable correspondante dans les blocs `html.aurora[data-aurora-theme="light"]` / `"dark"` en haut de `aurora.css`. La page de connexion lit ces mêmes blocs au moment où elle est servie : il n'y a rien à reporter ailleurs.
-
-## Traductions
-
-Les textes sont extraits avec Babel (installé avec OctoPrint). Après avoir modifié un texte dans un template ou dans `aurora.js` :
+Strings are extracted with Babel, which comes with OctoPrint. After changing a string in a template or in `aurora.js`:
 
 ```bash
 pybabel extract -F babel.cfg -o translations/messages.pot --no-location --omit-header .
 pybabel update -i translations/messages.pot -d octoprint_aurora/translations
 ```
 
-Complétez les nouvelles entrées des fichiers `messages.po`, puis compilez :
+Fill in the new entries of each `messages.po`, then compile:
 
 ```bash
 pybabel compile -d octoprint_aurora/translations
 ```
 
-Les fichiers `.po` doivent rester à côté des `.mo` : OctoPrint lit les `.po` pour les textes JavaScript.
+Keep the `.po` files next to the `.mo` files: OctoPrint reads the `.po` files for the JavaScript strings. To add a language:
 
-Pour ajouter une langue : `pybabel init -i translations/messages.pot -d octoprint_aurora/translations -l <code>`.
+```bash
+pybabel init -i translations/messages.pot -d octoprint_aurora/translations -l <code>
+```
 
-## Compatibilité
+### Tests
 
-- **Navigateurs** : rendu complet sur Chrome/Edge 111+, Firefox 113+ et Safari 16.2+. Les navigateurs plus anciens (par exemple celui d'un écran tactile branché sur l'imprimante) affichent le même thème, avec quelques fonds teintés remplacés par des fonds unis. Le flou de la barre de navigation est simplement ignoré quand il n'est pas pris en charge.
-- **Accessibilité** : les textes respectent le contraste WCAG AA (4,5:1) dans les deux thèmes, y compris les liens et les boutons colorés. Les 9 couleurs d'accent proposées gardent un texte blanc lisible. Pour une couleur personnalisée, le texte des boutons passe en blanc ou en noir selon ce qui contraste le mieux.
-- **Onglets d'OctoPrint** : Température (graphique aux couleurs du thème), Contrôle (webcam), GCode Viewer (fond, grille et lignes du modèle suivent le thème), Terminal, Timelapse, assistant de premier démarrage et toutes les pages des réglages.
-- **Plugins tiers testés** : les 10 plugins les plus utilisés selon les statistiques officielles d'OctoPrint (instances actives, octobre 2026) : Bed Level Visualizer, PrintTimeGenius, Firmware Updater, Dashboard, UI Customizer, Slicer Thumbnails, Cancelobject, DisplayLayerProgress, Themeify et Preheat Button. Octolapse, OctoEverywhere et Obico ont aussi été testés. Tous ont été installés ensemble sur OctoPrint 1.11.8. Leurs onglets, panneaux et réglages prennent le thème, sans erreur JavaScript, avec un contraste conforme dans les deux thèmes. Les seules exceptions sont des choix de design des plugins eux-mêmes : le panneau à la marque d'Obico, l'encadré d'aperçu et l'étiquette « USE AT YOUR OWN RISK » d'Octolapse, les boutons de webcam et les graduations de graphique de Dashboard (couleurs forcées par le plugin). Les règles de base d'Aurora (liens, titres, code) ont une priorité volontairement faible, pour laisser les plugins styliser leurs propres éléments.
-- **UI Customizer** : compatible. UI Customizer garde sa disposition (colonnes, widgets, barre du haut et pied de page fixes, menu des réglages) et Aurora fournit les couleurs. Note technique : UI Customizer désactive les règles CSS des plugins qui contiennent `#navbar .navbar-inner .nav`, c'est pourquoi Aurora écrit ces sélecteurs sous la forme `#navbar > .navbar-inner .nav`.
-- **Themeify** : c'est un autre thème complet, et il s'active tout seul à son installation. Utiliser les deux en même temps donne un résultat incohérent. Aurora affiche alors une notification au chargement de la page (une fois par session) et un avertissement dans ses réglages : désactivez l'un des deux.
+Unit tests, in an environment where OctoPrint is installed:
 
-## Licence
+```bash
+pip install pytest
+pytest tests
+```
 
-AGPL-3.0-or-later, comme OctoPrint.
+They also check that the copies of shared data stay in sync (instance colors, default settings, accent presets) and that every translation is complete.
+
+Browser tests, against a real OctoPrint with the virtual printer:
+
+```bash
+pip install .
+cd tests/e2e && npm install && npx playwright install chromium && cd ../..
+tests/run_e2e.sh
+```
+
+They check the contrast of every page in both themes, run a simulated print, and go through the settings (live preview, revert, save, reload, disable). OctoPrint refuses to run as root, so run them as a regular user.
+
+## License
+
+[AGPL-3.0-or-later](LICENSE), like OctoPrint itself.
+
+The "OctoPrint (original)" logo option uses OctoPrint's own tentacle image, which belongs to the OctoPrint project.
