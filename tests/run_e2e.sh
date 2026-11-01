@@ -62,7 +62,7 @@ status=0
 cd "$here/e2e"
 # settings.js disables the theme at the end, so it runs last.
 # TESTS="features.js" runs a subset.
-for test in ${TESTS:-contrast.js print.js features.js settings.js}; do
+for test in ${TESTS:-contrast.js print.js features.js webcam.js settings.js}; do
     echo "=== $test"
     node "$test" || status=1
 done

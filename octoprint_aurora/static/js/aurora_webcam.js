@@ -8,6 +8,7 @@
     var MARGIN = 16;
     var DEFAULT_WIDTH = 360;
     var MIN_WIDTH = 200;
+    var ICE_GATHERING_TIMEOUT = 2000;
     // a 1x1 transparent gif: assigning it stops the MJPEG download
     var BLANK = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
@@ -59,6 +60,26 @@
             return c && c.stream ? c.stream() || "" : "";
         });
 
+        // MJPEG goes in an <img>; HLS (.m3u8) and WebRTC (webrtc://) streams,
+        // which the Classic Webcam plugin also plays, need a <video>
+        self.streamType = ko.pureComputed(function () {
+            var url = self.streamUrl();
+            if (!url) return "mjpg";
+            if (typeof window.determineWebcamStreamType === "function") {
+                try {
+                    return window.determineWebcamStreamType(url);
+                } catch (e) {
+                    return "mjpg";
+                }
+            }
+            if (/^webrtcs?:/i.test(url)) return "webrtc";
+            return /\.m3u8$/i.test(url.split(/[?#]/)[0]) ? "hls" : "mjpg";
+        });
+
+        self.isVideo = ko.pureComputed(function () {
+            return self.streamType() !== "mjpg";
+        });
+
         self.available = ko.pureComputed(function () {
             var webcamEnabled = self.settingsViewModel.webcam_webcamEnabled;
             var enabled = ko.isObservable(webcamEnabled) ? webcamEnabled() : true;
@@ -89,7 +110,12 @@
         });
 
         self.streamSrc = ko.pureComputed(function () {
-            return self.showing() && (self.pageVisible() || self.inPip()) ? self.streamUrl() : BLANK;
+            return self.showing() && !self.isVideo() && (self.pageVisible() || self.inPip()) ? self.streamUrl() : BLANK;
+        });
+
+        // same rule for the video streams: playing only while it can be seen
+        self.videoOn = ko.pureComputed(function () {
+            return self.showing() && self.isVideo() && (self.pageVisible() || self.inPip());
         });
 
         // width / height of the stream, known once its first frame is in
@@ -147,9 +173,14 @@
             };
         };
 
+        // the picture elements, kept from the start: in picture in picture
+        // they live in the other window, out of reach of a query on the page
+        var imgEl = null;
+        var videoEl = null;
+
+        // the element showing the stream (<img> or <video>)
         var image = function () {
-            var el = document.getElementById("aurora_webcam");
-            return el && el.querySelector("img");
+            return self.isVideo() ? videoEl : imgEl;
         };
 
         // reads the stream's size: an MJPEG stream never finishes loading, so
@@ -227,6 +258,7 @@
         self.toggle = function () {
             self.open(!self.open());
             if (!self.open() && pipWindow) pipWindow.close();
+            if (!self.open() && self.inFullscreen()) document.exitFullscreen();
             self.error(false);
             save();
         };
@@ -254,6 +286,126 @@
 
         self.onError = function (data, event) {
             if (event.target.getAttribute("src") !== BLANK) self.error(true);
+        };
+
+        self.onVideoSize = function (data, event) {
+            var video = event.target;
+            if (video.videoWidth > 1 && video.videoHeight > 1) {
+                self.error(false);
+                self.ratio(video.videoWidth / video.videoHeight);
+            }
+            return true;
+        };
+
+        self.onVideoError = function (data, event) {
+            // native HLS (Safari) reports its failures on the element
+            if (event.target.getAttribute("src")) self.error(true);
+            return true;
+        };
+
+        // ----- HLS and WebRTC streams
+
+        var hls = null;
+        var peer = null;
+
+        var stopVideo = function () {
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+            if (peer) {
+                peer.close();
+                peer = null;
+            }
+            if (!videoEl) return;
+            videoEl.srcObject = null;
+            if (videoEl.getAttribute("src")) {
+                videoEl.removeAttribute("src");
+                videoEl.load();
+            }
+        };
+
+        // the same exchange as OctoPrint's own player (camera-streamer and
+        // compatible servers): post our offer, receive the answer
+        var startWebRtc = function (url) {
+            if (typeof window.RTCPeerConnection !== "function") {
+                self.error(true);
+                return;
+            }
+            var c = cam();
+            var ice = c && c.streamWebrtcIceServers ? ko.unwrap(c.streamWebrtcIceServers) : null;
+            var config = {};
+            if (ice && ice.length) config.iceServers = [{urls: ice}];
+            var pc = new RTCPeerConnection(config);
+            peer = pc;
+            pc.addTransceiver("video", {direction: "recvonly"});
+            pc.addTransceiver("audio", {direction: "recvonly"});
+            pc.addEventListener("track", function (event) {
+                if (event.track.kind === "video" && pc === peer) videoEl.srcObject = event.streams[0];
+            });
+            pc.createOffer()
+                .then(function (offer) {
+                    return pc.setLocalDescription(offer);
+                })
+                .then(function () {
+                    // wait for the network addresses to be gathered, at most
+                    // 2 seconds: an unreachable STUN server or a dead network
+                    // interface can keep the gathering going for a long time,
+                    // and the addresses found by then are usually enough
+                    return new Promise(function (resolve) {
+                        if (pc.iceGatheringState === "complete") return resolve();
+                        var check = function () {
+                            if (pc.iceGatheringState !== "complete") return;
+                            pc.removeEventListener("icegatheringstatechange", check);
+                            resolve();
+                        };
+                        pc.addEventListener("icegatheringstatechange", check);
+                        window.setTimeout(resolve, ICE_GATHERING_TIMEOUT);
+                    });
+                })
+                .then(function () {
+                    if (pc !== peer) return null;
+                    // webrtc://host becomes http://host, webrtcs:// https://
+                    return $.ajax({
+                        url: "http" + url.slice("webrtc".length),
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=UTF-8",
+                        data: JSON.stringify({sdp: pc.localDescription.sdp, type: pc.localDescription.type})
+                    });
+                })
+                .then(function (answer) {
+                    if (answer && pc === peer) return pc.setRemoteDescription(answer);
+                })
+                .catch(function () {
+                    if (pc === peer) self.error(true);
+                });
+            pc.addEventListener("connectionstatechange", function () {
+                if (pc === peer && pc.connectionState === "failed") self.error(true);
+            });
+        };
+
+        var startVideo = function () {
+            stopVideo();
+            if (!videoEl) return;
+            self.error(false);
+            var url = encodeURI(self.streamUrl());
+            if (self.streamType() === "webrtc") {
+                startWebRtc(url);
+            } else if (videoEl.canPlayType && videoEl.canPlayType("application/vnd.apple.mpegurl")) {
+                // Safari plays HLS by itself
+                videoEl.src = url;
+            } else if (window.Hls && window.Hls.isSupported()) {
+                // hls.js, shipped with OctoPrint
+                hls = new window.Hls();
+                hls.on(window.Hls.Events.ERROR, function (event, info) {
+                    if (info && info.fatal) self.error(true);
+                });
+                hls.loadSource(url);
+                hls.attachMedia(videoEl);
+            } else {
+                self.error(true);
+            }
         };
 
         // ----- Dragging by the title bar
@@ -349,6 +501,7 @@
                 return;
             }
             var img = image();
+            if (!img) return;
             var height = Math.round(self.rotated() ? self.shownWidth() * self.ratio() : self.shownWidth() / self.ratio());
             window.documentPictureInPicture
                 .requestWindow({width: self.shownWidth(), height: height})
@@ -357,10 +510,13 @@
                     win.document.body.style.cssText = "margin:0;background:#000;display:grid;place-items:center;height:100vh;overflow:hidden";
                     win.document.body.appendChild(img);
                     self.inPip(true);
+                    // moving a video pauses it
+                    if (img.play) img.play().catch(function () {});
                     win.addEventListener("pagehide", function () {
                         frame().querySelector(".aurora-webcam-body").prepend(img);
                         pipWindow = null;
                         self.inPip(false);
+                        if (img.play) img.play().catch(function () {});
                     });
                 })
                 .catch(function () {
@@ -377,6 +533,8 @@
             var el = frame();
             // a fixed window: keep it out of any container that could hide or clip it
             if (el && el.parentElement !== document.body) document.body.appendChild(el);
+            imgEl = el && el.querySelector("img");
+            videoEl = el && el.querySelector("video");
             window.addEventListener("resize", function () {
                 self.viewportHeight(window.innerHeight);
                 clamp();
@@ -385,13 +543,23 @@
             // the picture's size and turn follow the webcam settings, in the
             // window and in picture in picture
             ko.computed(function () {
-                var img = image();
-                if (img) $(img).css(imageStyle());
+                var style = imageStyle();
+                [imgEl, videoEl].forEach(function (el) {
+                    if (el) $(el).css(style);
+                });
+            });
+
+            // a video stream starts when the window shows and stops when it
+            // closes, the page is hidden or the stream changes
+            ko.computed(function () {
+                var on = self.videoOn();
+                self.streamUrl();
+                ko.ignoreDependencies(on ? startVideo : stopVideo);
             });
             self.showing.subscribe(function (showing) {
-                if (showing) readSize();
+                if (showing && !self.isVideo()) readSize();
             });
-            if (self.showing()) readSize();
+            if (self.showing() && !self.isVideo()) readSize();
 
             // a position saved in a larger browser window could be off screen
             // now: bring the window back in view whenever it appears

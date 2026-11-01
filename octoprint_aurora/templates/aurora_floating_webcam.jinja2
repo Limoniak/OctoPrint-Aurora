@@ -12,7 +12,8 @@
         </button>
     </div>
     <div class="aurora-webcam-body" data-bind="style: bodyStyle">
-        <img alt="{{ _('Webcam stream')|edq }}" data-bind="attr: { src: streamSrc }, event: { load: onLoad, error: onError, dblclick: toggleFullscreen }">
+        <img alt="{{ _('Webcam stream')|edq }}" data-bind="visible: !isVideo(), attr: { src: streamSrc }, event: { load: onLoad, error: onError, dblclick: toggleFullscreen }">
+        <video muted autoplay playsinline style="display: none" aria-label="{{ _('Webcam stream')|edq }}" data-bind="visible: isVideo, event: { loadedmetadata: onVideoSize, resize: onVideoSize, error: onVideoError, dblclick: toggleFullscreen }"></video>
         <p class="aurora-webcam-error" style="display: none" data-bind="visible: error">{{ _('The webcam stream could not be loaded.') }}</p>
     </div>
     <div class="aurora-webcam-resize" aria-hidden="true" data-bind="event: { pointerdown: startResize }"></div>

@@ -36,7 +36,7 @@ Light and dark themes, your own accent color, a cleaner layout, and nothing to r
 
 - **Print status card.** While printing, a card above the tabs shows the model thumbnail (from Slicer Thumbnails or Cura Thumbnails), a progress ring, time left, the expected finish time, the current layer (with DisplayLayerProgress) and temperatures, with Pause, Resume and Cancel at hand. On a phone it comes first on the page.
 - **Progress in the browser tab.** The tab title reads *42% · benchy.gcode* and its icon fills up as a ring, so you can follow a print from another tab.
-- **Floating webcam.** A camera button in the navbar opens the webcam in a small window that stays on screen whatever the tab. Drag it by its title bar, resize it from the corner grip (mouse or finger), go full screen with a double-click, close it with Escape, or pop it out into a picture-in-picture window (Chrome and Edge).
+- **Floating webcam.** A camera button in the navbar opens the webcam in a small window that stays on screen whatever the tab. Drag it by its title bar, resize it from the corner grip (mouse or finger), go full screen with a double-click, close it with Escape, or pop it out into a picture-in-picture window (Chrome and Edge). It plays the same streams as OctoPrint's own webcam: MJPEG, HLS and WebRTC (camera-streamer).
 - **Print alerts.** A chime and/or a browser notification when a print finishes, fails, or pauses on its own (filament change, runout). Pauses you ask for and cancelled prints stay quiet. Notifications need OctoPrint over HTTPS (or localhost); the chime works everywhere.
 - **A better terminal.** G-code is colored (commands, parameters, `ok`, errors, temperatures, comments), the last commands you sent are one click away, and your favorite commands (M114, G28, M84…) are buttons. Star the command you typed to add it.
 - **File grid with thumbnails.** One click in the Files panel header turns the file list into a grid of cards showing each model's thumbnail (from Slicer Thumbnails or Cura Thumbnails). Click a thumbnail, or Tab to it and press Enter, to load the file or open the folder. Each browser remembers its choice.
@@ -224,7 +224,7 @@ cd tests/e2e && npm install && npx playwright install chromium && cd ../..
 tests/run_e2e.sh
 ```
 
-They check the contrast of every page in both themes, run a simulated print, exercise the features (layout, remembered panels, file grid, terminal tools, floating webcam, print status card, tab progress) and go through the settings (live preview, revert, save, reload, disable). `TESTS="features.js" tests/run_e2e.sh` runs a single file. OctoPrint refuses to run as root, so run them as a regular user.
+They check the contrast of every page in both themes, run a simulated print, exercise the features (layout, remembered panels, file grid, terminal tools, floating webcam with MJPEG, HLS and WebRTC streams, print status card, tab progress) and go through the settings (live preview, revert, save, reload, disable). `TESTS="features.js" tests/run_e2e.sh` runs a single file. OctoPrint refuses to run as root, so run them as a regular user.
 
 ## License
 

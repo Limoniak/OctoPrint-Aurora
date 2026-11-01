@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1 – 2026-11-01
+
+### Fixed
+- Floating webcam: HLS (`.m3u8`) and WebRTC (`webrtc://`, camera-streamer) streams, which OctoPrint's own webcam plays, only showed "The webcam stream could not be loaded". They now play in the floating window, full screen and picture in picture too, and stop when the window closes or the page is hidden.
+- Floating webcam: in picture in picture, the picture lost its fit to the window and showed at its own size, cropped.
+- Floating webcam: closing it while in full screen leaves full screen.
+
 ## 0.3.0 – 2026-10-31
 
 Features inspired by other OctoPrint interface plugins.
