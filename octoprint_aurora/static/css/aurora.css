@@ -1731,11 +1731,12 @@ html.aurora .footer ul li a:hover {
 
 /* ===== Navbar theme toggle =========================================== */
 
+/* a block like the navbar's other links, so it has their height and its
+   icon sits on the same line as theirs */
 html.aurora #navbar_plugin_aurora > a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   min-width: 16px;
+  text-align: center;
 }
 
 html:not(.aurora) #navbar_plugin_aurora {
